@@ -18,3 +18,4 @@ v3_selftest_user_model.json
 .env
 *.key
 *_token*
+text_to_texture_selftest_assets/

@@ -816,10 +816,31 @@ def _build_v2_output_contract(form: str, name: str, width: int, height: int, anc
         text_lines.append("# 例如：0: #AABBCC（仅格式示意，禁止复制参考贴图）")
         text_lines.append("")
         text_lines.append("INDEX GRID")
-        text_lines.append("# 占位说明：共 %d 行，每行 %d 个整数；-1 表示透明，非负整数引用上面 PALETTE 的索引。" % (fh, fw))
-        text_lines.append("# 格式示例（2x2 占位，仅示意行列规则；不得复制参考贴图，必须生成新形状/图案）：")
-        text_lines.append("# -1  0")
-        text_lines.append("#  1 -1")
+        text_lines.append("# 共 %d 行，每行 %d 个整数；-1 表示透明，非负整数引用上面 PALETTE 的索引。" % (fh, fw))
+        text_lines.append("# 非 -1 像素数量要求：16x16 至少 40 个；禁止输出全 -1 的空图。")
+        if fw == 16 and fh == 16:
+            text_lines.append("# 以下是 16x16 真实生成样本的 INDEX GRID（蘑菇幼苗），仅用于展示“如何用索引填色/哪些位置用哪个颜色”；禁止复制它的形状与配色：")
+            text_lines += [
+                "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1  2  0  0  2 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1  2  0  0  1  0  2 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1  2  0  0  1  0  0  1  2 -1 -1 -1 -1",
+                "-1 -1 -1 -1  2  0  1  0  0  1  0  2 -1 -1 -1 -1",
+                "-1 -1 -1 -1  2  0  0  1  0  0  1  2 -1 -1 -1 -1",
+                "-1 -1 -1 -1  3  3  4  3  3  3  4  3 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1  7  5  6  7 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1",
+                "-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1",
+            ]
+            text_lines.append("# 注意：该样本的 PALETTE 有 0~7 共 8 个颜色索引；你的输出调色板也必须更丰富（至少 5~8 色：主色/亮部/暗部/强调色/描边色/中间色），并用这些索引填充细节。样本只是格式示范，不代表你只能用这几色。")
+        else:
+            text_lines.append("# 示例：至少填一部分非 -1 像素，并用 0/1/2 等索引表示颜色。")
         text_lines.append("")
 
     return {
@@ -1130,6 +1151,7 @@ def _build_v2_prompt_text(
     lines.append("- 每个 face 只输出一个可被 text_to_texture.py 解析的文本块（W/H + PALETTE + index grid）。")
     lines.append("- 多 face 时按 output_contract 的 face 顺序逐一输出，禁止混在一个块里。")
     lines.append("- 透明像素必须使用 -1。")
+    lines.append("- 禁止输出全 -1 的空图：16x16 的 INDEX GRID 中非 -1 像素必须 ≥ 40（64x32 实体按面积比例 ≥ 30%）。")
     lines.append("- 禁止输出解释性文字、Markdown 代码围栏、JSON 或额外标题。")
     lines.append("- 必须生成新的形状/图案/调色板：不得复制任何参考贴图（包括锚点 compact 文本与 few-shot 的 index grid）。")
     return "\n".join(lines).strip() + "\n"
@@ -1572,18 +1594,30 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
         ok.append("v2 concept_card has design_checklist (orientation/connection/semantic/palette/pattern/frame)")
 
     prompt_text = data.get("prompt", "")
-    for marker in (
-        "设计方案（先理解 → 配色 → 形状）",
-        "参考素材只是设计参考节点，不是硬性指标",
-        "不要复制参考贴图",
-        "允许 3~8 个参考节点",
-        "形状-纹样一体：先用形状确定结构，再让纹样贴合形状的走向/边缘/明暗面；纹样不得脱离形状独立存在。",
-        "设计自检清单（输出像素前必须逐项自查）",
-    ):
+    if "HEX GRID" in prompt_text:
+        markers = (
+            "设计要点（先理解，再直接输出）",
+            "走向/轴线设计",
+            "HEX GRID",
+            "参考节点（仅语义参考，禁止复制像素）",
+            "非 ---- 像素必须 >= 40",
+        )
+    else:
+        markers = (
+            "设计方案（先理解 → 配色 → 形状）",
+            "参考素材只是设计参考节点，不是硬性指标",
+            "不要复制参考贴图",
+            "允许 3~8 个参考节点",
+            "形状-纹样一体：先用形状确定结构，再让纹样贴合形状的走向/边缘/明暗面；纹样不得脱离形状独立存在。",
+            "设计自检清单（输出像素前必须逐项自查）",
+        )
+    for marker in markers:
         if marker not in prompt_text:
             raise ValueError("v2 prompt missing design-flow marker: %r" % marker)
     ok.append("v2 prompt contains design-flow paragraph (understand -> palette -> shape)")
     ok.append("v2 prompt contains shape-pattern integration requirement")
+    if "HEX GRID" in prompt_text:
+        ok.append("v2 prompt uses compact HEX GRID format (hex pixels + axis design)")
 
     fc = data["file_contract"]
     if fc.get("form") != form:
@@ -1636,11 +1670,16 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
         raise ValueError("v2 output_contract.text has a complete index grid; use format skeleton only")
     ok.append("v2 output_contract.text is a format skeleton (no full palette/index grid)")
 
-    if "检索特征摘要" not in data["prompt"] or "输出契约" not in data["prompt"]:
-        raise ValueError("v2 prompt missing features/output contract sections")
-    ok.append("v2 prompt embeds features and output contract")
+    if "HEX GRID" in data["prompt"]:
+        if "输出格式（HEX GRID" not in data["prompt"] or "参考节点" not in data["prompt"]:
+            raise ValueError("v2 prompt missing features/output contract sections (compact HEX mode)")
+        ok.append("v2 prompt embeds reference nodes and HEX output contract")
+    else:
+        if "检索特征摘要" not in data["prompt"] or "输出契约" not in data["prompt"]:
+            raise ValueError("v2 prompt missing features/output contract sections")
+        ok.append("v2 prompt embeds features and output contract")
 
-    if "不得复制" not in data["prompt"]:
+    if ("不得复制" not in data["prompt"]) and ("禁止复制" not in data["prompt"]):
         raise ValueError("v2 prompt missing no-copy notice")
     ok.append("v2 prompt forbids copying reference textures")
 

@@ -194,6 +194,144 @@ def _write_audit_evidence(pack: dict, raw_text: str, out_dir: Path, subagent_id:
     print("      -> prompt.sha256=%s" % prompt_hash)
 
 
+def _hex_sample_lines() -> list[str]:
+    """读取真实生成样本 mushroom_sprout，转成 HEX GRID 行（---- 透明）。"""
+    import re
+    sample = Path(__file__).resolve().parent / "examples" / "mushroom_sprout" / "raw_answer.txt"
+    try:
+        raw = sample.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return []
+    pal: dict[int, str] = {}
+    in_pal = False
+    for line in raw.splitlines():
+        ls = line.strip()
+        if ls.upper().startswith("PALETTE"):
+            in_pal = True
+            continue
+        if in_pal:
+            m = re.match(r"^\s*(\d+)\s*:\s*(#[0-9a-fA-F]{6})", ls)
+            if m:
+                pal[int(m.group(1))] = m.group(2).upper()
+            elif ls.upper().startswith("INDEX GRID"):
+                break
+    m = re.search(r"INDEX GRID\s*\n(.*)", raw, re.S)
+    rows: list[str] = []
+    if m:
+        for ln in m.group(1).splitlines():
+            toks = ln.split()
+            if len(toks) != 16:
+                continue
+            cells = []
+            for t in toks:
+                try:
+                    idx = int(t)
+                except ValueError:
+                    cells.append("----")
+                    continue
+                cells.append(pal.get(idx, "----") if idx >= 0 else "----")
+            rows.append(" ".join(cells))
+    return rows
+
+
+def _build_compact_prompt(pack: dict) -> str:
+    """生成面向纯文本 LLM 的紧凑 prompt：设计分析 + 直接输出 HEX GRID。
+
+    经验：
+    - 全量 prompt（检索特征/风格规则/few-shot）会让模型写一堆理解然后输出全 -1；
+    - INDEX GRID 数字索引容易让模型画空；改用直接 #RRGGBB/---- 的 HEX GRID 更直观；
+    - 必须让模型先做“走向/轴线分析”，否则会出现手柄斜、水晶正的朝向问题。
+    """
+    cc = pack.get("concept_card") or {}
+    lines = []
+    lines.append("# 任务")
+    lines.append("生成一个 %s 的 Minecraft 资源：%s" % (
+        pack.get("form", "item"), cc.get("item_name") or pack.get("query", "")
+    ))
+    lines.append("")
+    lines.append("# 设计要点（先理解，再直接输出）")
+    if cc.get("description"):
+        lines.append("- 语义：%s" % cc["description"])
+    ps = cc.get("palette_scheme") or {}
+    if ps:
+        lines.append("- 调色板（直接使用 #RRGGBB，至少 5~8 色）：base=%s light=%s dark=%s accent=%s outline=%s" % (
+            ps.get("base", "?"), ps.get("light", "?"), ps.get("dark", "?"),
+            ps.get("accent", "?"), ps.get("outline", "?")))
+        if ps.get("border_note"):
+            lines.append("  描边：%s" % ps["border_note"])
+        if ps.get("saturation_note"):
+            lines.append("  饱和度：%s" % ps["saturation_note"])
+    sp = cc.get("shape_pattern") or {}
+    if sp.get("silhouette"):
+        lines.append("- 形状：%s" % sp["silhouette"])
+    ori = sp.get("orientation") or {}
+    if ori:
+        lines.append("- 方位/构图：%s" % ori.get("composition_axis", "统一轴线"))
+        lines.append("- 连接：%s" % ori.get("connection_rule", "连接点对齐主轴"))
+        lines.append("- 轴线检查：%s" % ori.get("axis_check", "检查部件是否偏离轴线"))
+    ppf = sp.get("part_pattern_flow") or []
+    if ppf:
+        lines.append("- 形状-纹样一体：")
+        for item in ppf[:4]:
+            lines.append("  · %s：形状=%s 纹样=%s 走向=%s" % (
+                item.get("part", ""), item.get("shape", ""),
+                item.get("pattern", ""), item.get("flow", "")))
+    chk = cc.get("design_checklist") or []
+    if chk:
+        lines.append("- 设计自检（输出前逐项自查）：%s" % "；".join(
+            c.get("item", "") for c in chk))
+    refs = cc.get("reference_nodes") or []
+    if refs:
+        lines.append("- 参考节点（仅语义参考，禁止复制像素）：%s" % "、".join(
+            "%s(%s)" % (r.get("asset", "?"), r.get("role", "?")) for r in refs))
+    lines.append("")
+    lines.append("# 走向/轴线设计（必须先想清楚，这是最重要的）")
+    lines.append("- 整根法杖只有一条主轴线（左下→右上）；杖身、握柄、水晶簇必须沿同一条斜线方向。")
+    lines.append("- 水晶簇不能“正着”竖在斜杖上：每根尖柱的方向都要与杖身轴线一致或围绕该轴线轻微分叉。")
+    lines.append("- 连接点：水晶簇底端锚定在杖身右上端端点，连接在轴线上，不悬空、不偏侧。")
+    lines.append("- 剪影可辨：去掉颜色只看形状，要能认出“斜杖 + 顶部水晶簇”。")
+    lines.append("")
+    lines.append("# 输出格式（HEX GRID，直接给颜色，不要再输出 PALETTE/INDEX GRID）")
+    lines.append("- 先写 2~3 行设计分析（主轴线/部件走向/连接点），放在 FORMAT 之前；face 块内禁止任何解释文字。")
+    lines.append("- 然后输出下面的固定头，并紧跟 16 行 × 16 列的 HEX GRID：")
+    lines.append("FORM=item")
+    lines.append("=== face: sprite ===")
+    lines.append("FILE: assets/mcmod/textures/item/alien_crystal_wand.png")
+    lines.append("W=16 H=16")
+    lines.append("")
+    lines.append("HEX GRID")
+    lines.append("# 每行 16 个 token：#RRGGBB=不透明像素，----=透明；非 ---- 像素必须 >= 40；禁止输出全 ---- 空图。")
+    sample_rows = _hex_sample_lines()
+    if sample_rows:
+        lines.append("# 真实样本（蘑菇幼苗）的 HEX GRID 格式示例——仅用于理解怎么填颜色；禁止复制它的形状/配色：")
+        lines.extend(sample_rows)
+    else:
+        lines.append("# 示例：---- ---- ---- ----  /  ---- #ff0000 #ff4444 ----  /  ...（16 列）")
+    lines.append("")
+    lines.append("> 设计分析放在 FORMAT 之前；FORMAT 之后只允许 HEX GRID 数据行。")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def _hex_contract_text(pack: dict) -> str:
+    """生成与 HEX GRID 匹配的 output_contract.text（只含格式骨架，不含完整示例）。"""
+    form = pack.get("form", "item")
+    faces = pack.get("output_contract", {}).get("faces") or [
+        {"face": "sprite", "file": "assets/mcmod/textures/item/sprite.png", "width": 16, "height": 16}
+    ]
+    lines = ["FORM=%s" % form, "FACES=%d" % len(faces), ""]
+    for f in faces:
+        lines.append("=== face: %s ===" % f.get("face", "sprite"))
+        lines.append("FILE: %s" % f.get("file", "assets/mcmod/textures/item/sprite.png"))
+        lines.append("W=%d H=%d" % (f.get("width", 16), f.get("height", 16)))
+        lines.append("")
+        lines.append("HEX GRID")
+        lines.append("# %d 行 x %d 列；---- 透明，#RRGGBB 不透明；非 ---- 像素必须 >= 40" % (
+            f.get("height", 16), f.get("width", 16)))
+        lines.append("")
+    return "\n".join(lines).strip()
+
+
 def run(args: argparse.Namespace) -> int:
     out_dir = Path(args.out or ("generated/" + cg.slugify(args.query)))
     out_dir = out_dir.resolve()
@@ -242,6 +380,8 @@ def run(args: argparse.Namespace) -> int:
             top=args.top,
         )
         pack = bsp.build_prompt_pack_v2(ns)
+        pack["prompt"] = _build_compact_prompt(pack)  # 用紧凑 HEX prompt，避免全量 prompt 带偏模型
+        pack.setdefault("output_contract", {})["text"] = _hex_contract_text(pack)
         bsp.write_v2_prompt_pack(pack, out_dir / "prompt_pack.json")
         print("      -> prompt_pack.json (%d anchors, concept=%s)" % (
             len(pack.get("anchors", [])),

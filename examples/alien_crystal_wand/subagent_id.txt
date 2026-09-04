@@ -1,1 +1,1 @@
-opencode-go:deepseek-v4-flash (pipeline --llm-cmd)
+DeepSeek API:deepseek-chat (hex grid)

@@ -63,6 +63,8 @@ ALPHA_THRESHOLD = 8
 SELFTEST_REPORT = "text_to_texture_selftest.txt"
 _NOISE_LABELS = {
     "hex color grid",
+    "hex grid",
+    "hex grid:",
     "index grid",
     "index grid:",
     "index grid (palette index; alpha column active)",
@@ -238,11 +240,14 @@ def _parse_hex_grid(lines: list[str], start: int, w: int, h: int) -> list[list[t
             i += 1
             continue
         tokens = s.split()
-        if len(tokens) != w:
+        if len(tokens) > w:
             raise ValueError(
                 "hex row %d has %d columns; expected %d (line: %r)"
                 % (len(rows) + 1, len(tokens), w, s)
             )
+        if len(tokens) < w:
+            # 容错：模型偶尔少写尾部透明列，自动补 ---- 到 W 列
+            tokens = tokens + ["----"] * (w - len(tokens))
         row: list[tuple[int, int, int, int]] = []
         for tok in tokens:
             if tok == "----":

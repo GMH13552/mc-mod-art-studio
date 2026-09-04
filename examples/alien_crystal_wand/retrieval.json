@@ -5,10 +5,10 @@
   "form_source": "forced",
   "method": "rule",
   "method_note": "内置中文别名+关键词规则，未调用外部 LLM 子代理；离线可复现。",
-  "top": 5,
+  "top": 3,
   "anchors": [
     {
-      "path": "/tmp/pipeline_ds/retrieval_assets/blaze_rod.png",
+      "path": "/tmp/regenerate_pack/retrieval_assets/blaze_rod.png",
       "name": "blaze_rod",
       "category": "item",
       "role": "shape",
@@ -32,7 +32,7 @@
       "palette_count": 1
     },
     {
-      "path": "/tmp/pipeline_ds/retrieval_assets/diamond.png",
+      "path": "/tmp/regenerate_pack/retrieval_assets/diamond.png",
       "name": "diamond",
       "category": "item",
       "role": "color",
@@ -56,7 +56,7 @@
       "palette_count": 1
     },
     {
-      "path": "/tmp/pipeline_ds/retrieval_assets/blue_crystal.png",
+      "path": "/tmp/regenerate_pack/retrieval_assets/blue_crystal.png",
       "name": "blue_crystal",
       "category": "item",
       "role": "shape",
@@ -76,33 +76,9 @@
         "crystal"
       ],
       "palette_count": 1
-    },
-    {
-      "path": "/tmp/pipeline_ds/retrieval_assets/emerald.png",
-      "name": "emerald",
-      "category": "item",
-      "role": "color",
-      "features": {
-        "shape": "菱形/晶体",
-        "pattern": "无明显图案",
-        "colors": [
-          "#3CBE6E"
-        ],
-        "parts": [
-          "晶体主体"
-        ],
-        "attraction": [
-          "闪亮/晶体"
-        ]
-      },
-      "score": 5,
-      "matched_terms": [
-        "emerald"
-      ],
-      "palette_count": 1
     }
   ],
-  "count": 4,
+  "count": 3,
   "query_terms": {
     "english": [
       "amethyst",

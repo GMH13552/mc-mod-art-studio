@@ -1,5 +1,5 @@
 {
-  "prompt_sha256": "029eb4792b30a846caf89ba62a5582a5b00ece92992d2a174132b49e26b8eeac",
-  "answer_sha256": "af71ee9349c1fd4d43916d8ad94ef0e1181ccbdfdaabafd018b46a239b64eafe",
-  "subagent_id": "opencode-go:deepseek-v4-flash"
+  "prompt_sha256": "4e0f55edf8e9d5400f37909915b4a4d8de5a2944bc0605918d11f834db2f36ac",
+  "answer_sha256": "674e10fc2e181f7a2da462144f62b185597af14a1e9aa5da9588c7027f419510",
+  "subagent_id": "DeepSeek API:deepseek-chat"
 }

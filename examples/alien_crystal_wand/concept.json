@@ -106,7 +106,7 @@
   "source": "concept_grounder:offline_rule",
   "method": "rule",
   "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
-  "retrieval_anchor_count": 4,
+  "retrieval_anchor_count": 3,
   "design_checklist": [
     {
       "id": "orientation",
