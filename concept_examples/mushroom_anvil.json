@@ -1,0 +1,110 @@
+{
+  "item_name": "蘑菇铁砧 (Mushroom Anvil)",
+  "description": "一个以铁砧几何为骨架、顶面变成红色菌盖、侧面与底座带有菌柄/菌褶纹理的 Minecraft 自定义方块。",
+  "parts": [
+    "base 金属/石质底座",
+    "neck 窄颈",
+    "top 蘑菇菌盖顶面",
+    "body 铁砧侧面主体",
+    "particle 粒子/整体材质采样"
+  ],
+  "face_regions": {
+    "body": "铁砧底座+窄颈+侧面主体：深灰金属/石质底色，侧面加入褐色菌柄纵向纹理与少量红色菌盖边缘。",
+    "top": "顶面中央红蘑菇菌盖：红色主体 (#C32826/#BE2321)，白色斑点 (#FFBFBF/#FF9898)，边缘深红 (#A9121A)；菌盖覆盖铁砧顶面，四角露出金属耳。",
+    "particle": "整体材质颗粒：深灰/褐/红混合小颗粒，用于破坏粒子效果。"
+  },
+  "visual_goals": [
+    "body 底部画 4-8 像素深灰金属底座 (#3D3D3D/#525252)，右侧画窄颈过渡；",
+    "body 窄颈区域用褐色菌柄 (#493615/#684E1E) 纵向条纹，保留铁砧侧面有颈的结构；",
+    "top 的 16x16 中央 10x10 区域铺红色菌盖 (#C32826/#BE2321)，边缘 1-2 像素深红 (#A9121A)；",
+    "top 菌盖上散布 3-5 个白色斑点 (#FFBFBF/#FF9898)，斑点 1-2 像素，避免等距规则网格；",
+    "particle 面作为全图采样：灰色底 + 红色/褐色小点，不得复制原版 anvil_top.png 的条纹。"
+  ],
+  "minecraft_reference": "anvil（block_custom 模板：body/top/particle 三纹理）；red_mushroom_block（菌盖红底+白点）；red_mushroom（菌盖红色）",
+  "avoid": [
+    "不要复制原版 anvil.png / anvil_top.png 的逐像素纹样；",
+    "不要只画成普通灰色铁砧：必须有明显蘑菇菌盖/菌柄语义；",
+    "不要画成完整蘑菇方块：保留底座-窄颈-顶面的铁砧剪影；",
+    "不要用过多绿色/蓝色：主体应是蘑菇红 + 深灰金属。"
+  ],
+  "palette_scheme": {
+    "base": "#C32826",
+    "light": "#FFBFBF",
+    "dark": "#A9121A",
+    "accent": "#493615",
+    "outline": "#1F1210",
+    "border_note": "顶面菌盖边缘 1-2px 深红；底座/侧面用深灰金属与褐色菌柄形成自然边界。",
+    "saturation_note": "红色保持中等饱和度，避免荧光；灰/褐作为低饱和过渡。"
+  },
+  "shape_pattern": {
+    "silhouette": "铁砧主体+窄颈+顶面菌盖；顶面为方形模块，侧面保留底座/窄颈几何。",
+    "parts": [
+      "base 底座",
+      "neck 窄颈",
+      "top 菌盖顶面",
+      "body 侧面主体",
+      "particle 粒子采样"
+    ],
+    "border": "顶面菌盖边缘 1-2px 深红；金属边缘用 1px 深灰描边。",
+    "shading": "左上偏亮、右下偏暗；菌盖有白点高光，菌柄有纵向暗缝。",
+    "detail_pattern": "菌盖白点 + 菌柄纵向纹理 + 金属颗粒噪点。",
+    "shape_lock_optional": true,
+    "part_pattern_flow": [
+      {
+        "part": "base 底座",
+        "shape": "方形/梯形金属底座",
+        "pattern": "深灰颗粒与横向锻痕",
+        "flow": "颗粒沿底座平面和棱边分布，锻痕沿底座横向走。"
+      },
+      {
+        "part": "neck 窄颈",
+        "shape": "细窄颈",
+        "pattern": "褐色菌柄纵向纹理",
+        "flow": "纵向纹理沿窄颈的竖向走向贴合，不跨越成横纹。"
+      },
+      {
+        "part": "top 菌盖顶面",
+        "shape": "方形顶面 / 半圆菌盖",
+        "pattern": "白色斑点 + 放射菌褶",
+        "flow": "斑点沿伞面弧线分布，放射状菌褶从中心向边缘展开。"
+      },
+      {
+        "part": "body 侧面主体",
+        "shape": "铁砧侧面轮廓",
+        "pattern": "金属噪点 + 菌柄分割",
+        "flow": "噪点保留侧面结构线，菌柄分割线沿侧面的纵向/斜向轮廓走。"
+      },
+      {
+        "part": "particle 粒子采样",
+        "shape": "整体随机颗粒",
+        "pattern": "灰/褐/红小点",
+        "flow": "小点作为整体材质采样，不形成独立图案。"
+      }
+    ],
+    "integration_note": "每个部件的纹样都必须沿该部件形状的轮廓/明暗面走向；不得把形状与花纹割裂成两套独立描述。"
+  },
+  "reference_nodes": [
+    {
+      "asset": "anvil",
+      "role": "shape",
+      "reason": "提供铁砧底座/窄颈/顶面的几何骨架参考（非硬性指标）。"
+    },
+    {
+      "asset": "red_mushroom_block",
+      "role": "pattern",
+      "reason": "菌盖红底+白斑点图案与色调参考。"
+    },
+    {
+      "asset": "red_mushroom",
+      "role": "border",
+      "reason": "菌盖边缘深红和菌柄大地色参考。"
+    }
+  ],
+  "form": "block_custom",
+  "query": "蘑菇铁砧",
+  "source": "concept_grounder:offline_rule",
+  "method": "rule",
+  "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+  "block_template": "anvil",
+  "retrieval_anchor_count": 2
+}

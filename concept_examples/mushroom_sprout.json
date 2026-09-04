@@ -1,0 +1,96 @@
+{
+  "item_name": "蘑菇幼苗 (Mushroom Sprout)",
+  "description": "一棵刚长出的小蘑菇幼苗：内容就是蘑菇本体（菌盖+菌柄），使用 Minecraft cross 十字交叉渲染形式；cross 只是展示形式，不是树苗。",
+  "parts": [
+    "cap 小菌盖（红/褐）",
+    "gills 菌盖下沿菌褶（白/米）",
+    "stem 菌柄（浅褐/褐色）"
+  ],
+  "face_regions": {
+    "cross": "十字交叉贴图：中央 2-3 像素菌柄，上方 6-8 像素半圆菌盖，菌盖下沿 1-2 像素菌褶；整体是蘑菇剪影，不是树苗/叶冠。"
+  },
+  "visual_goals": [
+    "cross 形状 mask 应为 16x16 小蘑菇剪影：菌盖半圆 + 菌柄，高度约 8-11 像素；",
+    "cross 菌盖用 red_mushroom 系红色 #E21212/#C41D26/#A9121A，边缘深色；",
+    "cross 菌盖下沿画 1-2 像素白色/米色菌褶 #E3DDBA/#CFC47F；",
+    "cross 菌柄用 brown_mushroom 系浅褐/褐色 #CC9978/#916D55/#725643；",
+    "cross 保持透明背景，不出现树苗的枝干/叶冠/草丛。"
+  ],
+  "minecraft_reference": "red_mushroom（菌盖红/菌褶白）、brown_mushroom（菌柄褐/菌盖棕）、cross 仅借用十字交叉渲染形式",
+  "avoid": [
+    "不要复制原版 birch_sapling.png 的逐像素图案；",
+    "不要画成大树苗：必须有明显菌盖+菌柄蘑菇剪影，不是树苗叶冠；",
+    "不要画成普通蘑菇方块：保留 cross 透明剪影，不铺满 16x16；",
+    "不要用大块纯绿：本资源内容为蘑菇，红色/褐色为主。"
+  ],
+  "palette_scheme": {
+    "base": "#C41D26",
+    "light": "#FFB4B0",
+    "dark": "#8E1016",
+    "accent": "#E3DDBA",
+    "outline": "#5A3B1A",
+    "border_note": "菌盖外轮廓 1px 深红/暗褐；菌褶与菌柄用米白/褐色自然分隔，不做均匀黑框。",
+    "saturation_note": "菌盖红、菌柄褐均为中低饱和大地色，避免荧光和刺眼亮色。"
+  },
+  "shape_pattern": {
+    "silhouette": "小蘑菇剪影：半圆菌盖 + 菌柄，高度约 8-11 像素；cross 只是展示形式。",
+    "parts": [
+      "cap 菌盖",
+      "gills 菌褶",
+      "stem 菌柄"
+    ],
+    "border": "菌盖边缘 1px 深色；菌褶下沿 1px 米白；菌柄两侧深褐。",
+    "shading": "菌盖左上高光、右下暗面；菌柄左亮右暗。",
+    "detail_pattern": "菌盖 1px 噪点/少量斑点；菌褶横向 1px 线条。",
+    "shape_lock_optional": true,
+    "part_pattern_flow": [
+      {
+        "part": "cap 菌盖",
+        "shape": "半圆伞面",
+        "pattern": "红色系 + 白色斑点 + 左上高光",
+        "flow": "斑点沿伞面弧线分布，高光带沿伞面左上到右下走势。"
+      },
+      {
+        "part": "gills 菌褶",
+        "shape": "菌盖下沿弧线",
+        "pattern": "米白/褐色 1px 菌褶",
+        "flow": "菌褶线沿下沿弧线排列，随伞缘弯曲。"
+      },
+      {
+        "part": "stem 菌柄",
+        "shape": "竖向菌柄",
+        "pattern": "浅褐/褐色纵向纹理",
+        "flow": "纵向纹理沿菌柄走向，左亮右暗表现圆柱体积。"
+      }
+    ],
+    "integration_note": "菌盖放射/晕斑、菌褶弧线、菌柄纵向纹理都必须贴合对应部件的形状走向；纹样不得脱离形状独立存在。"
+  },
+  "reference_nodes": [
+    {
+      "asset": "birch_sapling",
+      "role": "shape",
+      "reason": "仅参考 cross 十字交叉渲染形式/尺度，不锁树苗形状，不复制像素。"
+    },
+    {
+      "asset": "red_mushroom",
+      "role": "color",
+      "reason": "菌盖红+菌褶白+菌柄褐的完整配色参考。"
+    },
+    {
+      "asset": "brown_mushroom",
+      "role": "pattern",
+      "reason": "菌盖斑点/菌柄纹理与低饱和大地色参考。"
+    },
+    {
+      "asset": "red_mooshroom",
+      "role": "border",
+      "reason": "生物体红色暗部/自然边界参考（非硬性指标）。"
+    }
+  ],
+  "form": "cross",
+  "query": "蘑菇幼苗",
+  "source": "concept_grounder:offline_rule",
+  "method": "rule",
+  "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+  "retrieval_anchor_count": 2
+}

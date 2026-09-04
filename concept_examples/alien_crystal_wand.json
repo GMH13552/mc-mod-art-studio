@@ -1,0 +1,102 @@
+{
+  "item_name": "异形水晶法杖 (Alien Crystal Wand)",
+  "description": "一根以法杖为语义骨架、顶端长着多根尖柱状异形水晶簇的 Minecraft 物品；水晶簇是顶部视觉主体，不是简单火焰棒。",
+  "parts": [
+    "rod 杖身",
+    "crystal_cluster 顶部明显水晶簇（多根尖柱/棱面）",
+    "handle 握柄/尾部"
+  ],
+  "face_regions": {
+    "sprite": "单张 16x16 透明背景：斜向杖身 + 顶端一组高约 4-7 像素的水晶尖柱簇（多根指向不同方向）；晶体青绿/水晶色但饱和度降低，有暗面和 1px 描边。"
+  },
+  "visual_goals": [
+    "sprite 顶部必须画出明显水晶簇：至少 3-5 根尖柱/棱面晶体，占据顶部 4-7 像素高，不能只是长条棒延伸；",
+    "sprite 杖身保持 2-3 像素宽斜向，但不要把整体画成 blaze_rod 的形状；顶部晶体簇是剪影重心；",
+    "sprite 晶体主色用低饱和青绿 #3E8F84/#2F6F68/#1F4E4A，亮面 #8FCEC4，暗面 #16403C；",
+    "sprite 晶体轮廓加 1px 深色描边 #10282A，避免荧光刺眼；",
+    "sprite 杖身/握柄使用琥珀/暗棕 #7A4A1E/#5A3413/#3E2613，与水晶形成自然边界；",
+    "sprite 保持透明背景，16x16 内不贴边、不出现方块外轮廓。"
+  ],
+  "minecraft_reference": "blaze_rod（仅借用物品尺度，不是形状锁）；diamond + emerald（晶体色相）；quartz（晶体棱面/暗部）",
+  "avoid": [
+    "不要复制原版 blaze_rod.png 的逐像素图案，也不要把它当成锁死形状；",
+    "不要画成普通木棍/火把/长条棒：顶部必须有明显、多根的异形水晶簇；",
+    "不要画成方块：保持物品透明剪影，不出现满铺背景；",
+    "不要用高饱和荧光青/绿：降低饱和度、加入暗部与 1px 描边。"
+  ],
+  "palette_scheme": {
+    "base": "#3E8F84",
+    "light": "#8FCEC4",
+    "dark": "#16403C",
+    "accent": "#C9A227",
+    "outline": "#10282A",
+    "border_note": "水晶外轮廓用 1px 深色描边 #10282A；杖身与水晶之间用暗棕/深绿自然分隔，不做均匀黑框。",
+    "saturation_note": "青绿/水晶色整体降低饱和度，避免高饱和荧光；亮部仅作局部 1px 提示。"
+  },
+  "shape_pattern": {
+    "silhouette": "斜向细杖 + 顶部明显水晶簇：顶部多根尖柱/棱面向不同方向生长，整体是一个‘法杖’语义剪影。",
+    "parts": [
+      "rod 杖身",
+      "crystal_cluster 顶部多根尖柱/棱面水晶",
+      "handle 握柄"
+    ],
+    "border": "晶体沿外轮廓 1px 深色 #10282A；杖身与水晶交界用暗色过渡。",
+    "shading": "左上亮部/右下暗部；每根晶体有亮面和暗面，避免平涂发光。",
+    "detail_pattern": "水晶棱面用小三角/菱形切面 + 1px 噪点；杖身用暗棕颗粒。",
+    "shape_lock_optional": true,
+    "part_pattern_flow": [
+      {
+        "part": "crystal_cluster 水晶簇",
+        "shape": "多根尖柱/棱面尖柱",
+        "pattern": "棱面 + 纵向高光带 + 两侧暗面",
+        "flow": "每根尖柱从尖端到底座都有一条纵向高光带，高光沿柱体轴向走；暗面位于柱体两侧，形成沿形状方向的明暗分界。"
+      },
+      {
+        "part": "rod 杖身",
+        "shape": "2-3px 宽斜向细杖",
+        "pattern": "暗棕颗粒 / 微弱魔法纹",
+        "flow": "颗粒与魔法纹沿杖身纵向流动，不脱离杖身轮廓，不形成横向孤立线条。"
+      },
+      {
+        "part": "handle 握柄",
+        "shape": "杖身下段加粗/深色段",
+        "pattern": "暗棕横向分段 + 颗粒",
+        "flow": "分段线沿握柄径向环绕，颗粒沿握柄纵向分布。"
+      }
+    ],
+    "integration_note": "先用形状确定结构（尖柱/杖身/握柄），再让棱面、高光带、颗粒纹样贴合每个部件的走向/边缘/明暗面；纹样不得脱离形状独立存在。"
+  },
+  "reference_nodes": [
+    {
+      "asset": "blaze_rod",
+      "role": "shape",
+      "reason": "仅参考物品尺度/细长剪影，不锁形状，也不复制像素。"
+    },
+    {
+      "asset": "diamond",
+      "role": "color",
+      "reason": "提供青绿/晶体色相与高光方向，但要降低饱和度。"
+    },
+    {
+      "asset": "emerald",
+      "role": "pattern",
+      "reason": "提供宝石棱面/切面质感与暗部参考。"
+    },
+    {
+      "asset": "quartz",
+      "role": "border",
+      "reason": "提供低饱和晶体暗部与自然描边参考。"
+    },
+    {
+      "asset": "stick",
+      "role": "material",
+      "reason": "法杖把手/杖身材质尺度参考（非硬性指标）。"
+    }
+  ],
+  "form": "item",
+  "query": "异形水晶法杖",
+  "source": "concept_grounder:offline_rule",
+  "method": "rule",
+  "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+  "retrieval_anchor_count": 4
+}

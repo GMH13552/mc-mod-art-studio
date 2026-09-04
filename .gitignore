@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.log
+my_asset_index.json
+retrieval_examples/
+prompt_packs_v2/
+generated_assets*/
+example_resourcepack*/
+v4_compose_selftest_assets/
+v3_selftest_user_model.json
+*_log.txt
+*_selftest.txt
+retrieve_log.txt
+v4_compose_selftest.txt
+v3_selftest_user_model.json
+*-log.txt
+*-log-*.txt

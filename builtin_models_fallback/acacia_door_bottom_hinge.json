@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "bottom": "#bottom",
+    "top": "#top",
+    "side": "#side",
+    "particle": "#particle"
+  }
+}

@@ -1,0 +1,444 @@
+{
+  "name": "alien_crystal_wand",
+  "query": "异形水晶法杖",
+  "form": "item",
+  "form_note": "异形：任意透明剪影（item_sprite）",
+  "form_source": "forced",
+  "type": "item",
+  "size": "16x16",
+  "width": 16,
+  "height": 16,
+  "fusion": "retrieval features fusion",
+  "retrieval_method": "rule",
+  "retrieval_method_note": "内置中文别名+关键词规则，未调用外部 LLM 子代理；离线可复现。",
+  "anchors": [
+    {
+      "path": "raw/item/blaze_rod.png",
+      "name": "blaze_rod.png",
+      "category": "item",
+      "role": "shape",
+      "features": {
+        "shape": "长条/杖",
+        "pattern": "无明显图案",
+        "colors": [
+          "#B9931C",
+          "#B36B19",
+          "#AE3C00",
+          "#BF5A00",
+          "#FFF32D"
+        ],
+        "parts": [
+          "杖身"
+        ],
+        "attraction": [
+          "火焰/魔法"
+        ]
+      },
+      "score": 5,
+      "matched_terms": [
+        "rod"
+      ],
+      "palette_count": 12,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n............XX..\n...........XXXX.\n..........XXXX..\n.........XXXX...\n........XXXX....\n.......XXXX.....\n......XXXX......\n.....XXXX.......\n....XXXX........\n...XXXX.........\n..XXXX..........\n.XXXX...........\n.XXX............\n.XX.............\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n............OO..\n...........OYYO.\n..........OYYO..\n.........OYYO...\n........OYYO....\n.......OYYO.....\n......OYYO......\n.....OYYO.......\n....OYYO........\n...OYYO.........\n..OYYO..........\n.OYYO...........\n.OYO............\n.OO.............\n................\n```\n\n## Palette (hex)\n```\n 0: #b36b19\n 1: #9b5607\n 2: #a86d1b\n 3: #fff32d\n 4: #b9931c\n 5: #953300\n 6: #fff87e\n 7: #ae3c00\n 8: #d8ae26\n 9: #bf5a00\n10: #ffc100\n11: #b15b10\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  2  3  4  5 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  6  4  7 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1  2  6  8  9 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1  0  3  4  9 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  2  3  4  9 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  2  6  4  9 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  3  4  7 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0 10  4  7 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1  2  3  4  7 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1  0 10  4  7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 11  3  4  9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1  0  8  9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1  5  7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #b36b19",
+        " 1: #9b5607",
+        " 2: #a86d1b",
+        " 3: #fff32d",
+        " 4: #b9931c",
+        " 5: #953300",
+        " 6: #fff87e",
+        " 7: #ae3c00",
+        " 8: #d8ae26",
+        " 9: #bf5a00",
+        "10: #ffc100",
+        "11: #b15b10"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  2  3  4  5 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  6  4  7 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1  2  6  8  9 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1  0  3  4  9 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1  2  3  4  9 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  2  6  4  9 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1  0  3  4  7 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0 10  4  7 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1  2  3  4  7 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1  0 10  4  7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 11  3  4  9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1  0  8  9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1  5  7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"
+      ]
+    },
+    {
+      "path": "raw/item/diamond.png",
+      "name": "diamond.png",
+      "category": "item",
+      "role": "color",
+      "features": {
+        "shape": "菱形/晶体",
+        "pattern": "无明显图案",
+        "colors": [
+          "#145E53",
+          "#4AEDD9",
+          "#20C5B5",
+          "#A1FBE8",
+          "#11727A"
+        ],
+        "parts": [
+          "晶体主体"
+        ],
+        "attraction": [
+          "闪亮/晶体"
+        ]
+      },
+      "score": 5,
+      "matched_terms": [
+        "diamond"
+      ],
+      "palette_count": 10,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n......XXXX......\n.....XXXXXX.....\n....XXXXXXXX....\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n..XXXXXXXXXXXX..\n..XXXXXXXXXXXX..\n..XXXXXXXXXXXX..\n..XXXXXXXXXXXX..\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n....XXXXXXXX....\n.....XXXXXX.....\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n......CCCC......\n.....C@@@CC.....\n....C@CCCCCC....\n...C@CCCCCCCC...\n...C@C@C@CCCC...\n..C@C@CCCCCCCC..\n..C@CCCCCCCCCC..\n..C@@CCCCCCCCC..\n..CCCCCCCCCCCC..\n...CCCCCCCCCC...\n...CCCCCCCCCC...\n....CCCCCCCC....\n.....CCCCCC.....\n................\n```\n\n## Palette (hex)\n```\n 0: #11727a\n 1: #ffffff\n 2: #d5fff6\n 3: #4aedd9\n 4: #a1fbe8\n 5: #20c5b5\n 6: #145e53\n 7: #1aaaa7\n 8: #1c919a\n 9: #2ce0d8\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  0  0  0 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  1  1  1  2  0 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0  1  3  3  4  2  5  6 -1 -1 -1 -1\n-1 -1 -1  0  1  3  4  4  2  4  3  5  6 -1 -1 -1\n-1 -1 -1  0  1  3  1  2  1  2  3  3  6 -1 -1 -1\n-1 -1  0  1  3  1  3  3  4  4  7  5  7  6 -1 -1\n-1 -1  0  1  3  2  3  4  4  4  8  5  7  6 -1 -1\n-1 -1  0  1  1  5  4  4  4  3  8  7  7  6 -1 -1\n-1 -1  0  2  3  3  7  7  7  7  5  5  8  6 -1 -1\n-1 -1 -1  6  3  7  5  5  5  5  7  5  6 -1 -1 -1\n-1 -1 -1  6  9  7  5  5  5  5  7  4  6 -1 -1 -1\n-1 -1 -1 -1  6  8  3  3  4  4  5  6 -1 -1 -1 -1\n-1 -1 -1 -1 -1  6  6  6  6  6  6 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #11727a",
+        " 1: #ffffff",
+        " 2: #d5fff6",
+        " 3: #4aedd9",
+        " 4: #a1fbe8",
+        " 5: #20c5b5",
+        " 6: #145e53",
+        " 7: #1aaaa7",
+        " 8: #1c919a",
+        " 9: #2ce0d8"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  0  0  0  0 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1  0  1  1  1  2  0 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0  1  3  3  4  2  5  6 -1 -1 -1 -1",
+        "-1 -1 -1  0  1  3  4  4  2  4  3  5  6 -1 -1 -1",
+        "-1 -1 -1  0  1  3  1  2  1  2  3  3  6 -1 -1 -1",
+        "-1 -1  0  1  3  1  3  3  4  4  7  5  7  6 -1 -1",
+        "-1 -1  0  1  3  2  3  4  4  4  8  5  7  6 -1 -1",
+        "-1 -1  0  1  1  5  4  4  4  3  8  7  7  6 -1 -1",
+        "-1 -1  0  2  3  3  7  7  7  7  5  5  8  6 -1 -1",
+        "-1 -1 -1  6  3  7  5  5  5  5  7  5  6 -1 -1 -1",
+        "-1 -1 -1  6  9  7  5  5  5  5  7  4  6 -1 -1 -1",
+        "-1 -1 -1 -1  6  8  3  3  4  4  5  6 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1  6  6  6  6  6  6 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"
+      ]
+    },
+    {
+      "path": "raw/item/emerald.png",
+      "name": "emerald.png",
+      "category": "item",
+      "role": "color",
+      "features": {
+        "shape": "菱形/晶体",
+        "pattern": "无明显图案",
+        "colors": [
+          "#17DD62",
+          "#005300",
+          "#002D00",
+          "#00AA2C",
+          "#AFFDCD"
+        ],
+        "parts": [
+          "晶体主体"
+        ],
+        "attraction": [
+          "闪亮/晶体"
+        ]
+      },
+      "score": 5,
+      "matched_terms": [
+        "emerald"
+      ],
+      "palette_count": 10,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n......XXXX......\n.....XXXXXX.....\n....XXXXXXXX....\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n....XXXXXXXX....\n.....XXXXXX.....\n......XXXX......\n................\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n......GGGG......\n.....GGGGGG.....\n....GGGGGGG#....\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n....GGGGGGG#....\n.....GGGGG#.....\n......####......\n................\n................\n```\n\n## Palette (hex)\n```\n 0: #005300\n 1: #dbffeb\n 2: #41f384\n 3: #17dd62\n 4: #affdcd\n 5: #00aa2c\n 6: #002d00\n 7: #009529\n 8: #82f6ad\n 9: #007b18\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  0  0  0 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  1  2  2  3  0 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0  1  4  2  2  5  3  6 -1 -1 -1 -1\n-1 -1 -1  0  1  4  4  2  2  5  5  3  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  4  4  5  7  5  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  4  8  5  9  5  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  4  8  5  9  5  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  8  8  5  9  3  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  8  2  9  7  3  6 -1 -1 -1\n-1 -1 -1 -1  0  5  7  9  9  7  8  6 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  5  7  9  3  6 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  6  6  6  6 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #005300",
+        " 1: #dbffeb",
+        " 2: #41f384",
+        " 3: #17dd62",
+        " 4: #affdcd",
+        " 5: #00aa2c",
+        " 6: #002d00",
+        " 7: #009529",
+        " 8: #82f6ad",
+        " 9: #007b18"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  0  0  0  0 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1  0  1  2  2  3  0 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0  1  4  2  2  5  3  6 -1 -1 -1 -1",
+        "-1 -1 -1  0  1  4  4  2  2  5  5  3  6 -1 -1 -1",
+        "-1 -1 -1  0  4  3  3  4  4  5  7  5  6 -1 -1 -1",
+        "-1 -1 -1  0  4  3  3  4  8  5  9  5  6 -1 -1 -1",
+        "-1 -1 -1  0  4  3  3  4  8  5  9  5  6 -1 -1 -1",
+        "-1 -1 -1  0  4  3  3  8  8  5  9  3  6 -1 -1 -1",
+        "-1 -1 -1  0  4  3  3  8  2  9  7  3  6 -1 -1 -1",
+        "-1 -1 -1 -1  0  5  7  9  9  7  8  6 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1  0  5  7  9  3  6 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  6  6  6  6 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"
+      ]
+    }
+  ],
+  "features": {
+    "summary": "形状：长条/杖；菱形/晶体\n图案：无明显图案\n颜色：#B9931C #B36B19 #AE3C00 #BF5A00 #FFF32D #145E53 #4AEDD9 #20C5B5 #A1FBE8 #11727A #17DD62 #005300 #002D00 #00AA2C #AFFDCD\n部位：杖身；晶体主体\n吸引点：火焰/魔法；闪亮/晶体",
+    "shape": [
+      "长条/杖",
+      "菱形/晶体"
+    ],
+    "pattern": [
+      "无明显图案"
+    ],
+    "colors": [
+      "#B9931C",
+      "#B36B19",
+      "#AE3C00",
+      "#BF5A00",
+      "#FFF32D",
+      "#145E53",
+      "#4AEDD9",
+      "#20C5B5",
+      "#A1FBE8",
+      "#11727A",
+      "#17DD62",
+      "#005300",
+      "#002D00",
+      "#00AA2C",
+      "#AFFDCD"
+    ],
+    "parts": [
+      "杖身",
+      "晶体主体"
+    ],
+    "attraction": [
+      "火焰/魔法",
+      "闪亮/晶体"
+    ],
+    "sources": {
+      "shape": [
+        "blaze_rod.png",
+        "diamond.png"
+      ],
+      "pattern": [
+        "blaze_rod.png"
+      ],
+      "colors": [
+        "blaze_rod.png",
+        "blaze_rod.png",
+        "blaze_rod.png",
+        "blaze_rod.png",
+        "blaze_rod.png",
+        "diamond.png",
+        "diamond.png",
+        "diamond.png",
+        "diamond.png",
+        "diamond.png",
+        "emerald.png",
+        "emerald.png",
+        "emerald.png",
+        "emerald.png",
+        "emerald.png"
+      ],
+      "parts": [
+        "blaze_rod.png",
+        "diamond.png"
+      ],
+      "attraction": [
+        "blaze_rod.png",
+        "diamond.png"
+      ]
+    },
+    "anchor_count": 3
+  },
+  "style_rules": {
+    "palette": [
+      "- `source`: 本组代表性物品共 8 张，调色板数范围 6-11，透明像素比例从 52% 到 73%。单张通常只保留主体颜色 + 少量亮/暗阶。"
+    ],
+    "light_dark": [
+      "- `source`: 对 8 个代表性物品做整图左上/右下象限平均亮度统计，8/8 张满足“左上平均亮度 > 右下平均亮度”，平均差 28.6。因此“左上高光 / 右下阴影”在本组样本中成立。",
+      "- `hypothesis`: 该规则是“代表性趋势”，并不是对所有原版物品的必然描述；生成新物品时仍应以锚点模板的逐像素文本为准。"
+    ],
+    "outline": [
+      "- `hypothesis`: 物品在透明背景上通常使用 1px 深色描边或深色接触阴影；本卡没有自动逐像素描边判定，应通过 `style_review.py` 的 `rule_review.outline_pass` 独立评审确认。",
+      "- `hypothesis`: 描边多为沿外轮廓的 1px 锯齿，不是均匀闭合黑框；工具头/把手接缝、宝石切面之间用深色像素分割。"
+    ],
+    "noise": [
+      "- `source`: 代表性物品的平均调色板数为 8.5（6-11），配合透明背景和 1px 色块抖动，说明原版 16x16 物品以“少量色阶 + 1px 噪点”为主。",
+      "- `hypothesis`: 噪点数量约占总像素的 10%%-30%%，避免模糊/渐变色带；具体比例需按锚点模板执行，本卡不作全局保证。"
+    ]
+  },
+  "few_shot": {
+    "asset": "stone_pickaxe.png",
+    "type": "item",
+    "form": "item",
+    "path": "style_cards/snippets/item_stone_pickaxe.txt",
+    "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n......XXXXX.....\n.....XXXXXXXXX..\n......XXXXXXXX..\n..........XXXX..\n.........XXXXXX.\n........XXX.XXX.\n.......XXX..XXX.\n......XXX...XXX.\n.....XXX....XXX.\n....XXX......X..\n...XXX..........\n..XXX...........\n..XX............\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n......+++++.....\n.....+=====+OO..\n......+###==O#..\n..........O==#..\n.........OO#==#.\n........OO#.#=#.\n.......OO#..#=#.\n......OO#...#=#.\n.....OO#....#=#.\n....OO#......#..\n...OO#..........\n..OO#...........\n..##............\n................\n```\n\n## Palette (hex)\n```\n 0: #494949\n 1: #9a9a9a\n 2: #898989\n 3: #7f7f7f\n 4: #493615\n 5: #684e1e\n 6: #181818\n 7: #896727\n 8: #281e0b\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  0  0  0  0 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  1  2  3  3  2  0  4  5 -1 -1\n-1 -1 -1 -1 -1 -1  0  6  6  6  3  3  7  8 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  4  2  3  6 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1  4  5  8  3  2  6 -1\n-1 -1 -1 -1 -1 -1 -1 -1  4  7  8 -1  6  3  6 -1\n-1 -1 -1 -1 -1 -1 -1  4  5  8 -1 -1  6  3  6 -1\n-1 -1 -1 -1 -1 -1  4  7  8 -1 -1 -1  6  2  6 -1\n-1 -1 -1 -1 -1  4  5  8 -1 -1 -1 -1  6  1  6 -1\n-1 -1 -1 -1  4  7  8 -1 -1 -1 -1 -1 -1  6 -1 -1\n-1 -1 -1  4  5  8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1  4  7  8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1  8  8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```"
+  },
+  "file_contract": {
+    "form": "item",
+    "modid": "mcmod",
+    "files": [
+      {
+        "path": "assets/mcmod/textures/item/alien_crystal_wand.png",
+        "kind": "texture",
+        "width": 16,
+        "height": 16,
+        "alpha": true,
+        "face": "sprite",
+        "note": "单张 16x16 透明背景物品贴图"
+      },
+      {
+        "path": "assets/mcmod/models/item/alien_crystal_wand.json",
+        "kind": "model",
+        "format": "item/generated",
+        "face": null,
+        "note": "item model，texture 指向 layer0"
+      }
+    ],
+    "templates": {
+      "assets/mcmod/models/item/alien_crystal_wand.json": {
+        "parent": "minecraft:item/generated",
+        "textures": {
+          "layer0": "mcmod:item/alien_crystal_wand"
+        }
+      }
+    },
+    "note": "文件路径按 Minecraft 资源包约定；templates 为空白/示例 JSON。"
+  },
+  "output_contract": {
+    "form": "item",
+    "faces": [
+      {
+        "face": "sprite",
+        "file": "assets/mcmod/textures/item/alien_crystal_wand.png",
+        "width": 16,
+        "height": 16,
+        "palette_placeholder": "#RRGGBB",
+        "grid_format": "共 16 行，每行 16 个整数；-1 表示透明，非负整数引用 PALETTE 索引。",
+        "seed_contract": null,
+        "seed_note": "格式骨架：不嵌入完整锚点 grid；输出必须由 LLM 新生成，不得复制参考贴图。"
+      }
+    ],
+    "text": "FORM=item\nFACES=1\n\n=== face: sprite ===\nFILE: assets/mcmod/textures/item/alien_crystal_wand.png\nW=16 H=16\n\nPALETTE\n# 占位说明：在此列出 LLM 自己生成的调色板，每行一个索引与 #RRGGBB\n# 例如：0: #AABBCC（仅格式示意，禁止复制参考贴图）\n\nINDEX GRID\n# 占位说明：共 16 行，每行 16 个整数；-1 表示透明，非负整数引用上面 PALETTE 的索引。\n# 格式示例（2x2 占位，仅示意行列规则；不得复制参考贴图，必须生成新形状/图案）：\n# -1  0\n#  1 -1",
+    "note": "声明每个 face 需要输出的像素块文本的格式骨架（W/H 模板 + PALETTE 占位 + index grid 行列规则）；不提供任何完整锚点 grid，实际像素内容必须由 LLM 新生成。"
+  },
+  "output_contract_note": "按 form 声明的像素块输出清单；实际 LLM 应逐 face 输出可被 text_to_texture.py 解析的文本块。",
+  "concept_card": {
+    "item_name": "异形水晶法杖 (Alien Crystal Wand)",
+    "description": "一根以法杖为语义骨架、顶端长着多根尖柱状异形水晶簇的 Minecraft 物品；水晶簇是顶部视觉主体，不是简单火焰棒。",
+    "parts": [
+      "rod 杖身",
+      "crystal_cluster 顶部明显水晶簇（多根尖柱/棱面）",
+      "handle 握柄/尾部"
+    ],
+    "face_regions": {
+      "sprite": "单张 16x16 透明背景：斜向杖身 + 顶端一组高约 4-7 像素的水晶尖柱簇（多根指向不同方向）；晶体青绿/水晶色但饱和度降低，有暗面和 1px 描边。"
+    },
+    "visual_goals": [
+      "sprite 顶部必须画出明显水晶簇：至少 3-5 根尖柱/棱面晶体，占据顶部 4-7 像素高，不能只是长条棒延伸；",
+      "sprite 杖身保持 2-3 像素宽斜向，但不要把整体画成 blaze_rod 的形状；顶部晶体簇是剪影重心；",
+      "sprite 晶体主色用低饱和青绿 #3E8F84/#2F6F68/#1F4E4A，亮面 #8FCEC4，暗面 #16403C；",
+      "sprite 晶体轮廓加 1px 深色描边 #10282A，避免荧光刺眼；",
+      "sprite 杖身/握柄使用琥珀/暗棕 #7A4A1E/#5A3413/#3E2613，与水晶形成自然边界；",
+      "sprite 保持透明背景，16x16 内不贴边、不出现方块外轮廓。"
+    ],
+    "minecraft_reference": "blaze_rod（仅借用物品尺度，不是形状锁）；diamond + emerald（晶体色相）；quartz（晶体棱面/暗部）",
+    "avoid": [
+      "不要复制原版 blaze_rod.png 的逐像素图案，也不要把它当成锁死形状；",
+      "不要画成普通木棍/火把/长条棒：顶部必须有明显、多根的异形水晶簇；",
+      "不要画成方块：保持物品透明剪影，不出现满铺背景；",
+      "不要用高饱和荧光青/绿：降低饱和度、加入暗部与 1px 描边。"
+    ],
+    "palette_scheme": {
+      "base": "#3E8F84",
+      "light": "#8FCEC4",
+      "dark": "#16403C",
+      "accent": "#C9A227",
+      "outline": "#10282A",
+      "border_note": "水晶外轮廓用 1px 深色描边 #10282A；杖身与水晶之间用暗棕/深绿自然分隔，不做均匀黑框。",
+      "saturation_note": "青绿/水晶色整体降低饱和度，避免高饱和荧光；亮部仅作局部 1px 提示。"
+    },
+    "shape_pattern": {
+      "silhouette": "斜向细杖 + 顶部明显水晶簇：顶部多根尖柱/棱面向不同方向生长，整体是一个‘法杖’语义剪影。",
+      "parts": [
+        "rod 杖身",
+        "crystal_cluster 顶部多根尖柱/棱面水晶",
+        "handle 握柄"
+      ],
+      "border": "晶体沿外轮廓 1px 深色 #10282A；杖身与水晶交界用暗色过渡。",
+      "shading": "左上亮部/右下暗部；每根晶体有亮面和暗面，避免平涂发光。",
+      "detail_pattern": "水晶棱面用小三角/菱形切面 + 1px 噪点；杖身用暗棕颗粒。",
+      "shape_lock_optional": true,
+      "part_pattern_flow": [
+        {
+          "part": "crystal_cluster 水晶簇",
+          "shape": "多根尖柱/棱面尖柱",
+          "pattern": "棱面 + 纵向高光带 + 两侧暗面",
+          "flow": "每根尖柱从尖端到底座都有一条纵向高光带，高光沿柱体轴向走；暗面位于柱体两侧，形成沿形状方向的明暗分界。"
+        },
+        {
+          "part": "rod 杖身",
+          "shape": "2-3px 宽斜向细杖",
+          "pattern": "暗棕颗粒 / 微弱魔法纹",
+          "flow": "颗粒与魔法纹沿杖身纵向流动，不脱离杖身轮廓，不形成横向孤立线条。"
+        },
+        {
+          "part": "handle 握柄",
+          "shape": "杖身下段加粗/深色段",
+          "pattern": "暗棕横向分段 + 颗粒",
+          "flow": "分段线沿握柄径向环绕，颗粒沿握柄纵向分布。"
+        }
+      ],
+      "integration_note": "先用形状确定结构（尖柱/杖身/握柄），再让棱面、高光带、颗粒纹样贴合每个部件的走向/边缘/明暗面；纹样不得脱离形状独立存在。"
+    },
+    "reference_nodes": [
+      {
+        "asset": "blaze_rod",
+        "role": "shape",
+        "reason": "仅参考物品尺度/细长剪影，不锁形状，也不复制像素。"
+      },
+      {
+        "asset": "diamond",
+        "role": "color",
+        "reason": "提供青绿/晶体色相与高光方向，但要降低饱和度。"
+      },
+      {
+        "asset": "emerald",
+        "role": "pattern",
+        "reason": "提供宝石棱面/切面质感与暗部参考。"
+      },
+      {
+        "asset": "quartz",
+        "role": "border",
+        "reason": "提供低饱和晶体暗部与自然描边参考。"
+      },
+      {
+        "asset": "stick",
+        "role": "material",
+        "reason": "法杖把手/杖身材质尺度参考（非硬性指标）。"
+      }
+    ],
+    "form": "item",
+    "query": "异形水晶法杖",
+    "source": "concept_grounder:offline_rule",
+    "method": "rule",
+    "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+    "retrieval_anchor_count": 3
+  },
+  "prompt": "# 任务说明\n请生成一个新的 Minecraft 像素资源，遵守 Minecraft 原版像素风格。\n\n- 资源名：alien_crystal_wand\n- 描述：异形水晶法杖\n- 形式：item\n- 尺寸：16x16\n\n# 概念理解卡片（先理解，再生成）\n\n- 名称：异形水晶法杖 (Alien Crystal Wand)\n- 描述：一根以法杖为语义骨架、顶端长着多根尖柱状异形水晶簇的 Minecraft 物品；水晶簇是顶部视觉主体，不是简单火焰棒。\n- 部件：rod 杖身；crystal_cluster 顶部明显水晶簇（多根尖柱/棱面）；handle 握柄/尾部\n- 各 face 画什么：\n  - sprite：单张 16x16 透明背景：斜向杖身 + 顶端一组高约 4-7 像素的水晶尖柱簇（多根指向不同方向）；晶体青绿/水晶色但饱和度降低，有暗面和 1px 描边。\n- 视觉目标：\n  - sprite 顶部必须画出明显水晶簇：至少 3-5 根尖柱/棱面晶体，占据顶部 4-7 像素高，不能只是长条棒延伸；\n  - sprite 杖身保持 2-3 像素宽斜向，但不要把整体画成 blaze_rod 的形状；顶部晶体簇是剪影重心；\n  - sprite 晶体主色用低饱和青绿 #3E8F84/#2F6F68/#1F4E4A，亮面 #8FCEC4，暗面 #16403C；\n  - sprite 晶体轮廓加 1px 深色描边 #10282A，避免荧光刺眼；\n  - sprite 杖身/握柄使用琥珀/暗棕 #7A4A1E/#5A3413/#3E2613，与水晶形成自然边界；\n  - sprite 保持透明背景，16x16 内不贴边、不出现方块外轮廓。\n- 原版参考：blaze_rod（仅借用物品尺度，不是形状锁）；diamond + emerald（晶体色相）；quartz（晶体棱面/暗部）\n- 避免：不要复制原版 blaze_rod.png 的逐像素图案，也不要把它当成锁死形状；不要画成普通木棍/火把/长条棒：顶部必须有明显、多根的异形水晶簇；不要画成方块：保持物品透明剪影，不出现满铺背景；不要用高饱和荧光青/绿：降低饱和度、加入暗部与 1px 描边\n\n> 输出顺序要求：你必须先用自己的话描述你理解的这个物体（至少包含它是什么、由哪些部件组成、每个 face 画什么），再输出下面的各 face 纹理。禁止跳过理解直接画纹理。\n\n\n# 设计方案（先理解 → 配色 → 形状）\n\n> 参考素材只是设计参考节点，不是硬性指标，更不是必须锁形状。\n> 不要复制参考贴图的逐像素内容；优先保证“这个东西是什么”的语义可辨认。\n> 允许 3~8 个参考节点，不要求只参考 2 个；每个节点的作用可以是 shape/color/pattern/border/material。\n> 形状-纹样一体：先用形状确定结构，再让纹样贴合形状的走向/边缘/明暗面；纹样不得脱离形状独立存在。\n\n### 配色方案 palette_scheme\n- 主色 base：#3E8F84\n- 亮部 light：#8FCEC4\n- 暗部 dark：#16403C\n- 强调色 accent：#C9A227\n- 描边色 outline：#10282A\n- 自然边框说明：水晶外轮廓用 1px 深色描边 #10282A；杖身与水晶之间用暗棕/深绿自然分隔，不做均匀黑框。\n- 饱和度说明：青绿/水晶色整体降低饱和度，避免高饱和荧光；亮部仅作局部 1px 提示。\n\n### 形状图样 shape_pattern\n- 剪影 silhouette：斜向细杖 + 顶部明显水晶簇：顶部多根尖柱/棱面向不同方向生长，整体是一个‘法杖’语义剪影。\n- 部件 parts：rod 杖身；crystal_cluster 顶部多根尖柱/棱面水晶；handle 握柄\n- 描边 border：晶体沿外轮廓 1px 深色 #10282A；杖身与水晶交界用暗色过渡。\n- 明暗 shading：左上亮部/右下暗部；每根晶体有亮面和暗面，避免平涂发光。\n- 细节图案 detail_pattern：水晶棱面用小三角/菱形切面 + 1px 噪点；杖身用暗棕颗粒。\n- 是否锁形状 shape_lock_optional：True\n- 形状-纹样联动 part_pattern_flow：\n  - [crystal_cluster 水晶簇] 形状：多根尖柱/棱面尖柱 | 纹样：棱面 + 纵向高光带 + 两侧暗面 | 走向：每根尖柱从尖端到底座都有一条纵向高光带，高光沿柱体轴向走；暗面位于柱体两侧，形成沿形状方向的明暗分界。\n  - [rod 杖身] 形状：2-3px 宽斜向细杖 | 纹样：暗棕颗粒 / 微弱魔法纹 | 走向：颗粒与魔法纹沿杖身纵向流动，不脱离杖身轮廓，不形成横向孤立线条。\n  - [handle 握柄] 形状：杖身下段加粗/深色段 | 纹样：暗棕横向分段 + 颗粒 | 走向：分段线沿握柄径向环绕，颗粒沿握柄纵向分布。\n- 联动说明 integration_note：先用形状确定结构（尖柱/杖身/握柄），再让棱面、高光带、颗粒纹样贴合每个部件的走向/边缘/明暗面；纹样不得脱离形状独立存在。\n\n### 参考节点 reference_nodes（3~8 个）\n- [1] blaze_rod | role=shape | 仅参考物品尺度/细长剪影，不锁形状，也不复制像素。\n- [2] diamond | role=color | 提供青绿/晶体色相与高光方向，但要降低饱和度。\n- [3] emerald | role=pattern | 提供宝石棱面/切面质感与暗部参考。\n- [4] quartz | role=border | 提供低饱和晶体暗部与自然描边参考。\n- [5] stick | role=material | 法杖把手/杖身材质尺度参考（非硬性指标）。\n\n\n# 检索特征摘要\n\n从原版锚点检索到以下特征，必须体现在生成结果中：\n\n形状：长条/杖；菱形/晶体\n图案：无明显图案\n颜色：#B9931C #B36B19 #AE3C00 #BF5A00 #FFF32D #145E53 #4AEDD9 #20C5B5 #A1FBE8 #11727A #17DD62 #005300 #002D00 #00AA2C #AFFDCD\n部位：杖身；晶体主体\n吸引点：火焰/魔法；闪亮/晶体\n\n# 锚点参考（compact 文本）\n\n## blaze_rod.png (shape)\n- 路径：raw/item/blaze_rod.png\n- 类别：item\n- 尺寸：16x16\n- 形状：长条/杖\n- 图案：无明显图案\n- 部位：杖身\n- 吸引点：火焰/魔法\n- 颜色：#B9931C #B36B19 #AE3C00 #BF5A00 #FFF32D\n\n## Silhouette (X=opaque, .=transparent)\n```\n................\n............XX..\n...........XXXX.\n..........XXXX..\n.........XXXX...\n........XXXX....\n.......XXXX.....\n......XXXX......\n.....XXXX.......\n....XXXX........\n...XXXX.........\n..XXXX..........\n.XXXX...........\n.XXX............\n.XX.............\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n............OO..\n...........OYYO.\n..........OYYO..\n.........OYYO...\n........OYYO....\n.......OYYO.....\n......OYYO......\n.....OYYO.......\n....OYYO........\n...OYYO.........\n..OYYO..........\n.OYYO...........\n.OYO............\n.OO.............\n................\n```\n\n## Palette (hex)\n```\n 0: #b36b19\n 1: #9b5607\n 2: #a86d1b\n 3: #fff32d\n 4: #b9931c\n 5: #953300\n 6: #fff87e\n 7: #ae3c00\n 8: #d8ae26\n 9: #bf5a00\n10: #ffc100\n11: #b15b10\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  2  3  4  5 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  6  4  7 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1  2  6  8  9 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1  0  3  4  9 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  2  3  4  9 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  2  6  4  9 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  3  4  7 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0 10  4  7 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1  2  3  4  7 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1  0 10  4  7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 11  3  4  9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1  0  8  9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1  5  7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```\n\n## diamond.png (color)\n- 路径：raw/item/diamond.png\n- 类别：item\n- 尺寸：16x16\n- 形状：菱形/晶体\n- 图案：无明显图案\n- 部位：晶体主体\n- 吸引点：闪亮/晶体\n- 颜色：#145E53 #4AEDD9 #20C5B5 #A1FBE8 #11727A\n\n## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n......XXXX......\n.....XXXXXX.....\n....XXXXXXXX....\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n..XXXXXXXXXXXX..\n..XXXXXXXXXXXX..\n..XXXXXXXXXXXX..\n..XXXXXXXXXXXX..\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n....XXXXXXXX....\n.....XXXXXX.....\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n......CCCC......\n.....C@@@CC.....\n....C@CCCCCC....\n...C@CCCCCCCC...\n...C@C@C@CCCC...\n..C@C@CCCCCCCC..\n..C@CCCCCCCCCC..\n..C@@CCCCCCCCC..\n..CCCCCCCCCCCC..\n...CCCCCCCCCC...\n...CCCCCCCCCC...\n....CCCCCCCC....\n.....CCCCCC.....\n................\n```\n\n## Palette (hex)\n```\n 0: #11727a\n 1: #ffffff\n 2: #d5fff6\n 3: #4aedd9\n 4: #a1fbe8\n 5: #20c5b5\n 6: #145e53\n 7: #1aaaa7\n 8: #1c919a\n 9: #2ce0d8\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  0  0  0 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  1  1  1  2  0 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0  1  3  3  4  2  5  6 -1 -1 -1 -1\n-1 -1 -1  0  1  3  4  4  2  4  3  5  6 -1 -1 -1\n-1 -1 -1  0  1  3  1  2  1  2  3  3  6 -1 -1 -1\n-1 -1  0  1  3  1  3  3  4  4  7  5  7  6 -1 -1\n-1 -1  0  1  3  2  3  4  4  4  8  5  7  6 -1 -1\n-1 -1  0  1  1  5  4  4  4  3  8  7  7  6 -1 -1\n-1 -1  0  2  3  3  7  7  7  7  5  5  8  6 -1 -1\n-1 -1 -1  6  3  7  5  5  5  5  7  5  6 -1 -1 -1\n-1 -1 -1  6  9  7  5  5  5  5  7  4  6 -1 -1 -1\n-1 -1 -1 -1  6  8  3  3  4  4  5  6 -1 -1 -1 -1\n-1 -1 -1 -1 -1  6  6  6  6  6  6 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```\n\n## emerald.png (color)\n- 路径：raw/item/emerald.png\n- 类别：item\n- 尺寸：16x16\n- 形状：菱形/晶体\n- 图案：无明显图案\n- 部位：晶体主体\n- 吸引点：闪亮/晶体\n- 颜色：#17DD62 #005300 #002D00 #00AA2C #AFFDCD\n\n## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n......XXXX......\n.....XXXXXX.....\n....XXXXXXXX....\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n....XXXXXXXX....\n.....XXXXXX.....\n......XXXX......\n................\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n......GGGG......\n.....GGGGGG.....\n....GGGGGGG#....\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n...GGGGGGGGG#...\n....GGGGGGG#....\n.....GGGGG#.....\n......####......\n................\n................\n```\n\n## Palette (hex)\n```\n 0: #005300\n 1: #dbffeb\n 2: #41f384\n 3: #17dd62\n 4: #affdcd\n 5: #00aa2c\n 6: #002d00\n 7: #009529\n 8: #82f6ad\n 9: #007b18\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  0  0  0 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  1  2  2  3  0 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0  1  4  2  2  5  3  6 -1 -1 -1 -1\n-1 -1 -1  0  1  4  4  2  2  5  5  3  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  4  4  5  7  5  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  4  8  5  9  5  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  4  8  5  9  5  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  8  8  5  9  3  6 -1 -1 -1\n-1 -1 -1  0  4  3  3  8  2  9  7  3  6 -1 -1 -1\n-1 -1 -1 -1  0  5  7  9  9  7  8  6 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  5  7  9  3  6 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  6  6  6  6 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```\n\n> 注意：以下锚点 compact 文本仅供风格/特征参考；不得复制其中的 PALETTE + index grid，必须生成新形状/图案。\n\n# 风格规则\n\n## 调色板\n- `source`: 本组代表性物品共 8 张，调色板数范围 6-11，透明像素比例从 52% 到 73%。单张通常只保留主体颜色 + 少量亮/暗阶。\n\n## 明暗规则\n- `source`: 对 8 个代表性物品做整图左上/右下象限平均亮度统计，8/8 张满足“左上平均亮度 > 右下平均亮度”，平均差 28.6。因此“左上高光 / 右下阴影”在本组样本中成立。\n- `hypothesis`: 该规则是“代表性趋势”，并不是对所有原版物品的必然描述；生成新物品时仍应以锚点模板的逐像素文本为准。\n\n## 描边规则\n- `hypothesis`: 物品在透明背景上通常使用 1px 深色描边或深色接触阴影；本卡没有自动逐像素描边判定，应通过 `style_review.py` 的 `rule_review.outline_pass` 独立评审确认。\n- `hypothesis`: 描边多为沿外轮廓的 1px 锯齿，不是均匀闭合黑框；工具头/把手接缝、宝石切面之间用深色像素分割。\n\n## 噪点 / 材质规则\n- `source`: 代表性物品的平均调色板数为 8.5（6-11），配合透明背景和 1px 色块抖动，说明原版 16x16 物品以“少量色阶 + 1px 噪点”为主。\n- `hypothesis`: 噪点数量约占总像素的 10%%-30%%，避免模糊/渐变色带；具体比例需按锚点模板执行，本卡不作全局保证。\n\n# Few-shot：同类原版 compact 片段\n\n- 示例资产：stone_pickaxe.png\n- 类型：item\n- 来源：style_cards/snippets/item_stone_pickaxe.txt\n\n## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n......XXXXX.....\n.....XXXXXXXXX..\n......XXXXXXXX..\n..........XXXX..\n.........XXXXXX.\n........XXX.XXX.\n.......XXX..XXX.\n......XXX...XXX.\n.....XXX....XXX.\n....XXX......X..\n...XXX..........\n..XXX...........\n..XX............\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n......+++++.....\n.....+=====+OO..\n......+###==O#..\n..........O==#..\n.........OO#==#.\n........OO#.#=#.\n.......OO#..#=#.\n......OO#...#=#.\n.....OO#....#=#.\n....OO#......#..\n...OO#..........\n..OO#...........\n..##............\n................\n```\n\n## Palette (hex)\n```\n 0: #494949\n 1: #9a9a9a\n 2: #898989\n 3: #7f7f7f\n 4: #493615\n 5: #684e1e\n 6: #181818\n 7: #896727\n 8: #281e0b\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  0  0  0  0 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  1  2  3  3  2  0  4  5 -1 -1\n-1 -1 -1 -1 -1 -1  0  6  6  6  3  3  7  8 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  4  2  3  6 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1  4  5  8  3  2  6 -1\n-1 -1 -1 -1 -1 -1 -1 -1  4  7  8 -1  6  3  6 -1\n-1 -1 -1 -1 -1 -1 -1  4  5  8 -1 -1  6  3  6 -1\n-1 -1 -1 -1 -1 -1  4  7  8 -1 -1 -1  6  2  6 -1\n-1 -1 -1 -1 -1  4  5  8 -1 -1 -1 -1  6  1  6 -1\n-1 -1 -1 -1  4  7  8 -1 -1 -1 -1 -1 -1  6 -1 -1\n-1 -1 -1  4  5  8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1  4  7  8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1  8  8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```\n\n> 注意：few-shot 仅为格式/风格示意；不得复制参考贴图，必须生成新形状/图案。\n\n# 输出文件清单\n\n- assets/mcmod/textures/item/alien_crystal_wand.png\n- assets/mcmod/models/item/alien_crystal_wand.json\n\n空白/示例 JSON 模板：\n```json\n{\n  \"parent\": \"minecraft:item/generated\",\n  \"textures\": {\n    \"layer0\": \"mcmod:item/alien_crystal_wand\"\n  }\n}\n```\n\n# 输出契约\n\nFORM=item\nFACES=1\n\n=== face: sprite ===\nFILE: assets/mcmod/textures/item/alien_crystal_wand.png\nW=16 H=16\n\nPALETTE\n# 占位说明：在此列出 LLM 自己生成的调色板，每行一个索引与 #RRGGBB\n# 例如：0: #AABBCC（仅格式示意，禁止复制参考贴图）\n\nINDEX GRID\n# 占位说明：共 16 行，每行 16 个整数；-1 表示透明，非负整数引用上面 PALETTE 的索引。\n# 格式示例（2x2 占位，仅示意行列规则；不得复制参考贴图，必须生成新形状/图案）：\n# -1  0\n#  1 -1\n\n# 严格输出要求\n\n- 每个 face 只输出一个可被 text_to_texture.py 解析的文本块（W/H + PALETTE + index grid）。\n- 多 face 时按 output_contract 的 face 顺序逐一输出，禁止混在一个块里。\n- 透明像素必须使用 -1。\n- 禁止输出解释性文字、Markdown 代码围栏、JSON 或额外标题。\n- 必须生成新的形状/图案/调色板：不得复制任何参考贴图（包括锚点 compact 文本与 few-shot 的 index grid）。\n"
+}

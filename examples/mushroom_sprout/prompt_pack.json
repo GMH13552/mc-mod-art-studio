@@ -1,0 +1,480 @@
+{
+  "name": "mushroom_sprout",
+  "query": "蘑菇幼苗",
+  "form": "cross",
+  "form_note": "block_multi：顶/侧/底三面 + model + blockstate",
+  "form_source": "auto_top_anchor",
+  "type": "block",
+  "size": "16x16",
+  "width": 16,
+  "height": 16,
+  "fusion": "retrieval features fusion",
+  "retrieval_method": "rule",
+  "retrieval_method_note": "内置中文别名+关键词规则，未调用外部 LLM 子代理；离线可复现。",
+  "anchors": [
+    {
+      "path": "raw/block/brown_mushroom.png",
+      "name": "brown_mushroom.png",
+      "category": "block",
+      "role": "color",
+      "features": {
+        "shape": "蘑菇伞",
+        "pattern": "褐色伞盖",
+        "colors": [
+          "#CC9978",
+          "#916D55",
+          "#725643",
+          "#6A4E3B",
+          "#B5947D"
+        ],
+        "parts": [
+          "菌盖",
+          "菌柄"
+        ],
+        "attraction": [
+          "大地色"
+        ]
+      },
+      "score": 3,
+      "matched_terms": [
+        "mushroom"
+      ],
+      "palette_count": 7,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n................\n................\n................\n................\n................\n................\n......XXXX......\n.....XXXXXX.....\n....XXXXXXXX....\n....XXXXXXXX....\n.......XX.......\n.......XX.......\n.......XX.......\n.......XX.......\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n................\n................\n................\n................\n................\n................\n......OOOO......\n.....OOOOOO.....\n....OOOOOOOO....\n....OOOOOOOO....\n.......OO.......\n.......OO.......\n.......OO.......\n.......OO.......\n```\n\n## Palette (hex)\n```\n 0: #cc9978\n 1: #916d55\n 2: #725643\n 3: #6a4e3b\n 4: #65554a\n 5: #4c3d33\n 6: #b5947d\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  0  0  1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  0  0  0  1  2 -1 -1 -1 -1 -1\n-1 -1 -1 -1  1  0  0  1  1  1  1  2 -1 -1 -1 -1\n-1 -1 -1 -1  3  1  2  3  3  2  2  3 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  4  5 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  6  4 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0  6 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0  6 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #cc9978",
+        " 1: #916d55",
+        " 2: #725643",
+        " 3: #6a4e3b",
+        " 4: #65554a",
+        " 5: #4c3d33",
+        " 6: #b5947d"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  0  0  0  1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1  0  0  0  0  1  2 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1  1  0  0  1  1  1  1  2 -1 -1 -1 -1",
+        "-1 -1 -1 -1  3  1  2  3  3  2  2  3 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1  4  5 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1  6  4 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1  0  6 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1  0  6 -1 -1 -1 -1 -1 -1 -1"
+      ]
+    },
+    {
+      "path": "raw/block/brown_mushroom_block.png",
+      "name": "brown_mushroom_block.png",
+      "category": "block",
+      "role": "pattern",
+      "features": {
+        "shape": "蘑菇方块",
+        "pattern": "菌盖斑点/菌褶",
+        "colors": [
+          "#977251",
+          "#946D52",
+          "#8D6850",
+          "#9C795A"
+        ],
+        "parts": [
+          "菌盖",
+          "菌柄"
+        ],
+        "attraction": [
+          "大地色"
+        ]
+      },
+      "score": 3,
+      "matched_terms": [
+        "mushroom"
+      ],
+      "palette_count": 4,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\n```\n\n## Palette (hex)\n```\n 0: #946d52\n 1: #977251\n 2: #8d6850\n 3: #9c795a\n```\n\n## Index grid (-1 = transparent)\n```\n 0  1  2  0  1  1  0  1  0  1  0  1  0  1  1  1\n 0  2  0  0  1  0  0  1  1  1  2  1  1  1  3  1\n 0  1  1  1  1  2  0  1  1  0  0  2  1  0  1  1\n 0  0  1  1  1  0  1  1  1  1  0  0  1  1  1  1\n 0  1  1  1  3  1  1  1  1  1  1  0  0  1  1  2\n 0  2  0  1  1  1  1  1  1  1  0  3  0  1  1  0\n 0  0  1  1  1  1  1  1  0  1  1  1  1  2  1  1\n 1  0  1  1  1  3  1  0  2  1  0  1  1  0  2  1\n 1  0  1  1  1  1  1  2  0  1  0  1  1  1  0  1\n 1  1  1  1  1  0  1  2  1  1  0  0  1  0  1  1\n 0  1  1  1  0  2  1  0  1  0  1  0  2  1  1  1\n 0  1  0  3  1  0  0  0  0  0  2  0  1  0  1  1\n 2  1  1  1  0  0  1  1  0  1  2  2  1  1  0  1\n 2  0  1  0  0  0  1  1  1  1  1  2  1  1  0  1\n 1  0  0  2  0  1  1  1  3  1  0  2  1  0  0  1\n 1  1  0  2  1  1  3  0  1  1  1  1  1  1  0  0\n```",
+      "seed_palette": [
+        " 0: #946d52",
+        " 1: #977251",
+        " 2: #8d6850",
+        " 3: #9c795a"
+      ],
+      "seed_index": [
+        " 0  1  2  0  1  1  0  1  0  1  0  1  0  1  1  1",
+        " 0  2  0  0  1  0  0  1  1  1  2  1  1  1  3  1",
+        " 0  1  1  1  1  2  0  1  1  0  0  2  1  0  1  1",
+        " 0  0  1  1  1  0  1  1  1  1  0  0  1  1  1  1",
+        " 0  1  1  1  3  1  1  1  1  1  1  0  0  1  1  2",
+        " 0  2  0  1  1  1  1  1  1  1  0  3  0  1  1  0",
+        " 0  0  1  1  1  1  1  1  0  1  1  1  1  2  1  1",
+        " 1  0  1  1  1  3  1  0  2  1  0  1  1  0  2  1",
+        " 1  0  1  1  1  1  1  2  0  1  0  1  1  1  0  1",
+        " 1  1  1  1  1  0  1  2  1  1  0  0  1  0  1  1",
+        " 0  1  1  1  0  2  1  0  1  0  1  0  2  1  1  1",
+        " 0  1  0  3  1  0  0  0  0  0  2  0  1  0  1  1",
+        " 2  1  1  1  0  0  1  1  0  1  2  2  1  1  0  1",
+        " 2  0  1  0  0  0  1  1  1  1  1  2  1  1  0  1",
+        " 1  0  0  2  0  1  1  1  3  1  0  2  1  0  0  1",
+        " 1  1  0  2  1  1  3  0  1  1  1  1  1  1  0  0"
+      ]
+    },
+    {
+      "path": "raw/entity/cow/red_mooshroom.png",
+      "name": "red_mooshroom.png",
+      "category": "entity",
+      "role": "part",
+      "features": {
+        "shape": "实体UV/生物剪影",
+        "pattern": "无明显图案",
+        "colors": [
+          "#A00F10",
+          "#A81012",
+          "#940E0F",
+          "#B3B3B3",
+          "#A1A1A1"
+        ],
+        "parts": [
+          "头",
+          "身体",
+          "腿/脚"
+        ],
+        "attraction": []
+      },
+      "score": 3,
+      "matched_terms": [
+        "mooshroom"
+      ],
+      "palette_count": 26,
+      "size": "64x32",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n......XXXXXXXXXXXXXXXX.XX............................XXXXXXXXXXX\n......XXXXXXXXXXXXXXXXXXXX..........................XXXXXX......\n......XXXXXXXXXXXXXXXXXXXX..........................XXXXXX......\n......XXXXXXXXXXXXXXXXXXXX..........................XXXXXX......\n......XXXXXXXXXXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX......\n......XXXXXXXXXXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\n..................XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n..................XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n....XXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n....XXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n....XXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n....XXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n......RRRR==RRRRRRRRRR.++............................RRRRRRRRRRR\n......RRRR==RRRRRRRRRR++++..........................RRRRRR......\n......RRRR==RRRRRRRRRR++++..........................RRRRRR......\n......RRR===RRRRRRRRRR++++..........................RRRRRR......\n......RR======RRRRRRRR......========RRRR==========RRRRRRRR......\n......RR======RRRRRRRR......=====RRRRRRR==========RRRRRRRR......\nRRRRRRRRR====RRR==RRRRR==RRR====RRRRRRRR==========RRRRRRRR......\nRRRRRRRRR===RRRRRR==RRR==RRR===RRRRRRRRR==========RR............\nRRRRRR##R==R##RRRR==RRRR=RRR==RRRRRRRR===========RRR............\nRRRRRR##R=RR##RRRRRRRRRRRRRRRRRRRRRRR=======RR===RRR............\nRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR====RRRRRRRRRRRR............\nRRRRRRRR@@@@RRRRRRRRRRRRRRRRRRRRRRR=====RRRRRRRRRRRR............\nRRRRRRR@#++#@RRRRRRRRRRRRRRRRRRRRRR=====RRRRRRRRRRRR............\nRRRRRRR=++++@RRRRRRRRRRRRRRRRRRRRRR=====RRRRRRRRRRRR............\n..................RR========RRRRRRRRRRRRRRRR==RRR=RRR=======RR..\n..................RR========RRRRRRRRRRRRRRRRRRRRRRRRR=======RR..\n....==RR#++#......RRRRRR===RRRRRRRRRRRRRRRRRRRRRRRRRR=======RR..\n....=RRR#++#......RRRRRRRRRRRRRRRRRRRRR==RRRRRRRRRRRRR======RR..\n....RRRR#++#......RRRRRRRRRRRRRRRRRRRR====RRRRRRRRRRRR======RR..\n....RRRR####......RRRRRRRRRRRRRRRRRRR======RRRRRRR==RR======RR..\nRRRRRRRRRRRRRRRR..RRRRRRRRRR===RRRRR=======RRRRRRR===R======RR..\nRRRRRRR==RRRRRRR..RRRRRRRRRR=====RRRR=======RR==============RR..\nRRRRRRR==RRRRRRR..RRRRRRRR======RRRRR================RR=====RR..\nRRRRRRR==RRRRRRR..RRRRRR=======RRRRRR=======RR=======RR=====RR..\nRRRRRRR==RRRRRRR..RRRRRR====RRRRRRRRRR===R==RRRRR===RRRR===RRR..\nRR==RRR==RRRRRRR..RRRRRR===RRRRRRRRRRRRRRR==RRRRR===RRRRRR=RRR..\nRRR=RRRRRRRRRR==..RRRRRR==RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..\nRRRRRRRRRRRRR===..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..\nRRRRRRRRRRRRR==R..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR=..\nRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR=..\nRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR========..\n#############++#..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR==========..\n```\n\n## Palette (hex)\n```\n 0: #a00f10\n 1: #a81012\n 2: #a1a1a1\n 3: #b3b3b3\n 4: #940e0f\n 5: #545454\n 6: #333333\n 7: #f7afaf\n 8: #565656\n 9: #707070\n10: #ce9191\n11: #444444\n12: #966a6a\n13: #818181\n14: #fdb3b3\n15: #946868\n16: #b78686\n17: #d39696\n18: #d49797\n19: #000000\n20: #dcdcdc\n21: #606060\n22: #c4c4c4\n23: #494949\n24: #171414\n25: #666666\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1  0  1  1  1  2  3  1  0  0  0  4  4  0  0  0  0 -1  5  6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  7  7  7  7  7  7  7  7  7  7  7\n-1 -1 -1 -1 -1 -1  1  1  1  1  3  3  1  1  0  4  4  4  4  4  4  0  8  9  8  8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 10  7  7  7 10 10 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  1  1  1  0  3  2  1  1  0  4  4  4  4  4  4  4 11 11 11 11 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  7 12  7  7 12 10 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  1  1  1  2  3 13  0  1  4  4  4  4  4  4  4  4  6  6  6  6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  7  7  7  7 10  7 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  1  1  2  3  2 13  3  2  4  4  4  4  4  4  4  0 -1 -1 -1 -1 -1 -1 13 13  2  3  3  2  3  3  0  0  4  4  3  2  3  3  3  2  3  3  3  2  0  0  7  7  7 10 10  7 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  1  2  3  3  2 13  2  0  0  0  0  4  4  0  0 -1 -1 -1 -1 -1 -1 13  2  3  3  3  0  0  1  1  1  0  4  3  3  3  3  2  3  2  3  3  3  1  0 10 12 10 10 12  7 -1 -1 -1 -1 -1 -1\n 0  1  1  1  1  0  0  1  1  3  3  3  2  1  0  1 13  2  1  1  0  1  1  2 13  0  1  0  2  3  3  2  0  0  1  1  1  0  0  0  2  2  3  3  3  3  2  2  3  3  1  1 10 10  7  7  7 10 -1 -1 -1 -1 -1 -1\n 1  0 14 10 10  0  0  1  1  3  3  3  1  0  0 10 15 16  3  3  0  1  1  3  3  0  1  0  3  2  3  0  1  0  1  1  1  1  1  0  3  2  2  3  3  3  2 13  2  2  1  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 1  4  4 17 18  0 19 19  1  2  3  0 19 19  0 18 18  0  3  2  0  1  1  0  3  0  1  0  3  2  0  0  1  1  1  0  1  1  3  3  3  3 13  2  2  3  3  3 13  1  1  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 1  4  4  4 18  0 19 19  1  2  1  1 19 19  0 18  0  1  1  1  0  1  1  1  1  1  1  0  0  0  0  1  1  1  1  0  0  2  3  3  2  3  2 13  1  1  3  2 13  1  1  0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 1  1  4  4  0  1  1  1  1  1  1  1  1  1  1  1  1  1  1  0  0  0  1  1  1  1  1  0  1  0  1  1  1  1  1  0  3  3  3  2  1  1  1  0  0  1  1  0  0  1  0  4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 0  1  1  0  1  1  0  1 20 20 20 20  0  1  0  1  1  1  1  4  0  0  1  1  1  1  0  0  0  1  0  1  1  1  1 13  2  3  3 13  4  0  0  0  4  4  4  4  0  0  0  4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 4  0  1  1  1  1  0 20 19 21 21 19 20  0  0  1  1  0  4  4  4  0  0  0  1  0  0  4  4  0  1  1  1  1  0  3  3  2  3  3  4  4  0  4  4  4  4  4  4  0  4  4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 4  4  0  0  1  1  0 22 21 23 23 21 20  0  0  1  0  0  4  4  4  4  0  0  0  0  4  4  4  4  0  0  1  1  0  2  3 13  3  2  4  4  4  7  7  7  7  7  7  4  4  0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  2  3  3  2 13 13 13 13  4  4  4  4  0  0  0  4  4  4  4  4  0  0  1  0 13  2  1  1  0 13  4  4  0 13 13  2  3  3  2 13  4  4 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  2  3  3  3  2 13 13 13  4  4  0  0  0  0  0  0  0  4  4  4  0  0  1  1  0  0  1  1  1  0  4  0  0 13  2  2  3  3  3 13  4  4 -1 -1\n-1 -1 -1 -1  3  2  1  0 24 25 25 24 -1 -1 -1 -1 -1 -1  0  0  1  1  0  0  3  2 13  4  4  4  4  0  0  0  0  0  0  4  0  4  0  0  1  1  1  0  1  1  1  0  4  0  1 13  2  3  3  3  3  3  0  4 -1 -1\n-1 -1 -1 -1  2  1  1  1 24 25 25 24 -1 -1 -1 -1 -1 -1  0  0  1  1  1  1  0  0  4  4  4  0  4  0  0  0  0  0  0  0  0  2  3  0  0  1  1  1  1  1  0  1  0  1  0  1 13  3  3  3  3  2  0  4 -1 -1\n-1 -1 -1 -1  0  1  1  0 24 25 25 24 -1 -1 -1 -1 -1 -1  0  1  1  1  1  0  0  0  0  4  4  0  0  0  0  0  0  0  0  0 13  2  2 13  0  1  1  1  1  1  1  1  0  1  1  1 13  2  3  3  3 13  1  0 -1 -1\n-1 -1 -1 -1  0  0  0  0 24 24 24 24 -1 -1 -1 -1 -1 -1  0  1  1  1  0  1  1  0  0  4  0  0  0  0  0  0  0  0  0 13 13 13 13  3  3  1  0  1  1  1  1  1  3  3  1  1  2  3  3  2  2  2  1  0 -1 -1\n 0  1  0  0  0  1  0  0  0  0  0  0  0  1  1  0 -1 -1  1  0  1  1  1  1  1  0  0  0  2 13 13  0  0  0  0  0 13 13 13 13  2  3  3  0  1  1  1  1  1  1  2  3  2  1  3  3  3  3  2  2  1  1 -1 -1\n 0  1  0  1  1  1  0  2  3  0  1  1  1  0  1  0 -1 -1  1  1  1  1  1  0  1  1  0  0  2 13 13 13 13  0  0  0  0 13 13 13  2  2  2  3  0  1  2  3  3  2  3  3  2 13  2  3  3  3  3  2  0  1 -1 -1\n 1  1  1  0  1  1  1  3  3  1  0  1  1  1  1  1 -1 -1  1  1  1  1  1  0  0  1  2  3 13  2 13 13  0  0  4  0  0 13 13 13  2  2  3  3  2  2  3  3  3  3  3  2 13  1  1  2  3  3  2 13  1  1 -1 -1\n 1  0  1  1  1  1  1  3  3  1  1  1  1  1  1  1 -1 -1  1  1  1  1  1  1  2  3  3  3 13 13 13  0  0  4  4  0  0 13 13 13 13  2  3  3  1  1  2  3  2  2 13  3 13  1  1 13  3  3 13 13  1  1 -1 -1\n 1  1  0  0  1  1  1  3  2  1  1  0  1  1  0  1 -1 -1  1  1  1  1  1  1  3  3  2 13  0  0  0  0  4  4  4  4  0  0 13 13  2  0  2  3  1  1  0  1  1  3  3  3  1  1  1  1 13  2 13  0  1  1 -1 -1\n 0  1  2  3  1  1  0  2 13  0  1  0  0  1  1  0 -1 -1  0  1  1  1  1  0  3  3  2  0  0  0  0  4  4  4  4  4  4  0  0  0  4  0 13  2  1  1  1  1  1  3  3  2  1  1  1  1  1  1 13  0  1  1 -1 -1\n 0  0  0  2  0  1  0  0  0  0  0  0  0  0  3  3 -1 -1  0  0  1  1  1  0  2  2  0  4  0  0  0 10  7  7  7 10 10  4  0  0  4  0  0  1  1  1  1  1  1  1  0  1  1  0  1  1  1  1  1  1  1  0 -1 -1\n 0  4  0  0  0  0  4  0  0  0  0  4  4  3  2 13 -1 -1  4  1  1  1  1  1  0  0  0  4  0  4  4  7 12  7  7 12 10  4  0  0  4  0  0  1  0  1  1  1  1  0  0  1  0  1  1  1  1  0  1  1  0  0 -1 -1\n 4  4  4  0  0  0  4  4  0  4  0  4  0  2  2  0 -1 -1  4  1  0  1  1  1  0  0  0  4  4  4  4  7  7  7  7 10  7  4  4  0  4  4  0  0  0  0  1  1  0  4  0  0  1  1  1  1  0  0  1  1  0  2 -1 -1\n 4  0  4  4  0  4  4  4  0  4  4  4  4  1  0  4 -1 -1  4  0  1  1  1  0  1  0  4  4  4  4  4  7  7  7 10 10  7  4  4  4  4  4  0  0  0  1  1  1  0  4  4  0  1  0  0  0  0  0  0  0  4  3 -1 -1\n 0  0  0  4  4  4  0  0  4  4  4  0  0  1  1  0 -1 -1  4  4  0  1  1  1  0  4  4  4  4  4  4 10 12 10 10 12  7  4  4  4  4  4  4  0  0  0  0  0  4  4  4  0  0  1  2  3  3  3  3  2 13 13 -1 -1\n24 24 24 24 24 24 24 24 24 24 24 24 24 25 25 24 -1 -1  4  4  4  4  4  4  4  4  4  4  4  4  4 10 10  7  7  7 10  4  4  4  4  4  4  4  4  4  4  4  4  4  4  4 13  2  3  3  3  3  2 13 13 13 -1 -1\n```",
+      "seed_palette": [
+        " 0: #a00f10",
+        " 1: #a81012",
+        " 2: #a1a1a1",
+        " 3: #b3b3b3",
+        " 4: #940e0f",
+        " 5: #545454",
+        " 6: #333333",
+        " 7: #f7afaf",
+        " 8: #565656",
+        " 9: #707070",
+        "10: #ce9191",
+        "11: #444444",
+        "12: #966a6a",
+        "13: #818181",
+        "14: #fdb3b3",
+        "15: #946868",
+        "16: #b78686",
+        "17: #d39696",
+        "18: #d49797",
+        "19: #000000",
+        "20: #dcdcdc",
+        "21: #606060",
+        "22: #c4c4c4",
+        "23: #494949",
+        "24: #171414",
+        "25: #666666"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1  0  1  1  1  2  3  1  0  0  0  4  4  0  0  0  0 -1  5  6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  7  7  7  7  7  7  7  7  7  7  7",
+        "-1 -1 -1 -1 -1 -1  1  1  1  1  3  3  1  1  0  4  4  4  4  4  4  0  8  9  8  8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 10  7  7  7 10 10 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  1  1  1  0  3  2  1  1  0  4  4  4  4  4  4  4 11 11 11 11 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  7 12  7  7 12 10 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  1  1  1  2  3 13  0  1  4  4  4  4  4  4  4  4  6  6  6  6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  7  7  7  7 10  7 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  1  1  2  3  2 13  3  2  4  4  4  4  4  4  4  0 -1 -1 -1 -1 -1 -1 13 13  2  3  3  2  3  3  0  0  4  4  3  2  3  3  3  2  3  3  3  2  0  0  7  7  7 10 10  7 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  0  1  2  3  3  2 13  2  0  0  0  0  4  4  0  0 -1 -1 -1 -1 -1 -1 13  2  3  3  3  0  0  1  1  1  0  4  3  3  3  3  2  3  2  3  3  3  1  0 10 12 10 10 12  7 -1 -1 -1 -1 -1 -1",
+        " 0  1  1  1  1  0  0  1  1  3  3  3  2  1  0  1 13  2  1  1  0  1  1  2 13  0  1  0  2  3  3  2  0  0  1  1  1  0  0  0  2  2  3  3  3  3  2  2  3  3  1  1 10 10  7  7  7 10 -1 -1 -1 -1 -1 -1",
+        " 1  0 14 10 10  0  0  1  1  3  3  3  1  0  0 10 15 16  3  3  0  1  1  3  3  0  1  0  3  2  3  0  1  0  1  1  1  1  1  0  3  2  2  3  3  3  2 13  2  2  1  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        " 1  4  4 17 18  0 19 19  1  2  3  0 19 19  0 18 18  0  3  2  0  1  1  0  3  0  1  0  3  2  0  0  1  1  1  0  1  1  3  3  3  3 13  2  2  3  3  3 13  1  1  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        " 1  4  4  4 18  0 19 19  1  2  1  1 19 19  0 18  0  1  1  1  0  1  1  1  1  1  1  0  0  0  0  1  1  1  1  0  0  2  3  3  2  3  2 13  1  1  3  2 13  1  1  0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        " 1  1  4  4  0  1  1  1  1  1  1  1  1  1  1  1  1  1  1  0  0  0  1  1  1  1  1  0  1  0  1  1  1  1  1  0  3  3  3  2  1  1  1  0  0  1  1  0  0  1  0  4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        " 0  1  1  0  1  1  0  1 20 20 20 20  0  1  0  1  1  1  1  4  0  0  1  1  1  1  0  0  0  1  0  1  1  1  1 13  2  3  3 13  4  0  0  0  4  4  4  4  0  0  0  4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        " 4  0  1  1  1  1  0 20 19 21 21 19 20  0  0  1  1  0  4  4  4  0  0  0  1  0  0  4  4  0  1  1  1  1  0  3  3  2  3  3  4  4  0  4  4  4  4  4  4  0  4  4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        " 4  4  0  0  1  1  0 22 21 23 23 21 20  0  0  1  0  0  4  4  4  4  0  0  0  0  4  4  4  4  0  0  1  1  0  2  3 13  3  2  4  4  4  7  7  7  7  7  7  4  4  0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  2  3  3  2 13 13 13 13  4  4  4  4  0  0  0  4  4  4  4  4  0  0  1  0 13  2  1  1  0 13  4  4  0 13 13  2  3  3  2 13  4  4 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  2  3  3  3  2 13 13 13  4  4  0  0  0  0  0  0  0  4  4  4  0  0  1  1  0  0  1  1  1  0  4  0  0 13  2  2  3  3  3 13  4  4 -1 -1",
+        "-1 -1 -1 -1  3  2  1  0 24 25 25 24 -1 -1 -1 -1 -1 -1  0  0  1  1  0  0  3  2 13  4  4  4  4  0  0  0  0  0  0  4  0  4  0  0  1  1  1  0  1  1  1  0  4  0  1 13  2  3  3  3  3  3  0  4 -1 -1",
+        "-1 -1 -1 -1  2  1  1  1 24 25 25 24 -1 -1 -1 -1 -1 -1  0  0  1  1  1  1  0  0  4  4  4  0  4  0  0  0  0  0  0  0  0  2  3  0  0  1  1  1  1  1  0  1  0  1  0  1 13  3  3  3  3  2  0  4 -1 -1",
+        "-1 -1 -1 -1  0  1  1  0 24 25 25 24 -1 -1 -1 -1 -1 -1  0  1  1  1  1  0  0  0  0  4  4  0  0  0  0  0  0  0  0  0 13  2  2 13  0  1  1  1  1  1  1  1  0  1  1  1 13  2  3  3  3 13  1  0 -1 -1",
+        "-1 -1 -1 -1  0  0  0  0 24 24 24 24 -1 -1 -1 -1 -1 -1  0  1  1  1  0  1  1  0  0  4  0  0  0  0  0  0  0  0  0 13 13 13 13  3  3  1  0  1  1  1  1  1  3  3  1  1  2  3  3  2  2  2  1  0 -1 -1",
+        " 0  1  0  0  0  1  0  0  0  0  0  0  0  1  1  0 -1 -1  1  0  1  1  1  1  1  0  0  0  2 13 13  0  0  0  0  0 13 13 13 13  2  3  3  0  1  1  1  1  1  1  2  3  2  1  3  3  3  3  2  2  1  1 -1 -1",
+        " 0  1  0  1  1  1  0  2  3  0  1  1  1  0  1  0 -1 -1  1  1  1  1  1  0  1  1  0  0  2 13 13 13 13  0  0  0  0 13 13 13  2  2  2  3  0  1  2  3  3  2  3  3  2 13  2  3  3  3  3  2  0  1 -1 -1",
+        " 1  1  1  0  1  1  1  3  3  1  0  1  1  1  1  1 -1 -1  1  1  1  1  1  0  0  1  2  3 13  2 13 13  0  0  4  0  0 13 13 13  2  2  3  3  2  2  3  3  3  3  3  2 13  1  1  2  3  3  2 13  1  1 -1 -1",
+        " 1  0  1  1  1  1  1  3  3  1  1  1  1  1  1  1 -1 -1  1  1  1  1  1  1  2  3  3  3 13 13 13  0  0  4  4  0  0 13 13 13 13  2  3  3  1  1  2  3  2  2 13  3 13  1  1 13  3  3 13 13  1  1 -1 -1",
+        " 1  1  0  0  1  1  1  3  2  1  1  0  1  1  0  1 -1 -1  1  1  1  1  1  1  3  3  2 13  0  0  0  0  4  4  4  4  0  0 13 13  2  0  2  3  1  1  0  1  1  3  3  3  1  1  1  1 13  2 13  0  1  1 -1 -1",
+        " 0  1  2  3  1  1  0  2 13  0  1  0  0  1  1  0 -1 -1  0  1  1  1  1  0  3  3  2  0  0  0  0  4  4  4  4  4  4  0  0  0  4  0 13  2  1  1  1  1  1  3  3  2  1  1  1  1  1  1 13  0  1  1 -1 -1",
+        " 0  0  0  2  0  1  0  0  0  0  0  0  0  0  3  3 -1 -1  0  0  1  1  1  0  2  2  0  4  0  0  0 10  7  7  7 10 10  4  0  0  4  0  0  1  1  1  1  1  1  1  0  1  1  0  1  1  1  1  1  1  1  0 -1 -1",
+        " 0  4  0  0  0  0  4  0  0  0  0  4  4  3  2 13 -1 -1  4  1  1  1  1  1  0  0  0  4  0  4  4  7 12  7  7 12 10  4  0  0  4  0  0  1  0  1  1  1  1  0  0  1  0  1  1  1  1  0  1  1  0  0 -1 -1",
+        " 4  4  4  0  0  0  4  4  0  4  0  4  0  2  2  0 -1 -1  4  1  0  1  1  1  0  0  0  4  4  4  4  7  7  7  7 10  7  4  4  0  4  4  0  0  0  0  1  1  0  4  0  0  1  1  1  1  0  0  1  1  0  2 -1 -1",
+        " 4  0  4  4  0  4  4  4  0  4  4  4  4  1  0  4 -1 -1  4  0  1  1  1  0  1  0  4  4  4  4  4  7  7  7 10 10  7  4  4  4  4  4  0  0  0  1  1  1  0  4  4  0  1  0  0  0  0  0  0  0  4  3 -1 -1",
+        " 0  0  0  4  4  4  0  0  4  4  4  0  0  1  1  0 -1 -1  4  4  0  1  1  1  0  4  4  4  4  4  4 10 12 10 10 12  7  4  4  4  4  4  4  0  0  0  0  0  4  4  4  0  0  1  2  3  3  3  3  2 13 13 -1 -1",
+        "24 24 24 24 24 24 24 24 24 24 24 24 24 25 25 24 -1 -1  4  4  4  4  4  4  4  4  4  4  4  4  4 10 10  7  7  7 10  4  4  4  4  4  4  4  4  4  4  4  4  4  4  4 13  2  3  3  3  3  2 13 13 13 -1 -1"
+      ]
+    }
+  ],
+  "features": {
+    "summary": "形状：蘑菇伞；蘑菇方块；实体UV/生物剪影\n图案：褐色伞盖；菌盖斑点/菌褶；无明显图案\n颜色：#CC9978 #916D55 #725643 #6A4E3B #B5947D #977251 #946D52 #8D6850 #9C795A #A00F10 #A81012 #940E0F #B3B3B3 #A1A1A1\n部位：菌盖；菌柄；头；身体；腿/脚\n吸引点：大地色",
+    "shape": [
+      "蘑菇伞",
+      "蘑菇方块",
+      "实体UV/生物剪影"
+    ],
+    "pattern": [
+      "褐色伞盖",
+      "菌盖斑点/菌褶",
+      "无明显图案"
+    ],
+    "colors": [
+      "#CC9978",
+      "#916D55",
+      "#725643",
+      "#6A4E3B",
+      "#B5947D",
+      "#977251",
+      "#946D52",
+      "#8D6850",
+      "#9C795A",
+      "#A00F10",
+      "#A81012",
+      "#940E0F",
+      "#B3B3B3",
+      "#A1A1A1"
+    ],
+    "parts": [
+      "菌盖",
+      "菌柄",
+      "头",
+      "身体",
+      "腿/脚"
+    ],
+    "attraction": [
+      "大地色"
+    ],
+    "sources": {
+      "shape": [
+        "brown_mushroom.png",
+        "brown_mushroom_block.png",
+        "red_mooshroom.png"
+      ],
+      "pattern": [
+        "brown_mushroom.png",
+        "brown_mushroom_block.png",
+        "red_mooshroom.png"
+      ],
+      "colors": [
+        "brown_mushroom.png",
+        "brown_mushroom.png",
+        "brown_mushroom.png",
+        "brown_mushroom.png",
+        "brown_mushroom.png",
+        "brown_mushroom_block.png",
+        "brown_mushroom_block.png",
+        "brown_mushroom_block.png",
+        "brown_mushroom_block.png",
+        "red_mooshroom.png",
+        "red_mooshroom.png",
+        "red_mooshroom.png",
+        "red_mooshroom.png",
+        "red_mooshroom.png"
+      ],
+      "parts": [
+        "brown_mushroom.png",
+        "brown_mushroom.png",
+        "red_mooshroom.png",
+        "red_mooshroom.png",
+        "red_mooshroom.png"
+      ],
+      "attraction": [
+        "brown_mushroom.png"
+      ]
+    },
+    "anchor_count": 3
+  },
+  "style_rules": {
+    "palette": [
+      "- `source`: 本组代表性方块共 8 张，调色板数范围 4-40；其中 8 张为全不透明（透明像素为 0）。本组未包含带透明背景的方块，实际库中植物/玻璃等才有透明背景。"
+    ],
+    "light_dark": [
+      "- `source`: 对 8 个代表性方块做整图左上/右下象限平均亮度统计，2/8 张满足左上 > 右下；方向差明显弱于物品（平均差约 -1.0），说明方块更接近“局部单元内的高光/阴影”，而非整张图的固定左上/右下光源。",
+      "- `hypothesis`: 原版方块表面没有全局强方向光；更常见的是每个 1px 材质单元的局部高光/阴影。本卡未做自动逐单元检测，建议生成时按锚点片段观察。"
+    ],
+    "outline": [
+      "- `hypothesis`: 方块面内部通常不用黑色粗描边；边界由暗色像素或色阶差形成。木板缝、矿石簇与石头底的交界可视为 1px 深色分隔。",
+      "- `hypothesis`: 描边/分隔的具体位置应由锚点文本确认，不能把“1px 深色”写成所有方块的固定事实。"
+    ],
+    "noise": [
+      "- `source`: 代表性方块的 8 张中，8 张为全不透明，调色板数均值为 11.2；说明方块大量使用平铺 + 1px 噪点/抖动。",
+      "- `hypothesis`: 原版方块避免大面积平涂/模糊渐变，通常用 1px 噪点表示材质差异；本卡未做逐像素噪声检测，建议生成时参考锚点片段。"
+    ]
+  },
+  "few_shot": {
+    "asset": "red_mushroom_block.png",
+    "type": "block",
+    "form": "cross",
+    "path": "style_cards/snippets/block_red_mushroom_block.txt",
+    "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\n```\n\n## Palette (hex)\n```\n 0: #c32826\n 1: #be2321\n 2: #c92b29\n 3: #ce2d2b\n 4: #ffbfbf\n 5: #ff9898\n```\n\n## Index grid (-1 = transparent)\n```\n 0  1  1  1  0  2  2  0  0  1  1  0  2  2  2  0\n 1  1  0  0  1  0  2  2  2  0  0  1  2  2  0  0\n 1  0  0  3  3  2  2  2  2  2  2  2  2  0  0  1\n 0  0  3  4  5  3  0  2  2  2  2  2  2  2  0  1\n 0  0  3  5  4  3  0  0  1  1  2  2  0  0  2  2\n 2  2  0  3  3  0  0  1  0  2  0  1  1  1  0  2\n 2  2  1  0  0  2  2  2  2  0  1  0  3  3  0  0\n 0  1  2  2  2  2  2  2  0  1  0  3  4  5  3  1\n 0  2  2  2  2  2  0  0  1  0  0  3  5  4  3  0\n 1  2  2  0  0  2  2  2  2  2  2  0  3  3  0  0\n 2  2  1  0  0  0  2  2  2  2  2  2  2  0  2  2\n 0  0  2  2  2  0  0  3  3  0  0  0  2  2  2  2\n 2  2  2  0  0  0  3  4  5  3  0  1  1  0  2  2\n 2  0  0  1  1  0  3  5  4  3  0  2  2  0  1  1\n 0  0  1  1  0  1  0  3  3  0  2  2  2  2  0  0\n 1  1  0  0  0  0  1  1  0  0  0  0  0  2  2  0\n```"
+  },
+  "file_contract": {
+    "form": "cross",
+    "modid": "mcmod",
+    "files": [
+      {
+        "path": "assets/mcmod/textures/block/mushroom_sprout.png",
+        "kind": "texture",
+        "width": 16,
+        "height": 16,
+        "alpha": true,
+        "face": "cross",
+        "note": "十字交叉贴图（透明背景）"
+      },
+      {
+        "path": "assets/mcmod/models/block/mushroom_sprout.json",
+        "kind": "model",
+        "format": "block/cross",
+        "face": null
+      },
+      {
+        "path": "assets/mcmod/blockstates/mushroom_sprout.json",
+        "kind": "blockstate",
+        "format": "variants",
+        "face": null
+      }
+    ],
+    "templates": {
+      "assets/mcmod/models/block/mushroom_sprout.json": {
+        "parent": "minecraft:block/cross",
+        "textures": {
+          "cross": "mcmod:block/mushroom_sprout"
+        }
+      },
+      "assets/mcmod/blockstates/mushroom_sprout.json": {
+        "variants": {
+          "": {
+            "model": "mcmod:block/mushroom_sprout"
+          }
+        }
+      }
+    },
+    "note": "文件路径按 Minecraft 资源包约定；templates 为空白/示例 JSON。"
+  },
+  "output_contract": {
+    "form": "cross",
+    "faces": [
+      {
+        "face": "cross",
+        "file": "assets/mcmod/textures/block/mushroom_sprout.png",
+        "width": 16,
+        "height": 16,
+        "palette_placeholder": "#RRGGBB",
+        "grid_format": "共 16 行，每行 16 个整数；-1 表示透明，非负整数引用 PALETTE 索引。",
+        "seed_contract": null,
+        "seed_note": "格式骨架：不嵌入完整锚点 grid；输出必须由 LLM 新生成，不得复制参考贴图。"
+      }
+    ],
+    "text": "FORM=cross\nFACES=1\n\n=== face: cross ===\nFILE: assets/mcmod/textures/block/mushroom_sprout.png\nW=16 H=16\n\nPALETTE\n# 占位说明：在此列出 LLM 自己生成的调色板，每行一个索引与 #RRGGBB\n# 例如：0: #AABBCC（仅格式示意，禁止复制参考贴图）\n\nINDEX GRID\n# 占位说明：共 16 行，每行 16 个整数；-1 表示透明，非负整数引用上面 PALETTE 的索引。\n# 格式示例（2x2 占位，仅示意行列规则；不得复制参考贴图，必须生成新形状/图案）：\n# -1  0\n#  1 -1",
+    "note": "声明每个 face 需要输出的像素块文本的格式骨架（W/H 模板 + PALETTE 占位 + index grid 行列规则）；不提供任何完整锚点 grid，实际像素内容必须由 LLM 新生成。"
+  },
+  "output_contract_note": "按 form 声明的像素块输出清单；实际 LLM 应逐 face 输出可被 text_to_texture.py 解析的文本块。",
+  "concept_card": {
+    "item_name": "蘑菇幼苗 (Mushroom Sprout)",
+    "description": "一棵刚长出的小蘑菇幼苗：内容就是蘑菇本体（菌盖+菌柄），使用 Minecraft cross 十字交叉渲染形式；cross 只是展示形式，不是树苗。",
+    "parts": [
+      "cap 小菌盖（红/褐）",
+      "gills 菌盖下沿菌褶（白/米）",
+      "stem 菌柄（浅褐/褐色）"
+    ],
+    "face_regions": {
+      "cross": "十字交叉贴图：中央 2-3 像素菌柄，上方 6-8 像素半圆菌盖，菌盖下沿 1-2 像素菌褶；整体是蘑菇剪影，不是树苗/叶冠。"
+    },
+    "visual_goals": [
+      "cross 形状 mask 应为 16x16 小蘑菇剪影：菌盖半圆 + 菌柄，高度约 8-11 像素；",
+      "cross 菌盖用 red_mushroom 系红色 #E21212/#C41D26/#A9121A，边缘深色；",
+      "cross 菌盖下沿画 1-2 像素白色/米色菌褶 #E3DDBA/#CFC47F；",
+      "cross 菌柄用 brown_mushroom 系浅褐/褐色 #CC9978/#916D55/#725643；",
+      "cross 保持透明背景，不出现树苗的枝干/叶冠/草丛。"
+    ],
+    "minecraft_reference": "red_mushroom（菌盖红/菌褶白）、brown_mushroom（菌柄褐/菌盖棕）、cross 仅借用十字交叉渲染形式",
+    "avoid": [
+      "不要复制原版 birch_sapling.png 的逐像素图案；",
+      "不要画成大树苗：必须有明显菌盖+菌柄蘑菇剪影，不是树苗叶冠；",
+      "不要画成普通蘑菇方块：保留 cross 透明剪影，不铺满 16x16；",
+      "不要用大块纯绿：本资源内容为蘑菇，红色/褐色为主。"
+    ],
+    "palette_scheme": {
+      "base": "#C41D26",
+      "light": "#FFB4B0",
+      "dark": "#8E1016",
+      "accent": "#E3DDBA",
+      "outline": "#5A3B1A",
+      "border_note": "菌盖外轮廓 1px 深红/暗褐；菌褶与菌柄用米白/褐色自然分隔，不做均匀黑框。",
+      "saturation_note": "菌盖红、菌柄褐均为中低饱和大地色，避免荧光和刺眼亮色。"
+    },
+    "shape_pattern": {
+      "silhouette": "小蘑菇剪影：半圆菌盖 + 菌柄，高度约 8-11 像素；cross 只是展示形式。",
+      "parts": [
+        "cap 菌盖",
+        "gills 菌褶",
+        "stem 菌柄"
+      ],
+      "border": "菌盖边缘 1px 深色；菌褶下沿 1px 米白；菌柄两侧深褐。",
+      "shading": "菌盖左上高光、右下暗面；菌柄左亮右暗。",
+      "detail_pattern": "菌盖 1px 噪点/少量斑点；菌褶横向 1px 线条。",
+      "shape_lock_optional": true,
+      "part_pattern_flow": [
+        {
+          "part": "cap 菌盖",
+          "shape": "半圆伞面",
+          "pattern": "红色系 + 白色斑点 + 左上高光",
+          "flow": "斑点沿伞面弧线分布，高光带沿伞面左上到右下走势。"
+        },
+        {
+          "part": "gills 菌褶",
+          "shape": "菌盖下沿弧线",
+          "pattern": "米白/褐色 1px 菌褶",
+          "flow": "菌褶线沿下沿弧线排列，随伞缘弯曲。"
+        },
+        {
+          "part": "stem 菌柄",
+          "shape": "竖向菌柄",
+          "pattern": "浅褐/褐色纵向纹理",
+          "flow": "纵向纹理沿菌柄走向，左亮右暗表现圆柱体积。"
+        }
+      ],
+      "integration_note": "菌盖放射/晕斑、菌褶弧线、菌柄纵向纹理都必须贴合对应部件的形状走向；纹样不得脱离形状独立存在。"
+    },
+    "reference_nodes": [
+      {
+        "asset": "birch_sapling",
+        "role": "shape",
+        "reason": "仅参考 cross 十字交叉渲染形式/尺度，不锁树苗形状，不复制像素。"
+      },
+      {
+        "asset": "red_mushroom",
+        "role": "color",
+        "reason": "菌盖红+菌褶白+菌柄褐的完整配色参考。"
+      },
+      {
+        "asset": "brown_mushroom",
+        "role": "pattern",
+        "reason": "菌盖斑点/菌柄纹理与低饱和大地色参考。"
+      },
+      {
+        "asset": "red_mooshroom",
+        "role": "border",
+        "reason": "生物体红色暗部/自然边界参考（非硬性指标）。"
+      }
+    ],
+    "form": "cross",
+    "query": "蘑菇幼苗",
+    "source": "concept_grounder:offline_rule",
+    "method": "rule",
+    "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+    "retrieval_anchor_count": 3
+  },
+  "prompt": "# 任务说明\n请生成一个新的 Minecraft 像素资源，遵守 Minecraft 原版像素风格。\n\n- 资源名：mushroom_sprout\n- 描述：蘑菇幼苗\n- 形式：cross\n- 尺寸：16x16\n\n# 概念理解卡片（先理解，再生成）\n\n- 名称：蘑菇幼苗 (Mushroom Sprout)\n- 描述：一棵刚长出的小蘑菇幼苗：内容就是蘑菇本体（菌盖+菌柄），使用 Minecraft cross 十字交叉渲染形式；cross 只是展示形式，不是树苗。\n- 部件：cap 小菌盖（红/褐）；gills 菌盖下沿菌褶（白/米）；stem 菌柄（浅褐/褐色）\n- 各 face 画什么：\n  - cross：十字交叉贴图：中央 2-3 像素菌柄，上方 6-8 像素半圆菌盖，菌盖下沿 1-2 像素菌褶；整体是蘑菇剪影，不是树苗/叶冠。\n- 视觉目标：\n  - cross 形状 mask 应为 16x16 小蘑菇剪影：菌盖半圆 + 菌柄，高度约 8-11 像素；\n  - cross 菌盖用 red_mushroom 系红色 #E21212/#C41D26/#A9121A，边缘深色；\n  - cross 菌盖下沿画 1-2 像素白色/米色菌褶 #E3DDBA/#CFC47F；\n  - cross 菌柄用 brown_mushroom 系浅褐/褐色 #CC9978/#916D55/#725643；\n  - cross 保持透明背景，不出现树苗的枝干/叶冠/草丛。\n- 原版参考：red_mushroom（菌盖红/菌褶白）、brown_mushroom（菌柄褐/菌盖棕）、cross 仅借用十字交叉渲染形式\n- 避免：不要复制原版 birch_sapling.png 的逐像素图案；不要画成大树苗：必须有明显菌盖+菌柄蘑菇剪影，不是树苗叶冠；不要画成普通蘑菇方块：保留 cross 透明剪影，不铺满 16x16；不要用大块纯绿：本资源内容为蘑菇，红色/褐色为主\n\n> 输出顺序要求：你必须先用自己的话描述你理解的这个物体（至少包含它是什么、由哪些部件组成、每个 face 画什么），再输出下面的各 face 纹理。禁止跳过理解直接画纹理。\n\n\n# 设计方案（先理解 → 配色 → 形状）\n\n> 参考素材只是设计参考节点，不是硬性指标，更不是必须锁形状。\n> 不要复制参考贴图的逐像素内容；优先保证“这个东西是什么”的语义可辨认。\n> 允许 3~8 个参考节点，不要求只参考 2 个；每个节点的作用可以是 shape/color/pattern/border/material。\n> 形状-纹样一体：先用形状确定结构，再让纹样贴合形状的走向/边缘/明暗面；纹样不得脱离形状独立存在。\n\n### 配色方案 palette_scheme\n- 主色 base：#C41D26\n- 亮部 light：#FFB4B0\n- 暗部 dark：#8E1016\n- 强调色 accent：#E3DDBA\n- 描边色 outline：#5A3B1A\n- 自然边框说明：菌盖外轮廓 1px 深红/暗褐；菌褶与菌柄用米白/褐色自然分隔，不做均匀黑框。\n- 饱和度说明：菌盖红、菌柄褐均为中低饱和大地色，避免荧光和刺眼亮色。\n\n### 形状图样 shape_pattern\n- 剪影 silhouette：小蘑菇剪影：半圆菌盖 + 菌柄，高度约 8-11 像素；cross 只是展示形式。\n- 部件 parts：cap 菌盖；gills 菌褶；stem 菌柄\n- 描边 border：菌盖边缘 1px 深色；菌褶下沿 1px 米白；菌柄两侧深褐。\n- 明暗 shading：菌盖左上高光、右下暗面；菌柄左亮右暗。\n- 细节图案 detail_pattern：菌盖 1px 噪点/少量斑点；菌褶横向 1px 线条。\n- 是否锁形状 shape_lock_optional：True\n- 形状-纹样联动 part_pattern_flow：\n  - [cap 菌盖] 形状：半圆伞面 | 纹样：红色系 + 白色斑点 + 左上高光 | 走向：斑点沿伞面弧线分布，高光带沿伞面左上到右下走势。\n  - [gills 菌褶] 形状：菌盖下沿弧线 | 纹样：米白/褐色 1px 菌褶 | 走向：菌褶线沿下沿弧线排列，随伞缘弯曲。\n  - [stem 菌柄] 形状：竖向菌柄 | 纹样：浅褐/褐色纵向纹理 | 走向：纵向纹理沿菌柄走向，左亮右暗表现圆柱体积。\n- 联动说明 integration_note：菌盖放射/晕斑、菌褶弧线、菌柄纵向纹理都必须贴合对应部件的形状走向；纹样不得脱离形状独立存在。\n\n### 参考节点 reference_nodes（3~8 个）\n- [1] birch_sapling | role=shape | 仅参考 cross 十字交叉渲染形式/尺度，不锁树苗形状，不复制像素。\n- [2] red_mushroom | role=color | 菌盖红+菌褶白+菌柄褐的完整配色参考。\n- [3] brown_mushroom | role=pattern | 菌盖斑点/菌柄纹理与低饱和大地色参考。\n- [4] red_mooshroom | role=border | 生物体红色暗部/自然边界参考（非硬性指标）。\n\n\n# 检索特征摘要\n\n从原版锚点检索到以下特征，必须体现在生成结果中：\n\n形状：蘑菇伞；蘑菇方块；实体UV/生物剪影\n图案：褐色伞盖；菌盖斑点/菌褶；无明显图案\n颜色：#CC9978 #916D55 #725643 #6A4E3B #B5947D #977251 #946D52 #8D6850 #9C795A #A00F10 #A81012 #940E0F #B3B3B3 #A1A1A1\n部位：菌盖；菌柄；头；身体；腿/脚\n吸引点：大地色\n\n# 锚点参考（compact 文本）\n\n## brown_mushroom.png (color)\n- 路径：raw/block/brown_mushroom.png\n- 类别：block\n- 尺寸：16x16\n- 形状：蘑菇伞\n- 图案：褐色伞盖\n- 部位：菌盖；菌柄\n- 吸引点：大地色\n- 颜色：#CC9978 #916D55 #725643 #6A4E3B #B5947D\n\n## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n................\n................\n................\n................\n................\n................\n......XXXX......\n.....XXXXXX.....\n....XXXXXXXX....\n....XXXXXXXX....\n.......XX.......\n.......XX.......\n.......XX.......\n.......XX.......\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n................\n................\n................\n................\n................\n................\n......OOOO......\n.....OOOOOO.....\n....OOOOOOOO....\n....OOOOOOOO....\n.......OO.......\n.......OO.......\n.......OO.......\n.......OO.......\n```\n\n## Palette (hex)\n```\n 0: #cc9978\n 1: #916d55\n 2: #725643\n 3: #6a4e3b\n 4: #65554a\n 5: #4c3d33\n 6: #b5947d\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  0  0  1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  0  0  0  1  2 -1 -1 -1 -1 -1\n-1 -1 -1 -1  1  0  0  1  1  1  1  2 -1 -1 -1 -1\n-1 -1 -1 -1  3  1  2  3  3  2  2  3 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  4  5 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  6  4 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0  6 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0  6 -1 -1 -1 -1 -1 -1 -1\n```\n\n## brown_mushroom_block.png (pattern)\n- 路径：raw/block/brown_mushroom_block.png\n- 类别：block\n- 尺寸：16x16\n- 形状：蘑菇方块\n- 图案：菌盖斑点/菌褶\n- 部位：菌盖；菌柄\n- 吸引点：大地色\n- 颜色：#977251 #946D52 #8D6850 #9C795A\n\n## Silhouette (X=opaque, .=transparent)\n```\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\n```\n\n## Palette (hex)\n```\n 0: #946d52\n 1: #977251\n 2: #8d6850\n 3: #9c795a\n```\n\n## Index grid (-1 = transparent)\n```\n 0  1  2  0  1  1  0  1  0  1  0  1  0  1  1  1\n 0  2  0  0  1  0  0  1  1  1  2  1  1  1  3  1\n 0  1  1  1  1  2  0  1  1  0  0  2  1  0  1  1\n 0  0  1  1  1  0  1  1  1  1  0  0  1  1  1  1\n 0  1  1  1  3  1  1  1  1  1  1  0  0  1  1  2\n 0  2  0  1  1  1  1  1  1  1  0  3  0  1  1  0\n 0  0  1  1  1  1  1  1  0  1  1  1  1  2  1  1\n 1  0  1  1  1  3  1  0  2  1  0  1  1  0  2  1\n 1  0  1  1  1  1  1  2  0  1  0  1  1  1  0  1\n 1  1  1  1  1  0  1  2  1  1  0  0  1  0  1  1\n 0  1  1  1  0  2  1  0  1  0  1  0  2  1  1  1\n 0  1  0  3  1  0  0  0  0  0  2  0  1  0  1  1\n 2  1  1  1  0  0  1  1  0  1  2  2  1  1  0  1\n 2  0  1  0  0  0  1  1  1  1  1  2  1  1  0  1\n 1  0  0  2  0  1  1  1  3  1  0  2  1  0  0  1\n 1  1  0  2  1  1  3  0  1  1  1  1  1  1  0  0\n```\n\n## red_mooshroom.png (part)\n- 路径：raw/entity/cow/red_mooshroom.png\n- 类别：entity\n- 尺寸：64x32\n- 形状：实体UV/生物剪影\n- 图案：无明显图案\n- 部位：头；身体；腿/脚\n- 颜色：#A00F10 #A81012 #940E0F #B3B3B3 #A1A1A1\n\n## Silhouette (X=opaque, .=transparent)\n```\n......XXXXXXXXXXXXXXXX.XX............................XXXXXXXXXXX\n......XXXXXXXXXXXXXXXXXXXX..........................XXXXXX......\n......XXXXXXXXXXXXXXXXXXXX..........................XXXXXX......\n......XXXXXXXXXXXXXXXXXXXX..........................XXXXXX......\n......XXXXXXXXXXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX......\n......XXXXXXXXXXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX............\n..................XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n..................XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n....XXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n....XXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n....XXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n....XXXXXXXX......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\nXXXXXXXXXXXXXXXX..XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX..\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n......RRRR==RRRRRRRRRR.++............................RRRRRRRRRRR\n......RRRR==RRRRRRRRRR++++..........................RRRRRR......\n......RRRR==RRRRRRRRRR++++..........................RRRRRR......\n......RRR===RRRRRRRRRR++++..........................RRRRRR......\n......RR======RRRRRRRR......========RRRR==========RRRRRRRR......\n......RR======RRRRRRRR......=====RRRRRRR==========RRRRRRRR......\nRRRRRRRRR====RRR==RRRRR==RRR====RRRRRRRR==========RRRRRRRR......\nRRRRRRRRR===RRRRRR==RRR==RRR===RRRRRRRRR==========RR............\nRRRRRR##R==R##RRRR==RRRR=RRR==RRRRRRRR===========RRR............\nRRRRRR##R=RR##RRRRRRRRRRRRRRRRRRRRRRR=======RR===RRR............\nRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR====RRRRRRRRRRRR............\nRRRRRRRR@@@@RRRRRRRRRRRRRRRRRRRRRRR=====RRRRRRRRRRRR............\nRRRRRRR@#++#@RRRRRRRRRRRRRRRRRRRRRR=====RRRRRRRRRRRR............\nRRRRRRR=++++@RRRRRRRRRRRRRRRRRRRRRR=====RRRRRRRRRRRR............\n..................RR========RRRRRRRRRRRRRRRR==RRR=RRR=======RR..\n..................RR========RRRRRRRRRRRRRRRRRRRRRRRRR=======RR..\n....==RR#++#......RRRRRR===RRRRRRRRRRRRRRRRRRRRRRRRRR=======RR..\n....=RRR#++#......RRRRRRRRRRRRRRRRRRRRR==RRRRRRRRRRRRR======RR..\n....RRRR#++#......RRRRRRRRRRRRRRRRRRRR====RRRRRRRRRRRR======RR..\n....RRRR####......RRRRRRRRRRRRRRRRRRR======RRRRRRR==RR======RR..\nRRRRRRRRRRRRRRRR..RRRRRRRRRR===RRRRR=======RRRRRRR===R======RR..\nRRRRRRR==RRRRRRR..RRRRRRRRRR=====RRRR=======RR==============RR..\nRRRRRRR==RRRRRRR..RRRRRRRR======RRRRR================RR=====RR..\nRRRRRRR==RRRRRRR..RRRRRR=======RRRRRR=======RR=======RR=====RR..\nRRRRRRR==RRRRRRR..RRRRRR====RRRRRRRRRR===R==RRRRR===RRRR===RRR..\nRR==RRR==RRRRRRR..RRRRRR===RRRRRRRRRRRRRRR==RRRRR===RRRRRR=RRR..\nRRR=RRRRRRRRRR==..RRRRRR==RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..\nRRRRRRRRRRRRR===..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..\nRRRRRRRRRRRRR==R..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR=..\nRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR=..\nRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR========..\n#############++#..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR==========..\n```\n\n## Palette (hex)\n```\n 0: #a00f10\n 1: #a81012\n 2: #a1a1a1\n 3: #b3b3b3\n 4: #940e0f\n 5: #545454\n 6: #333333\n 7: #f7afaf\n 8: #565656\n 9: #707070\n10: #ce9191\n11: #444444\n12: #966a6a\n13: #818181\n14: #fdb3b3\n15: #946868\n16: #b78686\n17: #d39696\n18: #d49797\n19: #000000\n20: #dcdcdc\n21: #606060\n22: #c4c4c4\n23: #494949\n24: #171414\n25: #666666\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1  0  1  1  1  2  3  1  0  0  0  4  4  0  0  0  0 -1  5  6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  7  7  7  7  7  7  7  7  7  7  7\n-1 -1 -1 -1 -1 -1  1  1  1  1  3  3  1  1  0  4  4  4  4  4  4  0  8  9  8  8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 10  7  7  7 10 10 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  1  1  1  0  3  2  1  1  0  4  4  4  4  4  4  4 11 11 11 11 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  7 12  7  7 12 10 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  1  1  1  2  3 13  0  1  4  4  4  4  4  4  4  4  6  6  6  6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  7  7  7  7 10  7 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  1  1  2  3  2 13  3  2  4  4  4  4  4  4  4  0 -1 -1 -1 -1 -1 -1 13 13  2  3  3  2  3  3  0  0  4  4  3  2  3  3  3  2  3  3  3  2  0  0  7  7  7 10 10  7 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  1  2  3  3  2 13  2  0  0  0  0  4  4  0  0 -1 -1 -1 -1 -1 -1 13  2  3  3  3  0  0  1  1  1  0  4  3  3  3  3  2  3  2  3  3  3  1  0 10 12 10 10 12  7 -1 -1 -1 -1 -1 -1\n 0  1  1  1  1  0  0  1  1  3  3  3  2  1  0  1 13  2  1  1  0  1  1  2 13  0  1  0  2  3  3  2  0  0  1  1  1  0  0  0  2  2  3  3  3  3  2  2  3  3  1  1 10 10  7  7  7 10 -1 -1 -1 -1 -1 -1\n 1  0 14 10 10  0  0  1  1  3  3  3  1  0  0 10 15 16  3  3  0  1  1  3  3  0  1  0  3  2  3  0  1  0  1  1  1  1  1  0  3  2  2  3  3  3  2 13  2  2  1  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 1  4  4 17 18  0 19 19  1  2  3  0 19 19  0 18 18  0  3  2  0  1  1  0  3  0  1  0  3  2  0  0  1  1  1  0  1  1  3  3  3  3 13  2  2  3  3  3 13  1  1  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 1  4  4  4 18  0 19 19  1  2  1  1 19 19  0 18  0  1  1  1  0  1  1  1  1  1  1  0  0  0  0  1  1  1  1  0  0  2  3  3  2  3  2 13  1  1  3  2 13  1  1  0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 1  1  4  4  0  1  1  1  1  1  1  1  1  1  1  1  1  1  1  0  0  0  1  1  1  1  1  0  1  0  1  1  1  1  1  0  3  3  3  2  1  1  1  0  0  1  1  0  0  1  0  4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 0  1  1  0  1  1  0  1 20 20 20 20  0  1  0  1  1  1  1  4  0  0  1  1  1  1  0  0  0  1  0  1  1  1  1 13  2  3  3 13  4  0  0  0  4  4  4  4  0  0  0  4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 4  0  1  1  1  1  0 20 19 21 21 19 20  0  0  1  1  0  4  4  4  0  0  0  1  0  0  4  4  0  1  1  1  1  0  3  3  2  3  3  4  4  0  4  4  4  4  4  4  0  4  4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 4  4  0  0  1  1  0 22 21 23 23 21 20  0  0  1  0  0  4  4  4  4  0  0  0  0  4  4  4  4  0  0  1  1  0  2  3 13  3  2  4  4  4  7  7  7  7  7  7  4  4  0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  2  3  3  2 13 13 13 13  4  4  4  4  0  0  0  4  4  4  4  4  0  0  1  0 13  2  1  1  0 13  4  4  0 13 13  2  3  3  2 13  4  4 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  2  3  3  3  2 13 13 13  4  4  0  0  0  0  0  0  0  4  4  4  0  0  1  1  0  0  1  1  1  0  4  0  0 13  2  2  3  3  3 13  4  4 -1 -1\n-1 -1 -1 -1  3  2  1  0 24 25 25 24 -1 -1 -1 -1 -1 -1  0  0  1  1  0  0  3  2 13  4  4  4  4  0  0  0  0  0  0  4  0  4  0  0  1  1  1  0  1  1  1  0  4  0  1 13  2  3  3  3  3  3  0  4 -1 -1\n-1 -1 -1 -1  2  1  1  1 24 25 25 24 -1 -1 -1 -1 -1 -1  0  0  1  1  1  1  0  0  4  4  4  0  4  0  0  0  0  0  0  0  0  2  3  0  0  1  1  1  1  1  0  1  0  1  0  1 13  3  3  3  3  2  0  4 -1 -1\n-1 -1 -1 -1  0  1  1  0 24 25 25 24 -1 -1 -1 -1 -1 -1  0  1  1  1  1  0  0  0  0  4  4  0  0  0  0  0  0  0  0  0 13  2  2 13  0  1  1  1  1  1  1  1  0  1  1  1 13  2  3  3  3 13  1  0 -1 -1\n-1 -1 -1 -1  0  0  0  0 24 24 24 24 -1 -1 -1 -1 -1 -1  0  1  1  1  0  1  1  0  0  4  0  0  0  0  0  0  0  0  0 13 13 13 13  3  3  1  0  1  1  1  1  1  3  3  1  1  2  3  3  2  2  2  1  0 -1 -1\n 0  1  0  0  0  1  0  0  0  0  0  0  0  1  1  0 -1 -1  1  0  1  1  1  1  1  0  0  0  2 13 13  0  0  0  0  0 13 13 13 13  2  3  3  0  1  1  1  1  1  1  2  3  2  1  3  3  3  3  2  2  1  1 -1 -1\n 0  1  0  1  1  1  0  2  3  0  1  1  1  0  1  0 -1 -1  1  1  1  1  1  0  1  1  0  0  2 13 13 13 13  0  0  0  0 13 13 13  2  2  2  3  0  1  2  3  3  2  3  3  2 13  2  3  3  3  3  2  0  1 -1 -1\n 1  1  1  0  1  1  1  3  3  1  0  1  1  1  1  1 -1 -1  1  1  1  1  1  0  0  1  2  3 13  2 13 13  0  0  4  0  0 13 13 13  2  2  3  3  2  2  3  3  3  3  3  2 13  1  1  2  3  3  2 13  1  1 -1 -1\n 1  0  1  1  1  1  1  3  3  1  1  1  1  1  1  1 -1 -1  1  1  1  1  1  1  2  3  3  3 13 13 13  0  0  4  4  0  0 13 13 13 13  2  3  3  1  1  2  3  2  2 13  3 13  1  1 13  3  3 13 13  1  1 -1 -1\n 1  1  0  0  1  1  1  3  2  1  1  0  1  1  0  1 -1 -1  1  1  1  1  1  1  3  3  2 13  0  0  0  0  4  4  4  4  0  0 13 13  2  0  2  3  1  1  0  1  1  3  3  3  1  1  1  1 13  2 13  0  1  1 -1 -1\n 0  1  2  3  1  1  0  2 13  0  1  0  0  1  1  0 -1 -1  0  1  1  1  1  0  3  3  2  0  0  0  0  4  4  4  4  4  4  0  0  0  4  0 13  2  1  1  1  1  1  3  3  2  1  1  1  1  1  1 13  0  1  1 -1 -1\n 0  0  0  2  0  1  0  0  0  0  0  0  0  0  3  3 -1 -1  0  0  1  1  1  0  2  2  0  4  0  0  0 10  7  7  7 10 10  4  0  0  4  0  0  1  1  1  1  1  1  1  0  1  1  0  1  1  1  1  1  1  1  0 -1 -1\n 0  4  0  0  0  0  4  0  0  0  0  4  4  3  2 13 -1 -1  4  1  1  1  1  1  0  0  0  4  0  4  4  7 12  7  7 12 10  4  0  0  4  0  0  1  0  1  1  1  1  0  0  1  0  1  1  1  1  0  1  1  0  0 -1 -1\n 4  4  4  0  0  0  4  4  0  4  0  4  0  2  2  0 -1 -1  4  1  0  1  1  1  0  0  0  4  4  4  4  7  7  7  7 10  7  4  4  0  4  4  0  0  0  0  1  1  0  4  0  0  1  1  1  1  0  0  1  1  0  2 -1 -1\n 4  0  4  4  0  4  4  4  0  4  4  4  4  1  0  4 -1 -1  4  0  1  1  1  0  1  0  4  4  4  4  4  7  7  7 10 10  7  4  4  4  4  4  0  0  0  1  1  1  0  4  4  0  1  0  0  0  0  0  0  0  4  3 -1 -1\n 0  0  0  4  4  4  0  0  4  4  4  0  0  1  1  0 -1 -1  4  4  0  1  1  1  0  4  4  4  4  4  4 10 12 10 10 12  7  4  4  4  4  4  4  0  0  0  0  0  4  4  4  0  0  1  2  3  3  3  3  2 13 13 -1 -1\n24 24 24 24 24 24 24 24 24 24 24 24 24 25 25 24 -1 -1  4  4  4  4  4  4  4  4  4  4  4  4  4 10 10  7  7  7 10  4  4  4  4  4  4  4  4  4  4  4  4  4  4  4 13  2  3  3  3  3  2 13 13 13 -1 -1\n```\n\n> 注意：以下锚点 compact 文本仅供风格/特征参考；不得复制其中的 PALETTE + index grid，必须生成新形状/图案。\n\n# 风格规则\n\n## 调色板\n- `source`: 本组代表性方块共 8 张，调色板数范围 4-40；其中 8 张为全不透明（透明像素为 0）。本组未包含带透明背景的方块，实际库中植物/玻璃等才有透明背景。\n\n## 明暗规则\n- `source`: 对 8 个代表性方块做整图左上/右下象限平均亮度统计，2/8 张满足左上 > 右下；方向差明显弱于物品（平均差约 -1.0），说明方块更接近“局部单元内的高光/阴影”，而非整张图的固定左上/右下光源。\n- `hypothesis`: 原版方块表面没有全局强方向光；更常见的是每个 1px 材质单元的局部高光/阴影。本卡未做自动逐单元检测，建议生成时按锚点片段观察。\n\n## 描边规则\n- `hypothesis`: 方块面内部通常不用黑色粗描边；边界由暗色像素或色阶差形成。木板缝、矿石簇与石头底的交界可视为 1px 深色分隔。\n- `hypothesis`: 描边/分隔的具体位置应由锚点文本确认，不能把“1px 深色”写成所有方块的固定事实。\n\n## 噪点 / 材质规则\n- `source`: 代表性方块的 8 张中，8 张为全不透明，调色板数均值为 11.2；说明方块大量使用平铺 + 1px 噪点/抖动。\n- `hypothesis`: 原版方块避免大面积平涂/模糊渐变，通常用 1px 噪点表示材质差异；本卡未做逐像素噪声检测，建议生成时参考锚点片段。\n\n# Few-shot：同类原版 compact 片段\n\n- 示例资产：red_mushroom_block.png\n- 类型：block\n- 来源：style_cards/snippets/block_red_mushroom_block.txt\n\n## Silhouette (X=opaque, .=transparent)\n```\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\nRRRRRRRRRRRRRRRR\n```\n\n## Palette (hex)\n```\n 0: #c32826\n 1: #be2321\n 2: #c92b29\n 3: #ce2d2b\n 4: #ffbfbf\n 5: #ff9898\n```\n\n## Index grid (-1 = transparent)\n```\n 0  1  1  1  0  2  2  0  0  1  1  0  2  2  2  0\n 1  1  0  0  1  0  2  2  2  0  0  1  2  2  0  0\n 1  0  0  3  3  2  2  2  2  2  2  2  2  0  0  1\n 0  0  3  4  5  3  0  2  2  2  2  2  2  2  0  1\n 0  0  3  5  4  3  0  0  1  1  2  2  0  0  2  2\n 2  2  0  3  3  0  0  1  0  2  0  1  1  1  0  2\n 2  2  1  0  0  2  2  2  2  0  1  0  3  3  0  0\n 0  1  2  2  2  2  2  2  0  1  0  3  4  5  3  1\n 0  2  2  2  2  2  0  0  1  0  0  3  5  4  3  0\n 1  2  2  0  0  2  2  2  2  2  2  0  3  3  0  0\n 2  2  1  0  0  0  2  2  2  2  2  2  2  0  2  2\n 0  0  2  2  2  0  0  3  3  0  0  0  2  2  2  2\n 2  2  2  0  0  0  3  4  5  3  0  1  1  0  2  2\n 2  0  0  1  1  0  3  5  4  3  0  2  2  0  1  1\n 0  0  1  1  0  1  0  3  3  0  2  2  2  2  0  0\n 1  1  0  0  0  0  1  1  0  0  0  0  0  2  2  0\n```\n\n> 注意：few-shot 仅为格式/风格示意；不得复制参考贴图，必须生成新形状/图案。\n\n# 输出文件清单\n\n- assets/mcmod/textures/block/mushroom_sprout.png\n- assets/mcmod/models/block/mushroom_sprout.json\n- assets/mcmod/blockstates/mushroom_sprout.json\n\n空白/示例 JSON 模板：\n```json\n{\n  \"parent\": \"minecraft:block/cross\",\n  \"textures\": {\n    \"cross\": \"mcmod:block/mushroom_sprout\"\n  }\n}\n```\n\n```json\n{\n  \"variants\": {\n    \"\": {\n      \"model\": \"mcmod:block/mushroom_sprout\"\n    }\n  }\n}\n```\n\n# 输出契约\n\nFORM=cross\nFACES=1\n\n=== face: cross ===\nFILE: assets/mcmod/textures/block/mushroom_sprout.png\nW=16 H=16\n\nPALETTE\n# 占位说明：在此列出 LLM 自己生成的调色板，每行一个索引与 #RRGGBB\n# 例如：0: #AABBCC（仅格式示意，禁止复制参考贴图）\n\nINDEX GRID\n# 占位说明：共 16 行，每行 16 个整数；-1 表示透明，非负整数引用上面 PALETTE 的索引。\n# 格式示例（2x2 占位，仅示意行列规则；不得复制参考贴图，必须生成新形状/图案）：\n# -1  0\n#  1 -1\n\n# 严格输出要求\n\n- 每个 face 只输出一个可被 text_to_texture.py 解析的文本块（W/H + PALETTE + index grid）。\n- 多 face 时按 output_contract 的 face 顺序逐一输出，禁止混在一个块里。\n- 透明像素必须使用 -1。\n- 禁止输出解释性文字、Markdown 代码围栏、JSON 或额外标题。\n- 必须生成新的形状/图案/调色板：不得复制任何参考贴图（包括锚点 compact 文本与 few-shot 的 index grid）。\n"
+}

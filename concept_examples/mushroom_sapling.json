@@ -1,0 +1,91 @@
+{
+  "item_name": "蘑菇树苗 (Mushroom Sapling, legacy)",
+  "description": "一棵刚长出的小蘑菇树苗：细菌柄为干，顶部长着小菌盖，使用十字交叉模型。",
+  "parts": [
+    "trunk 菌柄/树干（细）",
+    "cap 小菌盖/叶冠",
+    "root 根部小点"
+  ],
+  "face_regions": {
+    "cross": "十字交叉贴图：中央 2-3 像素菌柄，上方 4-6 像素菌盖，两侧有少量叶片/菌褶剪影。"
+  },
+  "visual_goals": [
+    "cross 中央底部画 1-2 像素宽菌柄，高 5-7 像素，褐色 #8A5A2B/#5A3B1A；",
+    "cross 菌柄顶部画 5x5 左右圆/半圆菌盖，红 #C32826 或褐 #CC9978，边缘 1 像素深色；",
+    "cross 菌盖下沿画 2-3 像素白色/米色菌褶 #E3DDBA/#CFC47F；",
+    "cross 两侧画 1-2 像素小叶片/菌褶剪影，左右对称但不等距；",
+    "cross 保持透明背景，根部用 1 像素 #7A5C33。"
+  ],
+  "minecraft_reference": "birch_sapling（十字树苗形态）；brown_mushroom / red_mushroom（菌盖颜色）",
+  "avoid": [
+    "不要复制原版 birch_sapling.png 的逐像素图案；",
+    "不要画成大树苗：16x16 内应是幼体/小型，高度约占 8-11 像素；",
+    "不要画成普通蘑菇方块：要保留十字交叉的透空剪影；",
+    "不要用大块纯绿：菌盖应红/褐，叶片绿只作少量点缀。"
+  ],
+  "palette_scheme": {
+    "base": "#C32826",
+    "light": "#FFBFBF",
+    "dark": "#A9121A",
+    "accent": "#CC9978",
+    "outline": "#5A3B1A",
+    "border_note": "菌盖下沿与菌褶用米白/褐色自然分隔；外轮廓 1px 深褐，不做均匀黑框。",
+    "saturation_note": "菌盖红色保持中等饱和度，菌柄大地色低饱和；避免荧光红/绿。"
+  },
+  "shape_pattern": {
+    "silhouette": "16x16 小蘑菇：半圆菌盖 + 细菌柄，高度约 8-11 像素。",
+    "parts": [
+      "cap 菌盖",
+      "gills 菌褶",
+      "stem 菌柄"
+    ],
+    "border": "菌盖边缘 1px 深红；菌柄两侧深褐形成自然描边。",
+    "shading": "菌盖左上高光/右下暗面；菌柄左亮右暗。",
+    "detail_pattern": "菌盖少量白点 + 菌褶 1px 横纹 + 菌柄噪点。",
+    "shape_lock_optional": true,
+    "part_pattern_flow": [
+      {
+        "part": "cap 菌盖",
+        "shape": "半圆伞面",
+        "pattern": "红色底 + 白色斑点 + 顶部高光",
+        "flow": "白点沿伞面弧线分布，高光沿伞面左上方走势，不脱离伞面边缘。"
+      },
+      {
+        "part": "gills 菌褶",
+        "shape": "菌盖下沿弧线",
+        "pattern": "米白/褐色横向 1px 菌褶",
+        "flow": "菌褶线沿下沿弧线排列，跟随伞边缘弯曲。"
+      },
+      {
+        "part": "stem 菌柄",
+        "shape": "竖向菌柄",
+        "pattern": "浅褐/褐色纵向纹理",
+        "flow": "纵向纹理沿菌柄走向分布，左亮右暗形成体积。"
+      }
+    ],
+    "integration_note": "菌盖斑点/菌褶、菌柄纹理都必须沿各自形状的弧线或纵向走向；纹样不得脱离形状独立存在。"
+  },
+  "reference_nodes": [
+    {
+      "asset": "birch_sapling",
+      "role": "shape",
+      "reason": "仅参考十字交叉渲染形式/物体尺度，不锁具体树苗形状。"
+    },
+    {
+      "asset": "red_mushroom",
+      "role": "color",
+      "reason": "菌盖红色、菌褶白色与菌柄大地色参考。"
+    },
+    {
+      "asset": "brown_mushroom_block",
+      "role": "border",
+      "reason": "菌盖边缘暗色与自然分隔参考。"
+    }
+  ],
+  "form": "cross",
+  "query": "蘑菇树苗",
+  "source": "concept_grounder:offline_rule",
+  "method": "rule",
+  "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+  "retrieval_anchor_count": 2
+}
