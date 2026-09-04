@@ -38,6 +38,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--model", default=os.environ.get("LLM_MODEL", "gpt-4o-mini"))
     parser.add_argument("--base-url", default=os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1"))
     parser.add_argument("--temperature", type=float, default=0.7)
+    parser.add_argument("--max-tokens", type=int, default=int(os.environ.get("LLM_MAX_TOKENS", "4096")))
     args = parser.parse_args(argv)
 
     api_key = os.environ.get("LLM_API_KEY")
@@ -55,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
         "model": args.model,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": args.temperature,
+        "max_tokens": args.max_tokens,
     }
     url = args.base_url.rstrip("/") + "/chat/completions"
     req = urllib.request.Request(
@@ -63,11 +65,13 @@ def main(argv: list[str] | None = None) -> int:
         headers={
             "Content-Type": "application/json",
             "Authorization": "Bearer " + api_key,
+            "User-Agent": "mc-mod-art-studio/1.0 (+https://github.com/GMH13552/mc-mod-art-studio)",
+            "Accept": "application/json",
         },
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=180) as resp:
+        with urllib.request.urlopen(req, timeout=600) as resp:
             data = json.load(resp)
     except Exception as exc:  # noqa: BLE001
         print("ERROR: LLM call failed: %s" % exc, file=sys.stderr)

@@ -397,30 +397,52 @@ def _card_mushroom_anvil(retrieval: dict | None, template: str = "anvil") -> dic
 
 
 def _card_alien_crystal_wand(retrieval: dict | None) -> dict:
-    """异形水晶法杖（item / blaze_rod 剪影）。"""
+    """异形水晶法杖（item / 语义是法杖，不是复制 blaze_rod）。"""
+    sp = _make_shape_pattern(
+        silhouette="沿左下→右上的斜向细杖 + 顶端水晶簇：杖身顶端即水晶簇锚点，中央主水晶与杖身同轴，左右副水晶分叉；整体是一条连续斜向‘法杖’剪影。",
+        parts=["rod 杖身", "crystal_cluster 顶部多根尖柱/棱面水晶", "handle 握柄"],
+        border="晶体沿外轮廓 1px 深色 #10282A；杖身与水晶交界用暗色过渡；描边沿对角线构图走，不形成独立竖直框。",
+        shading="沿对角线方向：左上/上侧亮，右下/下侧暗；每根晶体有亮面和暗面，避免平涂发光。",
+        detail_pattern="水晶棱面用小三角/菱形切面 + 1px 噪点；杖身用暗棕颗粒，颗粒沿杖身轴线流动。",
+        shape_lock_optional=True,
+        part_pattern_flow=[
+            {"part": "crystal_cluster 水晶簇", "shape": "多根尖柱/棱面尖柱（中央主晶与杖身同轴）", "pattern": "棱面 + 纵向高光带 + 两侧暗面", "flow": "每根尖柱从尖端到底座都有一条沿柱体轴向（即杖身对角线方向）的纵向高光带；中央主晶与杖身同轴，暗面位于柱体两侧。"},
+            {"part": "rod 杖身", "shape": "2-3px 宽斜向细杖（左下→右上）", "pattern": "暗棕颗粒 / 微弱魔法纹", "flow": "颗粒与魔法纹沿杖身轴线纵向流动，不出现横向/竖直孤立纹样。"},
+            {"part": "handle 握柄", "shape": "杖身下段加粗/深色段", "pattern": "暗棕分段 + 颗粒", "flow": "分段线沿握柄径向环绕，颗粒沿握柄纵向分布；整体仍在同一对角线上。"},
+        ],
+        integration_note="先用形状确定结构（尖柱/杖身/握柄），再让棱面、高光带、颗粒纹样贴合每个部件的走向/边缘/明暗面；纹样不得脱离形状独立存在。",
+    )
+    sp["orientation"] = {
+        "composition_axis": "整根法杖为一条从‘左下→右上’的对角线构图；杖身与杖头必须沿同一条轴线",
+        "head_anchor": "水晶簇锚定在杖身右上端（顶端），不是悬在画布垂直中心",
+        "connection_rule": "连接处位于杖身顶端端点，且与杖身轴线重合；严禁‘手柄斜、杖头正’或连接点偏到侧面",
+        "axis_check": "从杖尾到杖头用一条假想对角线贯穿，任何部件（握柄、杖身、中央主水晶）都不得偏离该轴线",
+    }
     return {
         "item_name": "异形水晶法杖 (Alien Crystal Wand)",
-        "description": "一根以法杖为语义骨架、顶端长着多根尖柱状异形水晶簇的 Minecraft 物品；水晶簇是顶部视觉主体，不是简单火焰棒。",
+        "description": "一根以法杖为语义骨架、顶端长着多根尖柱状异形水晶簇的 Minecraft 物品；整体沿同一条对角线构图，水晶簇锚定在杖身顶端，视觉主体是水晶簇，不是简单火焰棒。",
         "parts": [
             "rod 杖身",
             "crystal_cluster 顶部明显水晶簇（多根尖柱/棱面）",
             "handle 握柄/尾部",
         ],
         "face_regions": {
-            "sprite": "单张 16x16 透明背景：斜向杖身 + 顶端一组高约 4-7 像素的水晶尖柱簇（多根指向不同方向）；晶体青绿/水晶色但饱和度降低，有暗面和 1px 描边。",
+            "sprite": "单张 16x16 透明背景：整根法杖沿从左下到右上的对角线；杖身是一条 2-3px 宽斜向柄，顶端端点处锚定一组 3-5 根水晶尖柱簇；中央主水晶的轴线与杖身轴线重合，左右副水晶以主水晶为轴对称分叉；连接点在手柄顶端，不允许错位。",
         },
         "visual_goals": [
-            "sprite 顶部必须画出明显水晶簇：至少 3-5 根尖柱/棱面晶体，占据顶部 4-7 像素高，不能只是长条棒延伸；",
-            "sprite 杖身保持 2-3 像素宽斜向，但不要把整体画成 blaze_rod 的形状；顶部晶体簇是剪影重心；",
-            "sprite 晶体主色用低饱和青绿 #3E8F84/#2F6F68/#1F4E4A，亮面 #8FCEC4，暗面 #16403C；",
-            "sprite 晶体轮廓加 1px 深色描边 #10282A，避免荧光刺眼；",
-            "sprite 杖身/握柄使用琥珀/暗棕 #7A4A1E/#5A3413/#3E2613，与水晶形成自然边界；",
+            "sprite 构图：整根法杖沿‘左下→右上’对角线，从杖尾到杖头可连成一条假想直线；",
+            "sprite 杖身：2-3px 宽斜向柄，方向必须指向右上，不能竖直；",
+            "sprite 连接：水晶簇必须锚定在杖身右上端端点，连接点与杖身轴线重合，严禁‘手柄斜、杖头正’或连接点偏到侧面；",
+            "sprite 水晶簇：顶部 3-5 根尖柱，中央主水晶沿杖身轴线方向伸出，左右副水晶向两侧分叉；每根有纵向棱面高光和两侧暗面；",
+            "sprite 配色：低饱和青绿 #3E8F84/#2F6F68/#1F4E4A，亮面 #8FCEC4，暗面 #16403C，1px 描边 #10282A；",
+            "sprite 杖身/握柄：琥珀/暗棕 #7A4A1E/#5A3413/#3E2613，树纹沿杖身纵向；",
             "sprite 保持透明背景，16x16 内不贴边、不出现方块外轮廓。",
         ],
         "minecraft_reference": "blaze_rod（仅借用物品尺度，不是形状锁）；diamond + emerald（晶体色相）；quartz（晶体棱面/暗部）",
         "avoid": [
             "不要复制原版 blaze_rod.png 的逐像素图案，也不要把它当成锁死形状；",
             "不要画成普通木棍/火把/长条棒：顶部必须有明显、多根的异形水晶簇；",
+            "不要出现‘手柄斜、杖头正’或连接点偏到侧面的构图；",
             "不要画成方块：保持物品透明剪影，不出现满铺背景；",
             "不要用高饱和荧光青/绿：降低饱和度、加入暗部与 1px 描边。",
         ],
@@ -430,23 +452,10 @@ def _card_alien_crystal_wand(retrieval: dict | None) -> dict:
             dark="#16403C",
             accent="#C9A227",
             outline="#10282A",
-            border_note="水晶外轮廓用 1px 深色描边 #10282A；杖身与水晶之间用暗棕/深绿自然分隔，不做均匀黑框。",
+            border_note="水晶外轮廓用 1px 深色描边 #10282A；杖身与水晶之间用暗棕/深绿自然分隔；描边沿对角线构图走。",
             saturation_note="青绿/水晶色整体降低饱和度，避免高饱和荧光；亮部仅作局部 1px 提示。",
         ),
-        "shape_pattern": _make_shape_pattern(
-            silhouette="斜向细杖 + 顶部明显水晶簇：顶部多根尖柱/棱面向不同方向生长，整体是一个‘法杖’语义剪影。",
-            parts=["rod 杖身", "crystal_cluster 顶部多根尖柱/棱面水晶", "handle 握柄"],
-            border="晶体沿外轮廓 1px 深色 #10282A；杖身与水晶交界用暗色过渡。",
-            shading="左上亮部/右下暗部；每根晶体有亮面和暗面，避免平涂发光。",
-            detail_pattern="水晶棱面用小三角/菱形切面 + 1px 噪点；杖身用暗棕颗粒。",
-            shape_lock_optional=True,
-            part_pattern_flow=[
-                {"part": "crystal_cluster 水晶簇", "shape": "多根尖柱/棱面尖柱", "pattern": "棱面 + 纵向高光带 + 两侧暗面", "flow": "每根尖柱从尖端到底座都有一条纵向高光带，高光沿柱体轴向走；暗面位于柱体两侧，形成沿形状方向的明暗分界。"},
-                {"part": "rod 杖身", "shape": "2-3px 宽斜向细杖", "pattern": "暗棕颗粒 / 微弱魔法纹", "flow": "颗粒与魔法纹沿杖身纵向流动，不脱离杖身轮廓，不形成横向孤立线条。"},
-                {"part": "handle 握柄", "shape": "杖身下段加粗/深色段", "pattern": "暗棕横向分段 + 颗粒", "flow": "分段线沿握柄径向环绕，颗粒沿握柄纵向分布。"},
-            ],
-            integration_note="先用形状确定结构（尖柱/杖身/握柄），再让棱面、高光带、颗粒纹样贴合每个部件的走向/边缘/明暗面；纹样不得脱离形状独立存在。",
-        ),
+        "shape_pattern": sp,
         "reference_nodes": [
             {"asset": "blaze_rod", "role": "shape", "reason": "仅参考物品尺度/细长剪影，不锁形状，也不复制像素。"},
             {"asset": "diamond", "role": "color", "reason": "提供青绿/晶体色相与高光方向，但要降低饱和度。"},
@@ -696,6 +705,50 @@ _KNOWN_CARD_BUILDERS = {
 }
 
 
+def _make_design_checklist(card: dict) -> list[dict]:
+    """通用设计自检清单：生成前必须逐项自查，方位/连接/构图归设计环节统一负责。"""
+    form = card.get("form", "item")
+    checks = [
+        {
+            "id": "orientation",
+            "item": "方位/构图一致性",
+            "must": "所有部件沿同一条构图轴/方向，主体朝向一致；禁止出现‘手柄斜、头部正’、部件各朝各的现象。",
+            "self_check": "画之前先用一句话描述整体轴线（如左下→右上），再检查每个部件是否落在这条轴上。",
+        },
+        {
+            "id": "connection",
+            "item": "连接点对齐",
+            "must": "部件之间的连接点与主轴/中心对齐，不偏心、不悬空、不错位。",
+            "self_check": "检查杖头/部件是否锚定在手柄/主体的顶端端点，连接处是否位于轴线上。",
+        },
+        {
+            "id": "semantic",
+            "item": "语义可辨",
+            "must": "16x16 剪影一眼能看出‘这是什么’；主体清晰，不依赖文字说明。",
+            "self_check": "遮住颜色只看 alpha 剪影，仍能认出物品/方块/十字植物语义。",
+        },
+        {
+            "id": "palette",
+            "item": "配色层次",
+            "must": "包含 base/light/dark/outline；有明暗体积和自然描边，避免荧光平涂。",
+            "self_check": "每个部件至少有亮部/暗部/描边三档色阶；饱和度不过高。",
+        },
+        {
+            "id": "pattern_flow",
+            "item": "纹样与形状一体",
+            "must": "纹样沿形状的走向/边缘/明暗面流动，不脱离形状独立存在。",
+            "self_check": "逐部件核对 part_pattern_flow：纹样方向是否与部件形状一致。",
+        },
+        {
+            "id": "frame",
+            "item": "边框/背景",
+            "must": "透明背景、主体不贴边、不留明显空洞；%s 尺寸内主体占位合理（约 8~14px）。" % ("16x16" if form != "entity_uv" else "64x32"),
+            "self_check": "检查 bbox 是否居中、四周是否留至少 1px 透明边。",
+        },
+    ]
+    return checks
+
+
 def _enrich_card(card: dict, retrieval: dict | None, form: str, template: str | None) -> dict:
     """在卡片上补充来源/检索/形式信息，便于追踪与集成。"""
     card = dict(card)
@@ -727,6 +780,7 @@ def _enrich_card(card: dict, retrieval: dict | None, form: str, template: str | 
         )
     if not card.get("reference_nodes"):
         card["reference_nodes"] = _reference_nodes_from_retrieval(retrieval)
+    card["design_checklist"] = _make_design_checklist(card)
     return card
 
 
@@ -944,6 +998,14 @@ def _validate_concept_card(card: dict) -> list[str]:
         if node["role"] not in ("shape", "color", "pattern", "border", "material"):
             raise ValueError("reference_nodes[%d] role invalid: %r" % (i, node["role"]))
     checks.append("reference_nodes 3..8 entries with asset/role/reason (%d nodes)" % len(refs))
+
+    chk = card.get("design_checklist")
+    if not isinstance(chk, list) or len(chk) < 1:
+        raise ValueError("design_checklist must be a non-empty list")
+    for i, item in enumerate(chk, 1):
+        if not isinstance(item, dict) or not item.get("item") or not item.get("must") or not item.get("self_check"):
+            raise ValueError("design_checklist[%d] must contain item/must/self_check" % i)
+    checks.append("design_checklist orientation/connection/semantic/palette/pattern/frame (%d items)" % len(chk))
     return checks
 
 

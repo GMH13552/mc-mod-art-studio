@@ -1030,6 +1030,11 @@ def _build_v2_prompt_text(
             lines.append("- 明暗 shading：%s" % sp.get("shading", ""))
             lines.append("- 细节图案 detail_pattern：%s" % sp.get("detail_pattern", ""))
             lines.append("- 是否锁形状 shape_lock_optional：%s" % sp.get("shape_lock_optional", True))
+            ori = sp.get("orientation")
+            if isinstance(ori, dict):
+                lines.append("- 方位/构图 orientation：")
+                for k, v in ori.items():
+                    lines.append("  - %s：%s" % (k, v))
             lines.append("- 形状-纹样联动 part_pattern_flow：")
             for ppf in sp.get("part_pattern_flow", []):
                 lines.append("  - [%s] 形状：%s | 纹样：%s | 走向：%s" % (
@@ -1046,6 +1051,13 @@ def _build_v2_prompt_text(
                     i, node.get("asset", ""), node.get("role", ""), node.get("reason", "")
                 ))
             lines.append("")
+        checklist = concept_card.get("design_checklist", [])
+        if checklist:
+            lines.append("### 设计自检清单（输出像素前必须逐项自查）")
+            for c in checklist:
+                lines.append("- [ ] %s：%s" % (c.get("item", ""), c.get("must", "")))
+                lines.append("    自查：%s" % c.get("self_check", ""))
+            lines.append("")
 
     lines.append("")
     lines.append("# 检索特征摘要")
@@ -1055,7 +1067,7 @@ def _build_v2_prompt_text(
     lines.append(features["summary"])
 
     lines.append("")
-    lines.append("# 锚点参考（compact 文本）")
+    lines.append("# 锚点参考（语义摘要，仅供风格参考，不得复制像素）")
     lines.append("")
     for a in anchors:
         lines.append("## %s (%s)" % (a.get("name", "?"), a.get("role", "?")))
@@ -1072,10 +1084,8 @@ def _build_v2_prompt_text(
         if cols:
             lines.append("- 颜色：%s" % " ".join(cols))
         lines.append("")
-        lines.append(a.get("compact_text", ""))
-        lines.append("")
 
-    lines.append("> 注意：以下锚点 compact 文本仅供风格/特征参考；不得复制其中的 PALETTE + index grid，必须生成新形状/图案。")
+    lines.append("> 参考素材只是语义/风格参考，不提供可复制的像素网格；必须自行设计新形状与配色。")
     lines.append("")
 
     lines.append("# 风格规则")
@@ -1095,9 +1105,7 @@ def _build_v2_prompt_text(
     lines.append("- 类型：%s" % fs.get("type", ""))
     lines.append("- 来源：%s" % fs.get("path", ""))
     lines.append("")
-    lines.append(fs.get("compact_text", ""))
-    lines.append("")
-    lines.append("> 注意：few-shot 仅为格式/风格示意；不得复制参考贴图，必须生成新形状/图案。")
+    lines.append("> few-shot 仅作格式/风格示意；不得复制参考贴图，必须生成新形状/图案。")
     lines.append("")
 
     lines.append("# 输出文件清单")
@@ -1552,9 +1560,16 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
         for node in refs:
             if not node.get("asset") or node.get("role") not in ("shape", "color", "pattern", "border", "material") or not node.get("reason"):
                 raise ValueError("v2 concept_card reference_nodes entry invalid")
+        chk = cc.get("design_checklist")
+        if not isinstance(chk, list) or len(chk) < 1:
+            raise ValueError("v2 concept_card design_checklist missing")
+        for c in chk:
+            if not c.get("item") or not c.get("must") or not c.get("self_check"):
+                raise ValueError("v2 concept_card design_checklist entry invalid")
         ok.append("v2 concept_card is present and non-empty")
         ok.append("v2 concept_card has palette_scheme/shape_pattern/reference_nodes (v5 design)")
         ok.append("v2 concept_card shape_pattern is shape-pattern integrated (part_pattern_flow)")
+        ok.append("v2 concept_card has design_checklist (orientation/connection/semantic/palette/pattern/frame)")
 
     prompt_text = data.get("prompt", "")
     for marker in (
@@ -1563,6 +1578,7 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
         "不要复制参考贴图",
         "允许 3~8 个参考节点",
         "形状-纹样一体：先用形状确定结构，再让纹样贴合形状的走向/边缘/明暗面；纹样不得脱离形状独立存在。",
+        "设计自检清单（输出像素前必须逐项自查）",
     ):
         if marker not in prompt_text:
             raise ValueError("v2 prompt missing design-flow marker: %r" % marker)

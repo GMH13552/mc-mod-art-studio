@@ -92,5 +92,43 @@
   "source": "concept_grounder:offline_rule",
   "method": "rule",
   "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
-  "retrieval_anchor_count": 3
+  "retrieval_anchor_count": 2,
+  "design_checklist": [
+    {
+      "id": "orientation",
+      "item": "方位/构图一致性",
+      "must": "所有部件沿同一条构图轴/方向，主体朝向一致；禁止出现‘手柄斜、头部正’、部件各朝各的现象。",
+      "self_check": "画之前先用一句话描述整体轴线（如左下→右上），再检查每个部件是否落在这条轴上。"
+    },
+    {
+      "id": "connection",
+      "item": "连接点对齐",
+      "must": "部件之间的连接点与主轴/中心对齐，不偏心、不悬空、不错位。",
+      "self_check": "检查杖头/部件是否锚定在手柄/主体的顶端端点，连接处是否位于轴线上。"
+    },
+    {
+      "id": "semantic",
+      "item": "语义可辨",
+      "must": "16x16 剪影一眼能看出‘这是什么’；主体清晰，不依赖文字说明。",
+      "self_check": "遮住颜色只看 alpha 剪影，仍能认出物品/方块/十字植物语义。"
+    },
+    {
+      "id": "palette",
+      "item": "配色层次",
+      "must": "包含 base/light/dark/outline；有明暗体积和自然描边，避免荧光平涂。",
+      "self_check": "每个部件至少有亮部/暗部/描边三档色阶；饱和度不过高。"
+    },
+    {
+      "id": "pattern_flow",
+      "item": "纹样与形状一体",
+      "must": "纹样沿形状的走向/边缘/明暗面流动，不脱离形状独立存在。",
+      "self_check": "逐部件核对 part_pattern_flow：纹样方向是否与部件形状一致。"
+    },
+    {
+      "id": "frame",
+      "item": "边框/背景",
+      "must": "透明背景、主体不贴边、不留明显空洞；16x16 尺寸内主体占位合理（约 8~14px）。",
+      "self_check": "检查 bbox 是否居中、四周是否留至少 1px 透明边。"
+    }
+  ]
 }
