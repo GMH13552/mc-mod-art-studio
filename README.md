@@ -35,6 +35,38 @@ scan_mc_assets.py -> retrieve_assets.py -> concept_grounder.py
 - 示例 `examples/alien_crystal_wand/` 演示了“顶部明显水晶簇 + 低饱和青绿配色 + 暗部/1px 描边”，
   而不是照抄 blaze_rod 形状。
 
+## API 密钥配置（重要）
+
+本项目**不把密钥写进任何 .py**，**不要求你在代码里粘贴 key**。密钥通过**环境变量**传入：
+
+```bash
+# 方式 1：终端临时设置
+export LLM_API_KEY=sk-xxxx
+export LLM_BASE_URL=https://api.openai.com/v1   # 可选，兼容 OpenAI chat/completions 的地址
+export LLM_MODEL=gpt-4o-mini                    # 可选，换成你用的纯文本模型
+
+# 方式 2：复制 .env.example 为 .env 后 source（.env 已被 .gitignore 忽略）
+cp .env.example .env
+# 编辑 .env 填入 LLM_API_KEY=...
+set -a; source .env; set +a
+```
+
+然后通过 `llm_client.py` 调用（它只从环境变量读 key）：
+
+```bash
+python3 run_pipeline.py --query "异形水晶法杖" --form item --top 5 \
+    --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' \
+    --out out/alien_crystal_wand
+```
+
+> 安全约定：`LLM_API_KEY` 不会被写入仓库；`.env`、`*.key`、`*token*` 都在 `.gitignore` 里。自己测试时也**不要把 key 贴在命令历史里被录下来**（可用 `read -s` 或 `.env`）。
+
+## 图片演示
+
+![showcase](showcase.png)
+
+上图：`examples/alien_crystal_wand/sprite.png`（顶部明显水晶簇、低饱和青绿、深色描边）与 `examples/mushroom_sprout/cross.png`（cross 形式 + 蘑菇内容）。生成后再用下面的命令在本地放大查看/打包。
+
 ## 使用示例
 
 ### 一键流水线（推荐）
@@ -48,9 +80,9 @@ python3 run_pipeline.py --query "异形水晶法杖" --form item \
     --raw examples/alien_crystal_wand/raw_answer.txt \
     --out examples/alien_crystal_wand
 
-# 调用外部 LLM 命令（支持 {prompt} / {prompt_file} 替换）
+# 调用外部 LLM（推荐：llm_client.py 从环境变量读 LLM_API_KEY）
 python3 run_pipeline.py --query "异形水晶法杖" --form item --top 5 \
-    --llm-cmd 'python3 my_llm.py --prompt-file {prompt_file}' \
+    --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' \
     --out out/alien_crystal_wand
 
 # 同时打包成资源包
@@ -98,10 +130,12 @@ python3 package_asset.py --self-test
 
 - 核心脚本：`scan_mc_assets.py`、`retrieve_assets.py`、`concept_grounder.py`、`build_style_prompt.py`、
   `compose_asset.py`、`package_asset.py`、`asset_to_text.py`、`text_to_texture.py`、
-  `audit_generation.py`、`validate_raw_answers_v3.py`、`run_pipeline.py`。
+  `audit_generation.py`、`validate_raw_answers_v3.py`、`run_pipeline.py`、`llm_client.py`。
 - `minecraft_texture_tool/texture_to_text.py`（唯一保留的纹理转换工具文件）。
 - `builtin_models_fallback/`：极简模板 JSON（无原版贴图）。
 - `examples/`：`alien_crystal_wand` 与 `mushroom_sprout` 两个最小示例。
+- `.env.example`：API 密钥环境变量模板（`.env` 不入库）。
+- `showcase.png`：README 展示图（仅自产示例放大）。
 
 ## 安全说明
 

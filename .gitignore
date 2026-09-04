@@ -15,3 +15,6 @@ v4_compose_selftest.txt
 v3_selftest_user_model.json
 *-log.txt
 *-log-*.txt
+.env
+*.key
+*_token*
