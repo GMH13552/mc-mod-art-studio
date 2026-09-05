@@ -403,6 +403,20 @@ def _select_references_from_catalog(args, entries, query: str) -> list[str]:
             if n and n in line and n not in found:
                 found.append(n)
     chosen = found[:4]
+    # 弓类：强制用 idle bow 作为形状模板，避免选到 bow_pulling_* 的满弦形态。
+    if "弓" in query or "bow" in query.lower():
+        if "bow" not in chosen and "bow" in names:
+            chosen = ["bow"] + chosen
+        chosen = [n for n in chosen if not n.startswith("bow_pulling")] or ["bow"]
+        # 若替换后不足 4 个，补 top anchors 里未出现的相关项（保留原有选择）
+        if len(chosen) < 4:
+            for n in names:
+                if n in chosen:
+                    continue
+                if any(k in n for k in ("bow", "eye", "ender_eye", "spider_eye")):
+                    chosen.append(n)
+                if len(chosen) >= 4:
+                    break
     if not chosen:
         print("[two-stage] no names parsed; fallback to top anchors")
     return chosen
@@ -483,6 +497,39 @@ def _build_selected_reference_block(pack: dict, selected: list[dict], novelty: f
         selected, form, w, h, entity, novelty, no_original_ref
     )
     return block or ""
+
+
+def _extract_silhouette(compact_text: str) -> list[str]:
+    """从 asset_to_text compact 中提取 '## Silhouette' 的 X/. 行。"""
+    lines_out: list[str] = []
+    in_sil = False
+    for line in (compact_text or "").splitlines():
+        if "Silhouette" in line:
+            in_sil = True
+            continue
+        if in_sil:
+            if not line.strip():
+                break
+            if set(line.strip()) <= {"X", ".", " "}:
+                lines_out.append(line.rstrip())
+    return lines_out
+
+
+def _bow_silhouette_from_pack(pack: dict) -> list[str]:
+    """从 selected/anchor 里找一个 idle bow 的剪影。"""
+    for src in (pack.get("anchors", []),):
+        for a in src:
+            if a.get("name") == "bow":
+                sil = _extract_silhouette(a.get("compact_text", ""))
+                if sil:
+                    return sil
+        # selected refs 也可能在 pack["selected_anchors"]（未存）里；退而求其次搜所有含 bow 的
+        for a in src:
+            if str(a.get("name", "")).startswith("bow"):
+                sil = _extract_silhouette(a.get("compact_text", ""))
+                if sil:
+                    return sil
+    return []
 
 
 def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
@@ -572,6 +619,14 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     for rule in getattr(cg, "GENERIC_PIXEL_DETAIL_RULES", []) or []:
         lines.append("- %s" % rule)
     lines.append("")
+    if "弓" in (pack.get("query") or "").lower() or "bow" in (pack.get("query") or "").lower():
+        sil = _bow_silhouette_from_pack(pack)
+        if sil:
+            lines.append("## 弓形拓扑参考（X=不透明 . =透明；按此拓扑画，颜色按上面配色/配饰重上；不要画成直线/方块/满弦）")
+            lines.append("```")
+            lines.extend(sil)
+            lines.append("```")
+            lines.append("")
     lines.append("# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）")
     lines.append("- 先写 2~3 行设计分析：总结你要借/组合的关键特征（形状/配色/花纹/明暗），放在 FORMAT 之前。")
     lines.append("- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；设计分析中提到的每个关键特征必须在网格中可见（例如“眼球”要有瞳孔/虹膜/高光），非 -1 像素 >= 40；禁止全 -1 空图。")
