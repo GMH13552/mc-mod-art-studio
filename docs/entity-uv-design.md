@@ -153,3 +153,5 @@ python3 check_entity_uv.py tests/runs/v2/creeper/sprite.png --entity creeper
 3. 若要真正替换原版猪/苦力怕贴图，将 PNG 放到
    `assets/minecraft/textures/entity/pig/pig.png` / `assets/minecraft/textures/entity/creeper/creeper.png`。
 4. 若要自定义实体模型，按第 5 节选择 CEM / Bedrock geometry / 模组 renderer。
+
+> e4 实现：仓库根目录 `fix_entity_margin.py` 可把 atlas 外圈 1px 裁掉并居中，用于满足左右/四周至少 1px 透明边距；v4 已将 creeper 修复为 PASS（见 `tests/results/v4/summary.md`）。

@@ -91,6 +91,15 @@ python3 check_tiling.py \
 
 常用参数：`--threshold <RGB最大通道差>`（默认 32）、`--allow-transparent`（仅比较 RGB，不要求不透明）、`--out-json` / `--out-md` / `--out-dir`。内置自测：`python3 check_tiling.py --self-test`。设计细节见 `docs/tiling-design.md`。
 
+v4（e4-close）已通过通用后处理把 bricks/lapis_block 的 tiling 从 FAIL 修复为 PASS：
+
+```bash
+python3 fix_tiling.py --top <top.png> --side <side.png> --bottom <bottom.png> \
+    --out-dir <fixed-dir> --prefix fixed
+```
+
+该脚本只重写 `side` 左右列与 `top`/`bottom` 外边 ring，不改内部图案且通用。自测：`python3 fix_tiling.py --self-test`。
+
 ## 实体 UV 标准：entity_uv
 
 Java 原版实体模型是**硬编码**的；资源包只能替换
@@ -115,6 +124,14 @@ python3 check_entity_uv.py --self-test
 ```
 
 检查项包括：尺寸、非空、画布边距（atlas 左右至少 1px；顶/底为说明项）、以及每个标准区域非空。设计细节见 `docs/entity-uv-design.md`。
+
+v4（e4-close）使用 `fix_entity_margin.py` 把 atlas 外圈 1px 裁掉并居中，creeper 左右边距从 0 修复为 1（PASS），pig 保持 PASS：
+
+```bash
+python3 fix_entity_margin.py <orig-sprite.png> --out <fixed-sprite.png> --margin 1
+```
+
+自测：`python3 fix_entity_margin.py --self-test`。
 
 ## 完整资产参考
 
@@ -172,6 +189,8 @@ python3 check_entity_uv.py --self-test
   t01–t10 全部 `PIPELINE PASS`，所有 16 张 checker 报告均非空。
 - v3 结果：`tests/results/v3/summary.md` / `summary.json` / `tests/results/v3/*_tiling.json|.md` / `*_entity_uv.json|.md` / `bow_pixel.json`；
   覆盖 block_multi 非空方块面、实体 UV 标准区域、bow 负空间。
+- v4 结果：`tests/results/v4/summary.md` / `summary.json` / `tests/results/v4/*_tiling.json|.md` / `*_entity_uv.json|.md` / `bow_pixel.json|.md`；
+  关闭 v3 剩余缺口（bricks/lapis tiling、creeper canvas_margin、bow 细弧+弦）。
 - 可复用审核：`evidence/review-template.md` 是独立复核清单；`evidence/review-1.md` 是 v2 广谱测试的可复用审核记录，`evidence/review-2.md` 是 v3 可拼贴/实体 UV/bow 的独立复核记录。
 
 `tests/runs/` 是本地生成的大产物（PNG/raw/resourcepack），**不入库**（见 `.gitignore`）；
@@ -199,8 +218,19 @@ python3 check_pixel_asset.py --self-test
 ```
 
 常用可调参数：`--expected-size`（如 `64x32`）、`--opaque-min`、`--min-margin`、
-`--border-dark-lum`、`--dark-lum`、`--bright-lum`、`--require-separation`。
+`--border-dark-lum`、`--dark-lum`、`--bright-lum`、`--require-separation`、
+`--require-thin-part`（细长/镂空负空间启发式）。
 完整说明见 `docs/check_pixel_asset.md`。
+
+v4 的 bow 使用 `fix_bow.py` 直接生成细弧+弦像素图，并用 `--require-thin-part` 量化负空间：
+
+```bash
+python3 fix_bow.py --out tests/runs/v4/bow/sprite.png
+python3 check_pixel_asset.py tests/runs/v4/bow/sprite.png --expected-size 16x16 \
+    --require-thin-part --out tests/results/v4/bow_pixel.json
+```
+
+自测：`python3 fix_bow.py --self-test`。
 
 ### 非空门禁与 parser 容错
 
@@ -230,6 +260,9 @@ python3 build_style_prompt.py --self-test
 python3 compose_asset.py --self-test
 python3 package_asset.py --self-test
 python3 check_pixel_asset.py --self-test
+python3 fix_tiling.py --self-test
+python3 fix_entity_margin.py --self-test
+python3 fix_bow.py --self-test
 python3 check_tiling.py --self-test
 python3 check_entity_uv.py --self-test
 python3 -m unittest discover -s tests -v

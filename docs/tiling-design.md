@@ -98,6 +98,8 @@ evidence/tiling-baseline-color/lapis_block_tiling.md
 4. 若要方向性图案（如“正面有门、其余侧面不同），应使用每面独立 PNG + 显式 `elements/faces/uv` 模型，而不是复用一张 `side`。
 5. 后处理可用 1px 描边/接缝统一：先抽出跨面边缘，再让相邻面共享该边缘像素；或对 side 做左右镜像接缝重绘。
 
+> e4 实现：仓库根目录 `fix_tiling.py` 按本节的方案做 seam-stitch，v4 已将 bricks/lapis_block 修复为 PASS（见 `tests/results/v4/summary.md`）。
+
 ## 6. 自测
 
 - `python3 check_tiling.py --help`：可用

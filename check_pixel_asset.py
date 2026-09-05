@@ -57,6 +57,8 @@ DEFAULT_DARK_LUM = 80
 DEFAULT_BRIGHT_LUM = 160
 DEFAULT_MIN_BUCKET_PX = 2
 DEFAULT_MIN_MAIN_PX = 2
+DEFAULT_THIN_RATIO = 0.5
+DEFAULT_THIN_MIN_BBOX_PX = 10
 
 
 def normalize_path(path: str | Path) -> Path:
@@ -200,6 +202,18 @@ def analyze_png(path: str | Path, args: argparse.Namespace) -> dict:
         bbox_ok = False
         opaque_ratio = 0.0
 
+    # ---- thin / negative-space（细长部件启发式）----
+    thin_min_bbox_px = int(getattr(args, "thin_min_bbox_px", DEFAULT_THIN_MIN_BBOX_PX))
+    thin_ratio = float(getattr(args, "thin_ratio", DEFAULT_THIN_RATIO))
+    thin_part = False
+    if bbox is not None:
+        bw = bbox[2] - bbox[0]
+        bh = bbox[3] - bbox[1]
+        # bbox 明显大于 1px 物体，但内部负空间多（opaque_ratio 低）。
+        thin_part = max(bw, bh) >= thin_min_bbox_px and opaque_ratio <= thin_ratio
+    thin_required = bool(getattr(args, "require_thin_part", False))
+    thin_ok = thin_part if thin_required else None
+
     # ---- border / 描边 ----
     boundary = _outer_boundary(mask, width, height)
     boundary_lums = [_luminance(*px[x, y][:3]) for x, y in boundary]
@@ -280,6 +294,13 @@ def analyze_png(path: str | Path, args: argparse.Namespace) -> dict:
                 palette["dominant_color_count"],
             ),
         },
+        {
+            "id": "thin_part",
+            "ok": thin_ok,
+            "summary": "细长部件/负空间启发式：bbox 较大但 opaque_ratio<=%.2f" % thin_ratio,
+            "detail": "bbox=%s opaque_ratio=%.4f thin=%s (min_bbox_px=%d)"
+            % (bbox, opaque_ratio, thin_part, thin_min_bbox_px),
+        },
     ]
     if separation_required:
         checks.append(
@@ -321,6 +342,11 @@ def analyze_png(path: str | Path, args: argparse.Namespace) -> dict:
             "margins": margins,
             "min_margin": args.min_margin,
             "bbox_ok": bbox_ok,
+            "thin_part": thin_part,
+            "thin_ratio": thin_ratio,
+            "thin_min_bbox_px": thin_min_bbox_px,
+            "thin_required": thin_required,
+            "thin_ok": thin_ok,
             "boundary_pixel_count": len(boundary),
             "boundary_dark_pixel_count": boundary_dark_count,
             "boundary_dark_ratio": round(boundary_dark_ratio, 4),
@@ -394,11 +420,15 @@ def render_markdown(data: dict) -> str:
         "| component_count | %d |" % m["component_count"],
         "| component_sizes | %s |" % m["component_sizes"],
         "| separation_ok | %s |" % m["separation_ok"],
+        "| thin_part | %s |" % m["thin_part"],
+        "| thin_ratio | %.2f |" % m["thin_ratio"],
+        "| thin_min_bbox_px | %d |" % m["thin_min_bbox_px"],
         "",
         "## Notes",
         "",
         "- 本检查为通用像素启发式，不绑定具体物品名或形状。",
         "- `part_separation` 默认仅报告；用 `--require-separation` 才会纳入 verdict。",
+        "- `thin_part` 默认仅报告；用 `--require-thin-part` 才会纳入 verdict。",
         "- 阈值可通过 CLI 参数调整，产生可复现的证据文件。",
         "",
     ]
@@ -429,8 +459,8 @@ def render_console(data: dict) -> str:
             m["palette"]["dominant_color"],
             m["palette_ok"],
         ),
-        "  components=%d sizes=%s separation=%s"
-        % (m["component_count"], m["component_sizes"], m["part_separation"]),
+        "  components=%d sizes=%s separation=%s thin=%s ratio=%s"
+        % (m["component_count"], m["component_sizes"], m["part_separation"], m["thin_part"], m["opaque_ratio"]),
     ]
     for c in v["checks"]:
         status = "PASS" if c["ok"] is True else ("FAIL" if c["ok"] is False else "INFO")
@@ -483,6 +513,9 @@ def _self_test() -> int:
             min_main_px=DEFAULT_MIN_MAIN_PX,
             min_components=2,
             require_separation=True,
+            thin_ratio=DEFAULT_THIN_RATIO,
+            thin_min_bbox_px=DEFAULT_THIN_MIN_BBOX_PX,
+            require_thin_part=False,
         )
         data = analyze_png(path, args)
         assert data["metrics"]["opaque_count"] >= 20
@@ -540,6 +573,12 @@ def build_parser() -> argparse.ArgumentParser:
                         help="将部件分离（连通块>=2）纳入 PASS/FAIL 判定；默认仅报告")
     parser.add_argument("--min-components", type=int, default=2,
                         help="判定部件分离所需的最少连通块数（默认 2）")
+    parser.add_argument("--thin-ratio", type=float, default=DEFAULT_THIN_RATIO,
+                        help="细长部件负空间判定：opaque_ratio 上限（默认 0.5）")
+    parser.add_argument("--thin-min-bbox-px", type=int, default=DEFAULT_THIN_MIN_BBOX_PX,
+                        help="细长部件判定：bbox 长边最少像素数（默认 10）")
+    parser.add_argument("--require-thin-part", action="store_true",
+                        help="将细长部件/负空间启发式纳入 PASS/FAIL 判定；默认仅报告")
     parser.add_argument("--self-test", action="store_true",
                         help="运行合成图片自测并退出")
     return parser

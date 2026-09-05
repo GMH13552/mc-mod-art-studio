@@ -32,6 +32,7 @@ python3 check_pixel_asset.py --self-test
 | `border` | 外轮廓暗色像素占比 >= 0.15，且外轮廓像素 >= 2 | `--border-dark-lum`、`--min-border-dark-ratio`、`--min-border-px` |
 | `palette` | 暗色桶 >= 2、亮色桶 >= 2、主色出现次数 >= 2 | `--dark-lum`、`--bright-lum`、`--min-bucket-px`、`--min-main-px` |
 | `part_separation` | 默认仅报告；`--require-separation` 时要求连通块 >= 2 | `--min-components` |
+| `thin_part` | 默认仅报告；`--require-thin-part` 时要求 bbox 长边 >= 10 且 opaque_ratio <= 0.5 | `--thin-min-bbox-px`、`--thin-ratio` |
 
 所有检查均输出证据指标，不读取/依赖物品名称、概念卡或 LLM 私有模型。
 
@@ -45,6 +46,7 @@ python3 check_pixel_asset.py --self-test
 - `boundary_vs_all_delta`：外轮廓平均亮度与全体平均亮度之差（负值表示边界偏暗）。
 - `palette`：dark/mid/bright 分桶数量、主色 RGBA 与占比。
 - `component_count` / `component_sizes`：4-连通非透明分量数量与大小。
+- `thin_part` / `thin_ok`：细长部件/负空间启发式；当 bbox 较大但 `opaque_ratio` 较低时判定为细长/镂空，可用于弓类资产。
 - `verdict.overall`：`PASS` / `FAIL`。CLI 会在 `FAIL` 时返回退出码 `1`，`PASS` 时返回 `0`。
 
 ## 可复现命令

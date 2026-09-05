@@ -22,6 +22,7 @@
 | 方块拼贴校验 | `check_tiling.py` | side_wrap / top_side / bottom_side 边缘连续性 evidence |
 | 实体 UV 校验 | `check_entity_uv.py` | 尺寸/非空/画布边距/标准 UV 区域 evidence |
 | 一键整合 | `run_pipeline.py` | 串起 scan → retrieve → concept → prompt → raw → PNG → package，并执行非空门禁 |
+| 后处理（e4） | `fix_tiling.py` / `fix_entity_margin.py` / `fix_bow.py` | 方块 seam-stitch、实体 atlas margin inset、细长物品细弧+弦 |
 
 ## 3. 概念卡 schema（v5 设计升级）
 
@@ -108,6 +109,7 @@ python3 check_tiling.py --self-test
 可关闭不透明边缘门禁（仅作颜色对照）。详见 `docs/tiling-design.md`。
 
 v3 实测：glowstone PASS；bricks 与 lapis_block 因跨面边缘/侧边不一致 FAIL（但三面已非透明）。
+v4（e4-close）用 `fix_tiling.py` 做 seam-stitch 后处理：side 左右列取平均、top/bottom 外边 ring 重写为 side 顶/底行；bricks/lapis_block 均恢复 PASS，内部图案不变。
 
 ### 3.4 实体 UV 标准（entity_uv）
 
@@ -136,6 +138,7 @@ python3 check_entity_uv.py --self-test
 实现细节见 `docs/entity-uv-design.md` 与 `entity_uv_spec.py`。
 
 v3 实测：pig PASS；creeper 因左右触边（left=0,right=0）FAIL，但 head/body/legs 区域已非空。
+v4（e4-close）用 `fix_entity_margin.py` 把 atlas 外圈 1px 裁掉并居中；creeper 左右边距 0→1（PASS），pig 保持 PASS。
 
 ### 3.5 完整资产参考与坐标系
 
