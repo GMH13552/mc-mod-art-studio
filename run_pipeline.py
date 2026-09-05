@@ -403,6 +403,54 @@ def _build_catalog_text(entries: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def _parse_shape_plan(resp: str) -> list[str]:
+    """从选择响应里提取 16x16 的 X/. 形状计划行。"""
+    rows: list[str] = []
+    for line in resp.splitlines():
+        s = line.strip()
+        if len(s) >= 16 and set(s[:16]) <= {"X", ".", " "}:
+            rows.append(s[:16])
+            if len(rows) >= 16:
+                break
+    return rows if len(rows) >= 8 else []
+
+
+def _build_design_prompt(query: str, selected_anchors: list[dict]) -> str:
+    """设计形状计划：把选中的真实参考 compact（Silhouette/ASCII/配色）给模型，让它输出 16x16 X/. 剪影计划。"""
+    lines = ["# 设计形状计划（第二段：只输出 16x16 剪影，不画最终像素）"]
+    lines.append("目标：%s（item 16x16）" % query)
+    lines.append("下面是**已经选中的真实参考资源**（含剪影/ASCII/配色），请你据此设计这个物品的 16x16 剪影：")
+    lines.append("")
+    for i, a in enumerate(selected_anchors, 1):
+        lines.append("### 参考 %d：%s" % (i, a.get("name", "?")))
+        lines.append("路径：%s" % a.get("path", ""))
+        compact = a.get("compact_text", "") or ""
+        lines.append(compact[:1600])
+        lines.append("")
+    lines.append("要求：")
+    lines.append("- 中心词（后面的名词，如 稿/斧/剑）决定主体形状；尽量少改，保留原版工具的对角构图；")
+    lines.append("- 输出 16 行、每行 16 个字符，`X`=不透明，`.`=透明；")
+    lines.append("- 不要输出 PALETTE/INDEX GRID/颜色，只输出剪影计划。")
+    lines.append("")
+    lines.append("形状计划：")
+    return "\n".join(lines)
+
+
+def _design_shape_plan(args, query: str, selected_anchors: list[dict]) -> list[str]:
+    """调用设计模型，返回 16x16 X/. 形状计划（无则返回 []）。"""
+    if not selected_anchors:
+        return []
+    prompt = _build_design_prompt(query, selected_anchors)
+    dargs = argparse.Namespace(**vars(args))
+    dargs.llm_image = []
+    dargs.auto_visual_ref = False
+    print("[two-stage] design shape plan from real references ...")
+    resp = _generate_raw_text(dargs, prompt, auto_images=[])
+    plan = _parse_shape_plan(resp)
+    print("[two-stage] shape plan rows: %d" % len(plan))
+    return plan
+
+
 def _catalog_names(entries: list[dict]) -> set[str]:
     names = set()
     for e in entries:
@@ -415,7 +463,7 @@ def _catalog_names(entries: list[dict]) -> set[str]:
 
 def _build_selection_prompt(query: str, form: str, catalog_text: str) -> str:
     """两段式第一段：只给名字清单，让模型选 2-4 个参考并说明借什么。"""
-    return (
+    sel_prompt = (
         "# 选择参考（第一段：只输出选中的名字，不要画图）\n"
         "目标：%s（form=%s）\n"
         "下面是全部可用的资源名（只有名字）。请从中**选择 2-4 个**你最想参考的资产，\n"
@@ -425,8 +473,6 @@ def _build_selection_prompt(query: str, form: str, catalog_text: str) -> str:
         "- <资源名>: 借什么（如：bow: 弓形/弦；ender_eye: 绿色瞳孔/高光）\n"
         "只要名字与借法，**不要输出像素网格**。\n"
     ) % (query, form, catalog_text)
-    if "弓" in query or "bow" in query.lower():
-        sel_prompt += "\n> 注意：目标是弓时，优先用 `bow`（未拉开）作形状参考，**不要用 `bow_pulling_*`（拉满）**。\n"
     return sel_prompt
 
 
@@ -711,6 +757,13 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
         lines.append("# 已选参考拓扑模板（X=不透明 . =透明；按拓扑画，颜色按语义重新配色；不要复制像素）")
         lines.extend(topo)
         lines.append("")
+    shape_plan = pack.get("shape_plan") or []
+    if shape_plan:
+        lines.append("## 设计模型形状计划（这是最终剪影方向；请**按此计划填像素**，不要改轮廓；X=不透明 . =透明）")
+        lines.append("```")
+        lines.extend(shape_plan[:16])
+        lines.append("```")
+        lines.append("")
     lines.append("# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）")
     lines.append("- 先写 2~3 行设计分析：总结你要借/组合的关键特征（形状/配色/花纹/明暗），放在 FORMAT 之前。")
     lines.append("- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；设计分析中提到的每个关键特征必须在网格中可见（例如“眼球”要有瞳孔/虹膜/高光），非 -1 像素 >= 40；禁止全 -1 空图。")
@@ -824,6 +877,10 @@ def run(args: argparse.Namespace) -> int:
             pack["selected_refs"] = [a.get("name", "?") for a in selected_anchors]
             pack["_selected_anchor_objs"] = selected_anchors
             _refresh_concept_parts_from_selected(pack, selected_anchors)
+            shape_plan: list[str] = []
+            if args.form in ("item", "cross"):
+                shape_plan = _design_shape_plan(args, args.query, selected_anchors)
+            pack["shape_plan"] = shape_plan or None
             # 生成阶段不再塞全目录，只把选中参考的 compact 细节注入
             pack["catalog"] = None
             pack["reference_block"] = _build_selected_reference_block(
