@@ -39,7 +39,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--model", default=os.environ.get("LLM_MODEL", "gpt-4o-mini"))
     parser.add_argument("--base-url", default=os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1"))
     parser.add_argument("--temperature", type=float, default=0.7)
-    parser.add_argument("--max-tokens", type=int, default=int(os.environ.get("LLM_MAX_TOKENS", "4096")))
+    parser.add_argument("--max-tokens", type=int, default=int(os.environ.get("LLM_MAX_TOKENS", "20000")))
     parser.add_argument("--image", action="append", default=[], dest="images", metavar="PNG",
                         help="参考 PNG 路径；可多次使用（--image a.png --image b.png）或用逗号分隔（--image a.png,b.png）；"
                              "全部传给支持视觉的模型（如 deepseek-v4-flash-vision-exp）")
