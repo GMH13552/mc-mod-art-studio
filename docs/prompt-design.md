@@ -81,19 +81,58 @@
 - 没有改回 `HEX GRID`；
 - `text_to_texture.py` 对 `PALETTE + INDEX GRID` 的解析契约不受影响。
 
-## 8. 涉及文件
+## 8. 原版参考块与 novelty（q2-restore）
+
+`reference_analyzer.py` 把检索到的原版 compact 文本提炼成结构化“参考语法”，
+不再把整段 compact 原样当作答案，也不完全删掉参考：
+
+- `palette_family`：主/亮/暗/描边 的均值与范围；
+- `material_signature`：木质/石/金属/发光/软质 等 token；
+- `structure_hints`：细长/弧形/对称/部件数；
+- `uv_regions`：实体 UV 区域（`entity_uv` 时注入）。
+
+prompt 中的参考块固定标注：
+
+> 借鉴但不照抄：形状/纹理/配色可按需要修改。
+
+### 8.1 默认行为（novelty=0.5）
+
+- 生成“原版参考（结构化语法 + 少量片段）”块；
+- `include_compact=True`，但不附全部锚点，只附 **1–2 个最相关** 的 compact 片段；
+- 每个 compact 片段下方标注“仅供质感参考，禁止逐像素复制；形状/纹理/配色可按需要修改”。
+
+### 8.2 novelty 取值
+
+| novelty | 行为 |
+| --- | --- |
+| `0` | 最贴近原版：附 2 个 compact 片段。 |
+| `0.5`（默认） | 标准：附 1–2 个最相关 compact 片段。 |
+| `0.6~0.84` | 较自由：只附 1 个 compact 片段。 |
+| `0.85~1.0` | 最自由：不附 compact 片段，仅保留结构化参考语法。 |
+
+`--no-original-ref` 可完全关闭参考块，回到“仅语义摘要”模式。
+
+### 8.3 实现位置
+
+- `build_style_prompt.build_prompt_pack_v2` 负责调用
+  `reference_analyzer.analyze_compact()` 生成 `reference_analysis`，并渲染 `reference_block`；
+- `run_pipeline._build_compact_prompt()` 在 `pack["reference_block"]` 存在时注入同一参考块；
+- 两套 prompt 口径一致：先“参考语法”，再“少量 compact 片段”，最后才是输出契约。
+
+## 9. 涉及文件
 
 | 文件 | 改动 |
 | --- | --- |
+| `reference_analyzer.py` | 新增：原版 compact → 结构化语法 + 参考块渲染。 |
 | `concept_grounder.py` | 增加 `GENERIC_DESIGN_PRINCIPLES`；扩充 `GENERIC_PIXEL_DETAIL_RULES`（细长部件/负空间/禁止实心团块/透明边距例外）。 |
-| `build_style_prompt.py` | `_build_v2_prompt_text` 新增“通用设计原则”与 form-specific 硬约束段。 |
-| `run_pipeline.py` | `_build_compact_prompt` 新增 form-specific 硬约束段，并统一引用 `GENERIC_DESIGN_PRINCIPLES`。 |
+| `build_style_prompt.py` | `_build_v2_prompt_text` 新增“通用设计原则”与 form-specific 硬约束段；`build_prompt_pack_v2` 新增 `--novelty / --no-original-ref` 与参考块注入。 |
+| `run_pipeline.py` | `_build_compact_prompt` 注入参考块；修复 `--index` 的 `index_base` 传递；新增 `--novelty / --no-original-ref`。 |
 | `entity_uv_spec.py` | `contract_text()` 强化“标准 atlas、按区域填”表述。 |
 | `check_pixel_asset.py` | 新增 `opaque_ratio`（bbox 内覆盖率）指标。 |
 | `check_tiling.py` | 自测补 `bottom_side` 断言。 |
 | `docs/prompt-design.md` | 本说明文档。 |
 
-## 9. 验证方式
+## 10. 验证方式
 
 ```bash
 python3 concept_grounder.py --self-test

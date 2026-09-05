@@ -7,7 +7,7 @@ Java Edition 原版实体模型大多是硬编码的：资源包只能替换
 `assets/minecraft/textures/entity/<path>.png`，不能通过普通 `assets/<ns>/models/entity/*.json`
 直接替换实体模型。本模块提供：
 
-- 玩家皮肤 64x64 / 64x32 标准布局坐标（与 docs/method-survey.md §2.2 一致）。
+- 玩家皮肤 64x64 / 64x32 标准布局坐标（Java 原版皮肤布局）。
 - 猪 / 苦力怕等原版生物 64x32 atlas 的关键区域坐标（源自原版贴图/UV 模板）。
 - 生成给 LLM 的 “ENTITY UV 语义” 提示文本，避免 LLM 把 64x32 当成单个侧视图。
 

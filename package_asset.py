@@ -1309,7 +1309,7 @@ def package_asset(
             replacement_line = (
                 "No built-in vanilla entity detected from query/name; this texture is a generic entity UV.\n"
                 "  To load in Java: replace an existing vanilla path, or use OptiFine CEM / a mod renderer "
-                "(see docs/entity-uv-design.md)."
+                "(see entity_uv_spec.py / check_entity_uv.py)."
             )
         note = (
             "Entity UV texture for %s (%s).\n"
@@ -1336,7 +1336,7 @@ def package_asset(
         "entity_uv_note": (
             "实体贴图采用 64x32/64x64 标准 UV 布局；未生成 Java 实体 model，"
             "标准实体只能替换 vanilla texture 路径，自定义实体需 OptiFine CEM / Bedrock geometry / 模组 renderer，"
-            "详见 docs/entity-uv-design.md。" if form == "entity_uv" else None
+            "详见 entity_uv_spec.py 与 check_entity_uv.py。" if form == "entity_uv" else None
         ),
         "files": files_entries,
     }

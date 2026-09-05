@@ -1,22 +1,22 @@
 # check_pixel_asset 使用说明
 
-`check_pixel_asset.py` 是通用 16x16 像素资产检查器，用于在生成流程后输出可复现的
+`check_pixel_asset.py` 是通用像素资产检查器，用于在生成流程后输出可复现的
 像素级 evidence：非空、bbox、描边/外轮廓暗色、亮度色阶、部件分离启发式。脚本不绑定
 任何具体物品名或形状，只依赖 Pillow 与 Python 标准库。
 
 ## 快速开始
 
 ```bash
-# 直接查看终端摘要
-python3 check_pixel_asset.py examples/alien_crystal_wand/sprite.png
+# 直接查看终端摘要（item 16x16）
+python3 check_pixel_asset.py examples/reset-demo/bow.png
 
 # 输出 JSON evidence
-python3 check_pixel_asset.py examples/alien_crystal_wand/sprite.png \
-    --out examples/check-evidence/alien_crystal_wand.json
+python3 check_pixel_asset.py examples/reset-demo/bow.png \
+    --out examples/reset-demo/bow-check.json
 
-# 输出 Markdown evidence
-python3 check_pixel_asset.py examples/mushroom_sprout/cross.png \
-    --out examples/check-evidence/mushroom_sprout_cross.md
+# 检查实体 UV（64x32）
+python3 check_pixel_asset.py examples/reset-demo/pig.png \
+    --expected-size 64x32 --out examples/reset-demo/pig-check.json
 
 # 合成图自测
 python3 check_pixel_asset.py --self-test
@@ -52,18 +52,9 @@ python3 check_pixel_asset.py --self-test
 ## 可复现命令
 
 ```bash
-cd /tmp/mc-mod-art-studio-core
-
-# 冒烟检查两个示例并生成 evidence
-python3 check_pixel_asset.py --help
-python3 check_pixel_asset.py examples/alien_crystal_wand/sprite.png \
-    --out examples/check-evidence/alien_crystal_wand.json
-python3 check_pixel_asset.py examples/alien_crystal_wand/sprite.png \
-    --out examples/check-evidence/alien_crystal_wand.md
-python3 check_pixel_asset.py examples/mushroom_sprout/cross.png \
-    --out examples/check-evidence/mushroom_sprout_cross.json
-python3 check_pixel_asset.py examples/mushroom_sprout/cross.png \
-    --out examples/check-evidence/mushroom_sprout_cross.md
+# 冒烟检查 reset-demo 图片
+python3 check_pixel_asset.py examples/reset-demo/bow.png
+python3 check_pixel_asset.py examples/reset-demo/creeper.png --expected-size 64x32
 
 # 单元测试
 python3 -m unittest discover -s tests -v

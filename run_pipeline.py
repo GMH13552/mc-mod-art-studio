@@ -75,27 +75,32 @@ def _persist_synthetic_refs(retrieval: dict, out_dir: Path, synthetic_tmp: Path 
 
 def _load_retrieval_for_pipeline(
     args: argparse.Namespace,
-) -> tuple[dict, Path | None]:
-    """执行扫描/读取索引/合成索引，返回 (retrieval 所需的 index entries, synthetic_tmp)。"""
+) -> tuple[list[dict], Path | None, Path | None]:
+    """执行扫描/读取索引/合成索引。
+
+    返回 ``(entries, index_base, synthetic_tmp)``：
+    - ``index_base`` 传给 ``retrieve_assets.retrieve``，用于解析索引中的相对 path；
+    - ``synthetic_tmp`` 仅在有生成临时素材时非空，用于结束后清理。
+    """
     if args.mc_path:
         print("[1/7] scan_mc_assets: scanning %s" % args.mc_path)
         scan = sc.build_index(args.mc_path, with_palette=True)
         entries = scan["entries"]
         print("      -> %d entries from %s" % (len(entries), scan.get("source_dir")))
-        return entries, None
+        return entries, None, None
 
     if args.index:
         index_path = Path(args.index)
         print("[1/7] load index: %s" % index_path)
         entries, base = ra.load_index_with_base(index_path)
-        print("      -> %d entries" % len(entries))
-        return entries, None
+        print("      -> %d entries (base=%s)" % (len(entries), base))
+        return entries, base, None
 
     # 无 mc-path/index：使用 retrieve_assets 的合成迷你索引（代码生成，非原版素材）。
     print("[1/7] no --mc-path/--index: using synthetic minimal index")
     entries, tmp_root = ra._build_synthetic_selftest_index()
     print("      -> %d synthetic entries (will be cleaned after prompt pack)" % len(entries))
-    return entries, tmp_root
+    return entries, tmp_root, tmp_root
 
 
 def _generate_raw_text(args: argparse.Namespace, prompt_text: str) -> str:
@@ -195,7 +200,7 @@ def _assert_nonempty_pngs(paths: list[Path], query: str) -> None:
 
 
 def _write_audit_evidence(pack: dict, raw_text: str, out_dir: Path, subagent_id: str | None) -> None:
-    """写 raw_answer.txt / raw_answer.sha256 / hashes.json（复用 audit_generation 格式）。"""
+    """写 raw_answer.txt / raw_answer.sha256 / hashes.json。"""
     out_dir.mkdir(parents=True, exist_ok=True)
     raw_path = out_dir / "raw_answer.txt"
     raw_path.write_text(raw_text, encoding="utf-8")
@@ -342,6 +347,12 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
         lines.append("- 参考节点（仅语义参考，禁止复制像素）：%s" % "、".join(
             "%s(%s)" % (r.get("asset", "?"), r.get("role", "?")) for r in refs))
     lines.append("")
+
+    reference_block = pack.get("reference_block", "") or ""
+    if reference_block:
+        lines.append(reference_block)
+        lines.append("")
+
     lines.append("# 通用设计原则（每个物体都适用）")
     for rule in getattr(cg, "GENERIC_DESIGN_PRINCIPLES", []) or []:
         lines.append("- %s" % rule)
@@ -400,7 +411,7 @@ def run(args: argparse.Namespace) -> int:
     print("output dir: %s" % out_dir)
 
     # 1. scan / load index
-    entries, synthetic_tmp = _load_retrieval_for_pipeline(args)
+    entries, index_base, synthetic_tmp = _load_retrieval_for_pipeline(args)
     try:
         # 2. retrieve
         forced_form = None if args.form in (None, "", "auto") else args.form
@@ -408,8 +419,17 @@ def run(args: argparse.Namespace) -> int:
             args.query, args.top, args.form or "auto"))
         retrieval = ra.retrieve(
             args.query, top=args.top, form=forced_form,
-            index=entries, index_base=synthetic_tmp,
+            index=entries, index_base=index_base,
         )
+        # 修复 --index 相对路径：把索引中的相对 raw 路径解析为真实绝对路径，
+        # 后续 build_style_prompt._extract_feature_per_anchor 才能找到 PNG。
+        if index_base is not None:
+            for a in retrieval.get("anchors", []):
+                try:
+                    a["path"] = str(ra.resolve_entry_path({"path": a["path"]}, index_base))
+                except Exception:  # noqa: BLE001
+                    # 已是绝对路径或无法解析时保留原值，交给后续逻辑报错/兜底。
+                    pass
         retrieval = _persist_synthetic_refs(retrieval, out_dir, synthetic_tmp)
         _write_json(retrieval, out_dir / "retrieval.json")
         print("      -> form=%s anchors=%d" % (retrieval["form"], len(retrieval.get("anchors", []))))
@@ -439,6 +459,8 @@ def run(args: argparse.Namespace) -> int:
             fusion=None,
             out=str(out_dir),
             top=args.top,
+            novelty=args.novelty,
+            no_original_ref=args.no_original_ref,
         )
         pack = bsp.build_prompt_pack_v2(ns)
         pack["prompt"] = _build_compact_prompt(pack, vision=bool(args.llm_image))  # 用紧凑 HEX prompt；vision 模式更短（图作引导）
@@ -509,6 +531,10 @@ def main(argv: list[str] | None = None) -> int:
                         help="形式（默认 auto）")
     parser.add_argument("--top", type=int, default=3, choices=list(range(1, 9)),
                         help="检索参考节点数 1-8（默认 3）")
+    parser.add_argument("--novelty", type=float, default=0.5,
+                        help="参考自由度 0..1；默认 0.5。越高越少附原版 compact 片段，越低越贴原版。")
+    parser.add_argument("--no-original-ref", action="store_true",
+                        help="关闭原版参考块（不注入参考语法与 compact 片段）")
     parser.add_argument("--out", default=None, help="输出目录")
     parser.add_argument("--raw", default=None, help="现成 LLM raw_answer 文件路径")
     parser.add_argument("--llm-cmd", default=None,

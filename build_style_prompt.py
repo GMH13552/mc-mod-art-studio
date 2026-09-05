@@ -63,6 +63,7 @@ if str(_THIS_DIR) not in sys.path:
     sys.path.insert(0, str(_THIS_DIR))
 
 import entity_uv_spec as eu  # noqa: E402
+import reference_analyzer as refa  # noqa: E402
 
 _ASSET_SCRIPT = _THIS_DIR / "asset_to_text.py"
 _INDEX_PATH = _THIS_DIR / "mc_asset_library" / "library-index.json"
@@ -357,8 +358,19 @@ def _image_size(path: Path) -> tuple[int, int]:
         return im.size
 
 
+def _has_semitransparent_alpha(path: Path) -> bool:
+    """检查 PNG 是否含半透明像素（0<alpha<255）。"""
+    with Image.open(path) as im:
+        rgba = im.convert("RGBA")
+        return any(0 < a < 255 for _, _, _, a in rgba.getdata())
+
+
 def _run_asset_to_text(path: Path) -> str:
-    """调用 asset_to_text.py --mode compact --no-header，返回完整 compact 文本。"""
+    """调用 asset_to_text.py --mode compact --no-header，返回完整 compact 文本。
+
+    对含半透明 alpha 的原版实体纹理（如 creeper）自动加 --alpha-column，
+    避免 asset_to_text 因 alpha 校验失败。
+    """
     cmd = [
         sys.executable,
         str(_ASSET_SCRIPT),
@@ -366,6 +378,8 @@ def _run_asset_to_text(path: Path) -> str:
         "--mode", "compact",
         "--no-header",
     ]
+    if _has_semitransparent_alpha(path):
+        cmd.append("--alpha-column")
     proc = subprocess.run(
         cmd,
         cwd=str(_THIS_DIR),
@@ -646,6 +660,63 @@ def _aggregate_features(anchors: list[dict]) -> dict:
         "sources": sources,
         "anchor_count": len(anchors),
     }
+
+
+def _reference_block_for_anchors(
+    anchors: list[dict],
+    form: str,
+    width: int,
+    height: int,
+    entity: str | None,
+    novelty: float,
+    no_original_ref: bool,
+) -> tuple[str | None, bool, int]:
+    """为检索锚点生成“参考语法 + 可选 compact 片段”的 prompt 文本段。
+
+    返回 (reference_block, include_compact, compact_limit)。
+    ``no_original_ref=True`` 时返回 ``(None, False, 0)``。
+    """
+    analyses: list[dict] = []
+    for a in anchors:
+        uv_region = None
+        if form == "entity_uv":
+            uv_region = eu.regions_for_entity(entity, width, height)
+        analysis = refa.analyze_compact(
+            a.get("compact_text", ""), form=form, uv_region=uv_region,
+            name=a.get("name", "?") or "?",
+        )
+        analysis.update({
+            "path": a.get("path", ""),
+            "category": a.get("category", ""),
+            "role": a.get("role", ""),
+            "size": a.get("size", ""),
+        })
+        a["reference_analysis"] = analysis
+        analyses.append(analysis)
+
+    if no_original_ref:
+        return None, False, 0
+
+    include_compact, compact_limit = refa.decide_reference_include(novelty)
+    # “最相关”取 score 最高的锚点；没有 score 时保持原始顺序。
+    ranked = sorted(
+        anchors,
+        key=lambda a: -(
+            a.get("score") if a.get("score") is not None else 0
+        ),
+    )
+    compact_items = [
+        (a.get("name", "compact") or "compact", a.get("compact_text", ""))
+        for a in ranked[:compact_limit]
+        if a.get("compact_text")
+    ]
+    reference_block = refa.render_reference_block(
+        analyses,
+        compact_text=compact_items,
+        include_compact=include_compact,
+        max_compact=compact_limit,
+    )
+    return reference_block, include_compact, compact_limit
 
 
 def _form_file_contract(form: str, name: str, width: int, height: int) -> dict:
@@ -936,12 +1007,22 @@ def build_prompt_pack_v2(args: argparse.Namespace) -> dict:
         raise ValueError("retrieval returned no anchors; cannot build prompt pack")
     anchors = [_extract_feature_per_anchor(a) for a in raw_anchors]
 
+    novelty = getattr(args, "novelty", 0.5)
+    if novelty is None:
+        novelty = 0.5
+    novelty = max(0.0, min(1.0, float(novelty)))
+    no_original_ref = bool(getattr(args, "no_original_ref", False))
+
     features = _aggregate_features(anchors)
     style_rules = _v2_style_rules(type_)
     few_shot = _v2_few_shot(form)
     file_contract = _form_file_contract(form, args.name, width, height)
     entity = eu.detect_entity(args.query or args.name) if form == "entity_uv" else None
     output_contract = _build_v2_output_contract(form, args.name, width, height, anchors, entity=entity)
+
+    reference_block, include_compact, compact_limit = _reference_block_for_anchors(
+        anchors, form, width, height, entity, novelty, no_original_ref,
+    )
 
     # v4-concept：生成概念卡并作为“先理解再生成”的前置上下文。
     concept_card = None
@@ -964,6 +1045,7 @@ def build_prompt_pack_v2(args: argparse.Namespace) -> dict:
         args.name, retrieval, form, width, height, anchors, features,
         style_rules, few_shot, file_contract, output_contract,
         concept_card=concept_card,
+        reference_block=reference_block,
     )
 
     pack = {
@@ -989,6 +1071,13 @@ def build_prompt_pack_v2(args: argparse.Namespace) -> dict:
             "按 form 声明的像素块输出清单；实际 LLM 应逐 face 输出可被 text_to_texture.py 解析的文本块。"
         ),
         "concept_card": concept_card,
+        "novelty": novelty,
+        "no_original_ref": no_original_ref,
+        "reference_block": reference_block or "",
+        "reference_block_meta": {
+            "include_compact": include_compact,
+            "compact_limit": compact_limit,
+        },
         "prompt": prompt_text,
     }
     if args.retrieval:
@@ -1026,6 +1115,7 @@ def _build_v2_prompt_text(
     anchors: list[dict], features: dict, style_rules: dict,
     few_shot: dict, file_contract: dict, output_contract: dict,
     concept_card: dict | None = None,
+    reference_block: str | None = None,
 ) -> str:
     """把 v2/v4 提示包渲染为可直接给 LLM 的中文提示文本。"""
     lines = []
@@ -1133,26 +1223,31 @@ def _build_v2_prompt_text(
     lines.append(features["summary"])
 
     lines.append("")
-    lines.append("# 锚点参考（语义摘要，仅供风格参考，不得复制像素）")
-    lines.append("")
-    for a in anchors:
-        lines.append("## %s (%s)" % (a.get("name", "?"), a.get("role", "?")))
-        lines.append("- 路径：%s" % a.get("path", ""))
-        lines.append("- 类别：%s" % a.get("category", ""))
-        lines.append("- 尺寸：%s" % a.get("size", ""))
-        for k, label in (("shape", "形状"), ("pattern", "图案"), ("parts", "部位"), ("attraction", "吸引点")):
-            v = (a.get("features", {}).get(k) or [])
-            if isinstance(v, list):
-                v = "；".join(v)
-            if v:
-                lines.append("- %s：%s" % (label, v))
-        cols = a.get("features", {}).get("colors", [])
-        if cols:
-            lines.append("- 颜色：%s" % " ".join(cols))
+    if reference_block:
+        lines.append(reference_block)
         lines.append("")
+    else:
+        # 兼容回退：没有新 reference block 时保留旧的“仅语义摘要”锚点段。
+        lines.append("# 锚点参考（语义摘要，仅供风格参考，不得复制像素）")
+        lines.append("")
+        for a in anchors:
+            lines.append("## %s (%s)" % (a.get("name", "?"), a.get("role", "?")))
+            lines.append("- 路径：%s" % a.get("path", ""))
+            lines.append("- 类别：%s" % a.get("category", ""))
+            lines.append("- 尺寸：%s" % a.get("size", ""))
+            for k, label in (("shape", "形状"), ("pattern", "图案"), ("parts", "部位"), ("attraction", "吸引点")):
+                v = (a.get("features", {}).get(k) or [])
+                if isinstance(v, list):
+                    v = "；".join(v)
+                if v:
+                    lines.append("- %s：%s" % (label, v))
+            cols = a.get("features", {}).get("colors", [])
+            if cols:
+                lines.append("- 颜色：%s" % " ".join(cols))
+            lines.append("")
 
-    lines.append("> 参考素材只是语义/风格参考，不提供可复制的像素网格；必须自行设计新形状与配色。")
-    lines.append("")
+        lines.append("> 参考素材只是语义/风格参考，不提供可复制的像素网格；必须自行设计新形状与配色。")
+        lines.append("")
 
     lines.append("# 风格规则")
     lines.append("")
@@ -1255,6 +1350,8 @@ def prebuild_v2_packs(verbose: bool = True) -> list[Path]:
             size=None,
             fusion=None,
             out=str(out_path),
+            novelty=0.5,
+            no_original_ref=False,
         )
         pack = build_prompt_pack_v2(ns)
         write_v2_prompt_pack(pack, out_path)
@@ -1688,25 +1785,20 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
         ok.append("v2 concept_card has design_checklist (orientation/connection/border/highlight/texture/palette/pattern/frame, 9 items)")
 
     prompt_text = data.get("prompt", "")
+    design_flow_markers = (
+        "设计要点（先理解，再直接输出）",
+        "设计方案（先理解 → 配色 → 形状）",
+    )
     if "HEX GRID" in prompt_text:
-        markers = (
-            "设计要点（先理解，再直接输出）",
-            "走向/轴线设计",
-            "HEX GRID",
-            "参考节点（仅语义参考，禁止复制像素）",
-            "非 ---- 像素必须 >= 40",
-        )
+        markers = ("走向/轴线设计", "HEX GRID",
+                   "参考节点（仅语义参考，禁止复制像素）",
+                   "非 ---- 像素必须 >= 40")
     elif "INDEX GRID" in prompt_text:
-        markers = (
-            "设计要点（先理解，再直接输出）",
-            "通用设计原则",
-            "INDEX GRID",
-            "参考节点（仅语义参考，禁止复制像素）",
-            "非 -1 像素必须 >= 40",
-        )
+        # INDEX GRID 可能来自“原版参考片段”（新参考块），也可能来自输出契约。
+        # 因此 common 设计流程标题只要求二者之一。
+        markers = ("通用设计原则", "INDEX GRID", "非 -1 像素必须 >= 40")
     else:
         markers = (
-            "设计方案（先理解 → 配色 → 形状）",
             "参考素材只是设计参考节点，不是硬性指标",
             "不要复制参考贴图",
             "允许 3~8 个参考节点",
@@ -1716,6 +1808,8 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
     for marker in markers:
         if marker not in prompt_text:
             raise ValueError("v2 prompt missing design-flow marker: %r" % marker)
+    if not any(m in prompt_text for m in design_flow_markers):
+        raise ValueError("v2 prompt missing design-flow heading (understand -> palette -> shape)")
     ok.append("v2 prompt contains design-flow paragraph (understand -> palette -> shape)")
     ok.append("v2 prompt contains shape-pattern integration requirement")
     if "HEX GRID" in prompt_text:
@@ -1944,6 +2038,10 @@ def main(argv=None) -> int:
                         help="v2 form: auto|item|block_multi|cross|entity_uv")
     parser.add_argument("--top", type=int, default=3, choices=list(range(1, 9)),
                         help="v2 query 未给 retrieval 时检索锚点数（默认 3，支持 1-8）")
+    parser.add_argument("--novelty", type=float, default=0.5,
+                        help="参考自由度 0..1；默认 0.5。越高越少附原版 compact 片段，越低越贴原版。")
+    parser.add_argument("--no-original-ref", action="store_true",
+                        help="关闭原版参考块（不注入 compact 片段与参考语法）")
     parser.add_argument("--fusion", default=None,
                         help='Fusion method, e.g. "palette overlay on shape" or custom')
     parser.add_argument("--out", default=None,
@@ -1998,6 +2096,8 @@ def main(argv=None) -> int:
             size=args.size,
             fusion=args.fusion,
             out=out,
+            novelty=args.novelty,
+            no_original_ref=args.no_original_ref,
         )
         pack = build_prompt_pack_v2(ns)
         out_path = write_v2_prompt_pack(pack, Path(out))
