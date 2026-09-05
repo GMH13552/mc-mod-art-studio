@@ -76,6 +76,70 @@ export LLM_MODEL=deepseek-v4-flash
 - 形状图样（每个部件的形状 → 纹样沿形状结构走向）
 - 参考节点（多个，作为设计参考，不是硬性指标）
 
+## 像素细节规则
+
+提示词中加入了**不绑定具体物品的通用像素细节规则**，统一维护在
+`concept_grounder.GENERIC_PIXEL_DETAIL_RULES`，并在 `run_pipeline` 的最终 prompt 中逐条写入：
+
+1. **1px 边框/描边**：外轮廓用 `1px 深色描边`；部件接缝用暗色分隔；不做均匀黑框。
+2. **材质高光**：亮部高光沿形状走向，暗部在背光侧；金属/木/石/发光/软质等不同材质按语义推理使用不同高光强度与纹理提示。
+3. **纹理**：材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；有原版参考则参考其质感，没有则按语义推理合理材质。
+4. **明暗分层**：每个部件至少 `base/light/dark` 三档色阶；用 `1px` 明暗过渡表现体积，避免平涂。
+5. **方向/连接**：整体方向一致，部件连接自然、不悬空。
+
+详细设计与验证说明见 `docs/prompt-design.md`。这些规则与 `check_pixel_asset.py` 的
+非空/bbox/深色描边/明暗分桶检查对齐：先约束生成，再用像素检查器出具可复现证据。
+
+## 测试与证据
+
+### 非自证广谱测试集
+
+- `tests/` 是**非自证广谱测试集**：不使用 `examples/`、`concept_examples/` 或用户点名示例作为“正确答案”。
+- `tests/test_set.md` 定义 t01–t12 测试条目（钻石剑、金苹果、弓、荧石、红砖、青金石块、虞美人、橡树树苗、猪、苦力怕、箱子、石砖楼梯）。
+- `tests/README.md` 记录运行协议、`block_custom` 缺口与通过标准。
+- v2 结果：`tests/results/v2/summary.md` / `summary.json` / `tests/evidence/v2/*.md`；
+  t01–t10 全部 `PIPELINE PASS`，所有 16 张 checker 报告均非空。
+- 可复用审核：`evidence/review-template.md` 是独立复核清单，`evidence/review-1.md` 是 v2 广谱测试的可复用审核记录。
+
+`tests/runs/` 是本地生成的大产物（PNG/raw/resourcepack），**不入库**（见 `.gitignore`）；
+`tests/reports/`（每张 PNG 的 JSON 像素证据）、`tests/evidence/` 与 `tests/results/summary*`
+入库保留。克隆后如需复跑 runs，按 `tests/README.md` 的命令重新生成。
+
+### check_pixel_asset.py
+
+`check_pixel_asset.py` 是通用像素级检查器，提供非空、bbox、深色描边、亮度色阶、部件分离启发式等指标：
+
+```bash
+# 查看终端摘要
+python3 check_pixel_asset.py examples/alien_crystal_wand/sprite.png
+
+# 输出 JSON 证据
+python3 check_pixel_asset.py examples/alien_crystal_wand/sprite.png \
+    --out examples/check-evidence/alien_crystal_wand.json
+
+# 输出 Markdown 证据
+python3 check_pixel_asset.py examples/mushroom_sprout/cross.png \
+    --out examples/check-evidence/mushroom_sprout_cross.md
+
+# 合成图自测
+python3 check_pixel_asset.py --self-test
+```
+
+常用可调参数：`--expected-size`（如 `64x32`）、`--opaque-min`、`--min-margin`、
+`--border-dark-lum`、`--dark-lum`、`--bright-lum`、`--require-separation`。
+完整说明见 `docs/check_pixel_asset.md`。
+
+### 非空门禁与 parser 容错
+
+- **非空门禁**：`run_pipeline.py` 在生成 PNG 后调用 `_assert_nonempty_pngs()`；任何一张图
+  不透明像素为 0 都会输出 `PIPELINE: FAIL` 并附具体文件，**不会再错误地报 PASS**。
+- **parser 容错**：`text_to_texture.py` 支持 `PALETTE` 行行尾 `#` 注释；INDEX/HEX GRID
+  多出透明尾列可裁剪、少写尾部透明列自动补 `-1` / `----`；entity_uv 多出的尾行（包括
+  非全 `-1` 但不影响已有行语义的行）会按容错规则处理，不再因整段多余数据整体 FAIL。
+
+这两项改进在 v2 广谱测试中体现为：t01–t10 全部非空、pipeline 全部 PASS；详见
+`tests/results/v2/summary.md`。
+
 ## 示例
 
 ![showcase](showcase.png)
@@ -92,4 +156,6 @@ python3 concept_grounder.py --self-test
 python3 build_style_prompt.py --self-test
 python3 compose_asset.py --self-test
 python3 package_asset.py --self-test
+python3 check_pixel_asset.py --self-test
+python3 -m unittest discover -s tests -v
 ```

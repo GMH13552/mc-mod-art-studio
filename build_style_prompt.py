@@ -178,12 +178,15 @@ _FALLBACK_STYLE_RULES = {
     ],
     "light_dark": [
         "- 左上偏亮、右下偏暗；局部使用 1px 色阶表现体积。",
+        "- 每个部件至少 base/light/dark 三档色阶；亮部高光沿形状走向，暗部在背光侧。",
     ],
     "outline": [
         "- 外轮廓使用 1px 深色/暗色自然描边，不做均匀黑框。",
+        "- 部件接缝用暗色分隔；不同材质（金属/木/石/发光/软质）按语义使用不同高光强度与纹理提示，不给死例子。",
     ],
     "noise": [
         "- 使用少量 1px 噪点/抖动，避免大面积平涂和模糊渐变。",
+        "- 材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。",
     ],
 }
 
@@ -998,6 +1001,10 @@ def _build_v2_prompt_text(
     lines.append("- 描述：%s" % (retrieval.get("query", name) or name))
     lines.append("- 形式：%s" % form)
     lines.append("- 尺寸：%dx%d" % (width, height))
+    lines.append("")
+    lines.append("# 本体硬约束（最重要）")
+    lines.append("- 必须生成「%s」这个物体本身；参考节点不能改变主体类别、形状或语义。" % (retrieval.get("query", name) or name))
+    lines.append("- 参考节点只允许借用配色、材质、明暗、尺度与局部图案；若参考节点与 %s 语义冲突，请忽略其形状与语义。" % (retrieval.get("query", name) or name))
 
     if concept_card:
         lines.append("")
@@ -1118,6 +1125,25 @@ def _build_v2_prompt_text(
             lines.append("## %s" % label)
             lines.extend(rules)
             lines.append("")
+
+    lines.append("# 通用像素细节（每个物体都适用，不绑定具体物品）")
+    lines.append("")
+    try:
+        import concept_grounder as cg
+        generic_rules = getattr(cg, "GENERIC_PIXEL_DETAIL_RULES", []) or []
+    except Exception:  # noqa: BLE001
+        generic_rules = []
+    if not generic_rules:
+        generic_rules = [
+            "边框/描边：外轮廓用 1px 深色描边；部件接缝用暗色分隔；不做均匀黑框。",
+            "材质高光：亮部高光沿形状走向，暗部在背光侧；金属/木/石/发光/软质等不同材质按语义推理使用不同高光强度与纹理提示，不给死例子。",
+            "纹理：材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。",
+            "明暗分层：每个部件至少 base/light/dark 三档色阶；用 1px 明暗过渡表现体积，避免平涂。",
+            "方向/连接：整体方向一致，部件连接自然、不悬空。",
+        ]
+    for rule in generic_rules:
+        lines.append("- %s" % rule)
+    lines.append("")
 
     lines.append("# Few-shot：同类原版 compact 片段")
     lines.append("")
@@ -1583,15 +1609,34 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
             if not node.get("asset") or node.get("role") not in ("shape", "color", "pattern", "border", "material") or not node.get("reason"):
                 raise ValueError("v2 concept_card reference_nodes entry invalid")
         chk = cc.get("design_checklist")
-        if not isinstance(chk, list) or len(chk) < 1:
-            raise ValueError("v2 concept_card design_checklist missing")
+        if not isinstance(chk, list) or len(chk) != 9:
+            raise ValueError(
+                "v2 concept_card design_checklist must contain 9 items (got %d)"
+                % (len(chk) if isinstance(chk, list) else 0)
+            )
         for c in chk:
-            if not c.get("item") or not c.get("must") or not c.get("self_check"):
+            if not isinstance(c, dict) or not c.get("item") or not c.get("must") or not c.get("self_check"):
                 raise ValueError("v2 concept_card design_checklist entry invalid")
+        checklist_ids = {c.get("id") for c in chk}
+        required_ids = ("segment_border", "material_highlight", "material_texture")
+        missing_ids = [rid for rid in required_ids if rid not in checklist_ids]
+        if missing_ids:
+            raise ValueError(
+                "v2 concept_card design_checklist missing border/highlight/texture entry: %s"
+                % ", ".join(missing_ids)
+            )
+        checklist_items = "\n".join(c.get("item", "") for c in chk)
+        required_labels = ("描边", "高光", "纹理")
+        missing_labels = [label for label in required_labels if label not in checklist_items]
+        if missing_labels:
+            raise ValueError(
+                "v2 concept_card design_checklist entries missing required concepts: %s"
+                % ", ".join(missing_labels)
+            )
         ok.append("v2 concept_card is present and non-empty")
         ok.append("v2 concept_card has palette_scheme/shape_pattern/reference_nodes (v5 design)")
         ok.append("v2 concept_card shape_pattern is shape-pattern integrated (part_pattern_flow)")
-        ok.append("v2 concept_card has design_checklist (orientation/connection/semantic/palette/pattern/frame)")
+        ok.append("v2 concept_card has design_checklist (orientation/connection/border/highlight/texture/palette/pattern/frame, 9 items)")
 
     prompt_text = data.get("prompt", "")
     if "HEX GRID" in prompt_text:

@@ -667,6 +667,7 @@ def _generic_card(
         "avoid": [
             "不要复制任何参考贴图的逐像素图案；",
             "不要画成与检索主题无关的物体；",
+            "不要把 query 画成检索锚点的形状/语义；参考节点只允许提供配色/材质/明暗/尺度。",
             "不要丢失 %s 的几何/形式特征。" % form,
         ],
         "palette_scheme": _make_palette_scheme(
@@ -708,6 +709,18 @@ _KNOWN_CARD_BUILDERS = {
     "蘑菇幼苗": _card_mushroom_sprout,
 }
 
+# 通用像素细节规则：不绑定任何具体物品/材质/形状，只描述 Minecraft 像素资产的
+# 共同设计约束。concept_grounder、build_style_prompt 和 run_pipeline 共用这一份，
+# 避免各处 prompt 口径漂移。
+GENERIC_PIXEL_DETAIL_RULES = [
+    "边框/描边：外轮廓用 1px 深色描边；部件接缝用暗色分隔；不做均匀黑框。",
+    "材质高光：亮部高光沿形状走向，暗部在背光侧；金属/木/石/发光/软质等不同材质按语义推理使用不同高光强度与纹理提示，不给死例子。",
+    "纹理：材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。",
+    "明暗分层：每个部件至少 base/light/dark 三档色阶；用 1px 明暗过渡表现体积，避免平涂。",
+    "方向/连接：整体方向一致，部件连接自然、不悬空。",
+    "透明边距：所有 16x16/64x32 贴图都必须与画布四边保留至少 1px 透明边距，禁止满铺到边缘（这是像素资产 bbox 检查要求）。",
+]
+
 
 def _make_design_checklist(card: dict) -> list[dict]:
     """通用设计自检清单：生成前必须逐项自查，方位/连接/构图归设计环节统一负责。"""
@@ -732,9 +745,27 @@ def _make_design_checklist(card: dict) -> list[dict]:
             "self_check": "遮住颜色只看 alpha 剪影，仍能认出物品/方块/十字植物语义。",
         },
         {
+            "id": "segment_border",
+            "item": "外轮廓描边与部件接缝",
+            "must": "外轮廓用 1px 深色描边，部件接缝用暗色分隔；不做均匀黑框。",
+            "self_check": "检查外轮廓像素是否为 1px 深色/暗色，部件交界处是否有暗色缝。",
+        },
+        {
+            "id": "material_highlight",
+            "item": "材质高光方向",
+            "must": "亮部高光沿形状走向，暗部在背光侧；不同材质（金属/木/石/发光/软质）用不同高光强度与纹理提示，由模型根据语义推理，不给死例子。",
+            "self_check": "每个部件先标出受光面/背光面，再检查高光与暗部是否沿形状方向流动。",
+        },
+        {
+            "id": "material_texture",
+            "item": "材质纹理贴合",
+            "must": "材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。",
+            "self_check": "纹理是否沿部件边缘/走向/明暗面分布，不横跨形状乱画。",
+        },
+        {
             "id": "palette",
             "item": "配色层次",
-            "must": "包含 base/light/dark/outline；有明暗体积和自然描边，避免荧光平涂。",
+            "must": "包含 base/light/dark/outline；每个部件至少 base/light/dark 三档色阶；有明暗体积和自然描边，避免荧光平涂。",
             "self_check": "每个部件至少有亮部/暗部/描边三档色阶；饱和度不过高。",
         },
         {
@@ -1004,12 +1035,31 @@ def _validate_concept_card(card: dict) -> list[str]:
     checks.append("reference_nodes 3..8 entries with asset/role/reason (%d nodes)" % len(refs))
 
     chk = card.get("design_checklist")
-    if not isinstance(chk, list) or len(chk) < 1:
-        raise ValueError("design_checklist must be a non-empty list")
+    if not isinstance(chk, list) or len(chk) != 9:
+        raise ValueError(
+            "design_checklist must contain 9 items (got %d)"
+            % (len(chk) if isinstance(chk, list) else 0)
+        )
     for i, item in enumerate(chk, 1):
         if not isinstance(item, dict) or not item.get("item") or not item.get("must") or not item.get("self_check"):
             raise ValueError("design_checklist[%d] must contain item/must/self_check" % i)
-    checks.append("design_checklist orientation/connection/semantic/palette/pattern/frame (%d items)" % len(chk))
+    checklist_ids = {c.get("id") for c in chk}
+    required_ids = ("segment_border", "material_highlight", "material_texture")
+    missing_ids = [rid for rid in required_ids if rid not in checklist_ids]
+    if missing_ids:
+        raise ValueError(
+            "design_checklist missing border/highlight/texture entry: %s"
+            % ", ".join(missing_ids)
+        )
+    checklist_items = "\n".join(c.get("item", "") for c in chk)
+    required_labels = ("描边", "高光", "纹理")
+    missing_labels = [label for label in required_labels if label not in checklist_items]
+    if missing_labels:
+        raise ValueError(
+            "design_checklist entries missing required concepts: %s"
+            % ", ".join(missing_labels)
+        )
+    checks.append("design_checklist orientation/connection/border/highlight/texture/palette/pattern/frame (%d items)" % len(chk))
     return checks
 
 

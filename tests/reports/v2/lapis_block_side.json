@@ -1,0 +1,104 @@
+{
+  "tool": "check_pixel_asset.py",
+  "version": "1.0.0",
+  "input": {
+    "path": "tests/runs/v2/lapis_block/assets/mcmod/textures/block/q_975291d177f35757_side.png",
+    "width": 16,
+    "height": 16
+  },
+  "metrics": {
+    "opaque_count": 52,
+    "opaque_min": 20,
+    "alpha_min": 8,
+    "size_ok": true,
+    "bbox": [
+      4,
+      5,
+      12,
+      13
+    ],
+    "margins": {
+      "left": 4,
+      "top": 5,
+      "right": 4,
+      "bottom": 3
+    },
+    "min_margin": 1,
+    "bbox_ok": true,
+    "boundary_pixel_count": 20,
+    "boundary_dark_pixel_count": 0,
+    "boundary_dark_ratio": 0.0,
+    "boundary_dark_lum": 90,
+    "min_border_dark_ratio": 0.15,
+    "mean_boundary_luminance": 101.98,
+    "mean_all_luminance": 95.54,
+    "boundary_vs_all_delta": 6.45,
+    "border_ok": false,
+    "palette": {
+      "total_pixels": 52,
+      "dark_count": 20,
+      "mid_count": 28,
+      "bright_count": 4,
+      "dark_lum": 80,
+      "bright_lum": 160,
+      "dominant_color": [
+        134,
+        96,
+        67,
+        255
+      ],
+      "dominant_color_count": 20,
+      "dominant_color_ratio": 0.3846
+    },
+    "palette_ok": true,
+    "component_count": 1,
+    "component_sizes": [
+      52
+    ],
+    "part_separation": false,
+    "min_components": 2,
+    "separation_required": false,
+    "separation_ok": null
+  },
+  "verdict": {
+    "overall": "FAIL",
+    "checks": [
+      {
+        "id": "non_empty",
+        "ok": true,
+        "summary": "不透明像素数 >= 20",
+        "detail": "opaque_pixels=52 threshold=20"
+      },
+      {
+        "id": "size",
+        "ok": true,
+        "summary": "尺寸为 16x16",
+        "detail": "size=16x16"
+      },
+      {
+        "id": "bbox",
+        "ok": true,
+        "summary": "剪影 bbox 四周至少 1px 透明",
+        "detail": "bbox=[4, 5, 12, 13] margins={'left': 4, 'top': 5, 'right': 4, 'bottom': 3}"
+      },
+      {
+        "id": "border",
+        "ok": false,
+        "summary": "外轮廓存在足够暗色描边像素（暗色边界占比 >= 0.15）",
+        "detail": "boundary_pixels=20 dark_boundary=0 ratio=0.0000"
+      },
+      {
+        "id": "palette",
+        "ok": true,
+        "summary": "调色板同时含暗色/亮色/主色",
+        "detail": "dark=20 mid=28 bright=4 dominant=[134, 96, 67, 255] count=20"
+      },
+      {
+        "id": "part_separation",
+        "ok": null,
+        "summary": "部件分离为启发式报告（未用 --require-separation 纳入判定）",
+        "detail": "components=1 sizes=[52]"
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+# bricks 运行证据
+
+- 命令：`python3 run_pipeline.py --query "红砖" --form block_multi --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/bricks --package`
+- 执行日期：2026-09-05 (UTC)
+- 仓库 commit：`02ec21bbf537558aadcee5025f93044a06f3b1e0`
+- form：block_multi
+- 产物：
+  - `tests/runs/bricks/assets/mcmod/textures/block/q_7ea27816_top.png`
+  - `tests/runs/bricks/assets/mcmod/textures/block/q_7ea27816_side.png`
+  - `tests/runs/bricks/assets/mcmod/textures/block/q_7ea27816_bottom.png`
+- raw_answer sha256：e624b5821af73f0df40003bd0aeffca33458d114283f96b1c7ff7dceb5f0adc3
+- PNG 尺寸：
+  - `top`: 16x16
+  - `side`: 16x16
+  - `bottom`: 16x16
+- check_pixel_asset 命令：
+  - `python3 check_pixel_asset.py tests/runs/bricks/assets/mcmod/textures/block/q_7ea27816_top.png --expected-size 16x16 --out tests/reports/bricks_top.json`
+  - `python3 check_pixel_asset.py tests/runs/bricks/assets/mcmod/textures/block/q_7ea27816_side.png --expected-size 16x16 --out tests/reports/bricks_side.json`
+  - `python3 check_pixel_asset.py tests/runs/bricks/assets/mcmod/textures/block/q_7ea27816_bottom.png --expected-size 16x16 --out tests/reports/bricks_bottom.json`
+- check_pixel_asset 结果：FAIL
+  - top: FAIL (opaque=0 bbox=None border=False palette=False)
+  - side: FAIL (opaque=0 bbox=None border=False palette=False)
+  - bottom: FAIL (opaque=0 bbox=None border=False palette=False)
+- 观察与问题：
+  - run_status: PIPELINE PASS
+  - semantic drift: concept描述含有 "杖/晶体/蘑菇/斧头" 等自证/合成索引特征
+  - 输出为全透明/空纹理（bbox=None, opaque=0），属于“全 -1”退化基线。

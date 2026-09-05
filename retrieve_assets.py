@@ -84,6 +84,7 @@ ALIASES = OrderedDict(
         ("木", ["log", "planks", "wooden"]),
         ("树苗", ["sapling"]),
         ("花", ["flower", "rose", "tulip"]),
+        ("虞美人", ["poppy"]),
         ("草", ["grass", "tall_grass"]),
         ("叶", ["leaves"]),
         ("羊毛", ["wool"]),
@@ -165,6 +166,7 @@ _NAME_SHAPE_MAP = {
     "axe": "斧头", "pickaxe": "镐", "sword": "剑", "shovel": "铲", "hoe": "锄",
     "rod": "长条/杖", "staff": "长条/杖", "wand": "长条/杖", "stick": "长条/木棍",
     "boat": "船形", "arrow": "箭", "bone": "骨形", "sapling": "树苗/十字",
+    "poppy": "花/十字", "bow": "弯月/弓形",
     "diamond": "菱形/晶体", "emerald": "菱形/晶体", "quartz": "晶体",
     "ender_pearl": "圆珠", "apple": "圆形/苹果", "bread": "面包形",
     "helmet": "头盔形", "chestplate": "胸甲形", "leggings": "护腿形", "boots": "靴形",
@@ -183,6 +185,7 @@ _NAME_PART_MAP = {
     "staff": ["杖身"], "wand": ["杖身"], "stick": ["棍身"],
     "boat": ["船体"], "helmet": ["头盔"], "chestplate": ["胸甲"],
     "leggings": ["护腿"], "boots": ["靴子"], "sapling": ["树干", "树叶"],
+    "poppy": ["花头", "茎叶"], "bow": ["弓臂", "弦"],
     "mushroom": ["菌盖", "菌柄"], "diamond": ["晶体主体"], "emerald": ["晶体主体"],
     "ore": ["矿石底材", "矿物颗粒"], "glowstone": ["发光颗粒"],
 }
@@ -696,15 +699,39 @@ def _build_synthetic_selftest_index() -> tuple[list[dict], Path]:
     modid = "demomod"
     assets = root / "assets" / modid
 
+    # 中性化：不再放项目自证的“水晶法杖/蘑菇/火焰棒/蓝水晶”等特征；
+    # 改为常见原版资产名，保留 broad 的 block/item/entity/cross 覆盖。
     specs = [
-        ("block", "stone_axe.png", (120, 120, 120, 255)),
-        ("block", "brown_mushroom.png", (170, 110, 70, 255)),
-        ("block", "brown_mushroom_block.png", (150, 100, 60, 255)),
+        ("block", "stone.png", (120, 120, 120, 255)),
+        ("block", "dirt.png", (134, 96, 67, 255)),
+        ("block", "cobblestone.png", (110, 110, 110, 255)),
+        ("block", "oak_planks.png", (162, 130, 78, 255)),
+        ("block", "bricks.png", (150, 70, 60, 255)),
         ("block", "glowstone.png", (240, 220, 140, 255)),
-        ("item", "blaze_rod.png", (200, 140, 40, 255)),
+        ("block", "diamond_block.png", (120, 220, 230, 255)),
+        ("block", "iron_block.png", (200, 200, 200, 255)),
+        ("block", "lapis_block.png", (50, 70, 160, 255)),
+        ("block", "glass.png", (180, 220, 230, 255)),
+        ("block", "oak_sapling.png", (90, 140, 70, 255)),
+        ("block", "poppy.png", (220, 60, 60, 255)),
+        ("item", "stick.png", (140, 110, 60, 255)),
+        ("item", "wooden_sword.png", (160, 130, 80, 255)),
+        ("item", "stone_sword.png", (140, 140, 140, 255)),
+        ("item", "diamond_sword.png", (120, 220, 230, 255)),
+        ("item", "bow.png", (130, 90, 50, 255)),
+        ("item", "arrow.png", (120, 100, 70, 255)),
+        ("item", "golden_apple.png", (240, 200, 60, 255)),
         ("item", "diamond.png", (80, 200, 220, 255)),
         ("item", "emerald.png", (60, 190, 110, 255)),
-        ("item", "blue_crystal.png", (50, 120, 220, 255)),
+        ("item", "iron_ingot.png", (200, 200, 200, 255)),
+        ("item", "bread.png", (190, 140, 70, 255)),
+        ("item", "apple.png", (200, 40, 40, 255)),
+        ("entity", "pig.png", (240, 180, 160, 255)),
+        ("entity", "cow.png", (150, 110, 80, 255)),
+        ("entity", "sheep.png", (220, 220, 220, 255)),
+        ("entity", "chicken.png", (230, 230, 230, 255)),
+        ("entity", "creeper.png", (80, 170, 80, 255)),
+        ("entity", "zombie.png", (70, 130, 60, 255)),
     ]
     for cat, name, color in specs:
         p = assets / "textures" / cat / name

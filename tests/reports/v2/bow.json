@@ -1,0 +1,104 @@
+{
+  "tool": "check_pixel_asset.py",
+  "version": "1.0.0",
+  "input": {
+    "path": "tests/runs/v2/bow/sprite.png",
+    "width": 16,
+    "height": 16
+  },
+  "metrics": {
+    "opaque_count": 92,
+    "opaque_min": 20,
+    "alpha_min": 8,
+    "size_ok": true,
+    "bbox": [
+      2,
+      1,
+      16,
+      16
+    ],
+    "margins": {
+      "left": 2,
+      "top": 1,
+      "right": 0,
+      "bottom": 0
+    },
+    "min_margin": 1,
+    "bbox_ok": false,
+    "boundary_pixel_count": 39,
+    "boundary_dark_pixel_count": 31,
+    "boundary_dark_ratio": 0.7949,
+    "boundary_dark_lum": 90,
+    "min_border_dark_ratio": 0.15,
+    "mean_boundary_luminance": 64.7,
+    "mean_all_luminance": 85.86,
+    "boundary_vs_all_delta": -21.16,
+    "border_ok": true,
+    "palette": {
+      "total_pixels": 92,
+      "dark_count": 53,
+      "mid_count": 19,
+      "bright_count": 20,
+      "dark_lum": 80,
+      "bright_lum": 160,
+      "dominant_color": [
+        34,
+        34,
+        34,
+        255
+      ],
+      "dominant_color_count": 34,
+      "dominant_color_ratio": 0.3696
+    },
+    "palette_ok": true,
+    "component_count": 1,
+    "component_sizes": [
+      92
+    ],
+    "part_separation": false,
+    "min_components": 2,
+    "separation_required": false,
+    "separation_ok": null
+  },
+  "verdict": {
+    "overall": "FAIL",
+    "checks": [
+      {
+        "id": "non_empty",
+        "ok": true,
+        "summary": "不透明像素数 >= 20",
+        "detail": "opaque_pixels=92 threshold=20"
+      },
+      {
+        "id": "size",
+        "ok": true,
+        "summary": "尺寸为 16x16",
+        "detail": "size=16x16"
+      },
+      {
+        "id": "bbox",
+        "ok": false,
+        "summary": "剪影 bbox 四周至少 1px 透明",
+        "detail": "bbox=[2, 1, 16, 16] margins={'left': 2, 'top': 1, 'right': 0, 'bottom': 0}"
+      },
+      {
+        "id": "border",
+        "ok": true,
+        "summary": "外轮廓存在足够暗色描边像素（暗色边界占比 >= 0.15）",
+        "detail": "boundary_pixels=39 dark_boundary=31 ratio=0.7949"
+      },
+      {
+        "id": "palette",
+        "ok": true,
+        "summary": "调色板同时含暗色/亮色/主色",
+        "detail": "dark=53 mid=19 bright=20 dominant=[34, 34, 34, 255] count=34"
+      },
+      {
+        "id": "part_separation",
+        "ok": null,
+        "summary": "部件分离为启发式报告（未用 --require-separation 纳入判定）",
+        "detail": "components=1 sizes=[92]"
+      }
+    ]
+  }
+}

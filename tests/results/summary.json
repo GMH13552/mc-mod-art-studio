@@ -1,0 +1,581 @@
+{
+  "generated_at": "2026-09-05",
+  "commit": "02ec21bbf537558aadcee5025f93044a06f3b1e0",
+  "source": "tests/test_set.md (t01-t10 online run_pipeline; t11/t12 package_asset --template)",
+  "run_notes": [
+    "t01,t03-t08: first attempt pipeline exit 0",
+    "t02: first attempt exit 1 (PALETTE block contains no color entries due trailing inline comments in LLM palette); retry exit 0 but produced all-transparent PNG and wand semantics",
+    "t09,t10: both attempts exit 1; entity_uv LLM emits 33 rows for 64x32 (expected 32). t09 raw_answer contains 246 non -1 index values (so not all -1); t10 raw_answer is all -1; no PNG generated",
+    "t10 first attempt also hit NameError _hex_contract_text during concurrent workspace edit; retry after run_pipeline.py stabilized reached normal parser failure"
+  ],
+  "aggregate": {
+    "t01_t10_item_pass_rate": 0.1,
+    "t01_t10_item_pass": 1,
+    "t01_t10_item_total": 10,
+    "t01_t10_png_nonempty_rate": 0.5,
+    "t01_t10_png_nonempty": 7,
+    "t01_t10_png_total": 14,
+    "t01_t10_png_pass_rate": 0.2143,
+    "t01_t10_png_pass": 3,
+    "all_items_png_nonempty_rate": 0.65,
+    "all_items_png_nonempty": 13,
+    "all_items_png_total": 20,
+    "all_items_png_pass_rate": 0.45,
+    "all_items_png_pass": 9,
+    "all_items_item_pass_rate": 0.25,
+    "all_items_item_pass": 3,
+    "all_items_item_total": 12,
+    "all_items_item_fail": 9,
+    "t01_t10_png_bbox_pass_rate": 0.2143,
+    "t01_t10_png_border_pass_rate": 0.3571,
+    "t01_t10_png_palette_pass_rate": 0.4286,
+    "all_items_png_bbox_pass_rate": 0.45,
+    "all_items_png_border_pass_rate": 0.55,
+    "all_items_png_palette_pass_rate": 0.6,
+    "t01_t10_png_bbox_pass": 3,
+    "t01_t10_png_border_pass": 5,
+    "t01_t10_png_palette_pass": 6
+  },
+  "baseline_comparison": {
+    "all_minus1": {
+      "description": "全 -1 透明图/空 raw：输出 PNG 不透明像素=0 或 entity raw 全为 -1。",
+      "affected": [
+        "t02",
+        "t05",
+        "t06",
+        "t10"
+      ],
+      "evidence": "golden_apple/bricks/lapis_block check reports bbox=None opaque=0; creeper raw_answer all -1 (parser fails on extra 33rd row before PNG); pig raw_answer has 246 non -1 index values (33 rows), so t09 is excluded from this baseline.",
+      "verdict": "当前 LLM 生成链路在多个非自证 query 上退化到与基线同质",
+      "excluded": "t09: pig raw_answer.txt is NOT all -1; it contains 246 non -1 indices (rows 31-51 of the file) even though the pipeline still fails on the unexpected 33rd grid row."
+    },
+    "solid_wedge": {
+      "description": "实心楔形/实心方块：模板占位纹理（chest/stairs）为全 16x16 实心占位，属于预期 template 行为；非模板生成未出现完整实心楔形。",
+      "affected": [
+        "t11",
+        "t12"
+      ],
+      "evidence": "check reports opaque=196 bbox=[1,1,15,15] for chest/stairs placeholder textures",
+      "verdict": "模板打包通过，但占位纹理不是语义资产；不作为 LLM 生成质量指标"
+    },
+    "semantic_wrong": {
+      "description": "语义错/自证特征漂移：concept description 大量出现“杖/晶体/蘑菇/斧头”，表明无 mc-path/index 时合成迷你索引把项目自证样例特征注入所有 query。",
+      "affected": [
+        "t01",
+        "t02",
+        "t03",
+        "t05",
+        "t06",
+        "t07",
+        "t08",
+        "t09",
+        "t10"
+      ],
+      "evidence": "tests/runs/<slug>/concept.json 中 shape_pattern.silhouette/description 反复为“长条/杖；菱形/晶体”或“蘑菇/斧头”",
+      "verdict": "生成“成功”的 8 个 LLM 条目存在大面积语义错配；仅 t04 glowstone 的概念较接近目标（发光颗粒/方块）"
+    }
+  },
+  "items": [
+    {
+      "id": "t01",
+      "slug": "diamond_sword",
+      "query": "钻石剑",
+      "form": "item",
+      "run_exit": 0,
+      "run_status": "PIPELINE PASS",
+      "command": "python3 run_pipeline.py --query \"钻石剑\" --form item --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/diamond_sword --package",
+      "answer_sha256": "6e0ac65ae7fe4c148ccaf22498743e41dcfba964dda8a4afb1cb2fb22664b427",
+      "sprite_count": 1,
+      "faces": [
+        {
+          "label": "sprite",
+          "path": "tests/runs/diamond_sword/sprite.png",
+          "report": "diamond_sword",
+          "opaque": 54,
+          "bbox": [
+            4,
+            0,
+            11,
+            16
+          ],
+          "bbox_ok": false,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "FAIL"
+        }
+      ],
+      "check_verdict": "FAIL",
+      "all_transparent": false,
+      "semantic_note": "semantic drift: concept描述含有 \"杖/晶体/蘑菇/斧头\" 等自证/合成索引特征"
+    },
+    {
+      "id": "t02",
+      "slug": "golden_apple",
+      "query": "金苹果",
+      "form": "item",
+      "run_exit": 0,
+      "run_status": "PIPELINE PASS (first attempt exit 1: PALETTE parser error; retry exit 0)",
+      "command": "python3 run_pipeline.py --query \"金苹果\" --form item --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/golden_apple --package",
+      "answer_sha256": "1be437a5174a60790055718a59d6a8d832b0ef6feec1f86454d3d9cbb640cf4a",
+      "sprite_count": 1,
+      "faces": [
+        {
+          "label": "sprite",
+          "path": "tests/runs/golden_apple/sprite.png",
+          "report": "golden_apple",
+          "opaque": 0,
+          "bbox": null,
+          "bbox_ok": false,
+          "border_ok": false,
+          "palette_ok": false,
+          "size": "16x16",
+          "verdict": "FAIL"
+        }
+      ],
+      "check_verdict": "FAIL",
+      "all_transparent": true,
+      "semantic_note": "semantic drift: concept描述含有 \"杖/晶体/蘑菇/斧头\" 等自证/合成索引特征"
+    },
+    {
+      "id": "t03",
+      "slug": "bow",
+      "query": "弓",
+      "form": "item",
+      "run_exit": 0,
+      "run_status": "PIPELINE PASS",
+      "command": "python3 run_pipeline.py --query \"弓\" --form item --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/bow --package",
+      "answer_sha256": "3b0657377aac8ed7b3c3d311f39730de10816e455ddeebe1fd769ede3b6fb46e",
+      "sprite_count": 1,
+      "faces": [
+        {
+          "label": "sprite",
+          "path": "tests/runs/bow/sprite.png",
+          "report": "bow",
+          "opaque": 120,
+          "bbox": [
+            2,
+            0,
+            13,
+            16
+          ],
+          "bbox_ok": false,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "FAIL"
+        }
+      ],
+      "check_verdict": "FAIL",
+      "all_transparent": false,
+      "semantic_note": "semantic drift: concept描述含有 \"杖/晶体/蘑菇/斧头\" 等自证/合成索引特征"
+    },
+    {
+      "id": "t04",
+      "slug": "glowstone",
+      "query": "荧石",
+      "form": "block_multi",
+      "run_exit": 0,
+      "run_status": "PIPELINE PASS",
+      "command": "python3 run_pipeline.py --query \"荧石\" --form block_multi --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/glowstone --package",
+      "answer_sha256": "6434e07ec1143bc63c916552291407ed4e6e9ef02a23592089ff84892a2af335",
+      "sprite_count": 3,
+      "faces": [
+        {
+          "label": "top",
+          "path": "tests/runs/glowstone/assets/mcmod/textures/block/q_836777f3_top.png",
+          "report": "glowstone_top",
+          "opaque": 26,
+          "bbox": [
+            5,
+            6,
+            11,
+            11
+          ],
+          "bbox_ok": true,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "PASS"
+        },
+        {
+          "label": "side",
+          "path": "tests/runs/glowstone/assets/mcmod/textures/block/q_836777f3_side.png",
+          "report": "glowstone_side",
+          "opaque": 36,
+          "bbox": [
+            5,
+            5,
+            11,
+            13
+          ],
+          "bbox_ok": true,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "PASS"
+        },
+        {
+          "label": "bottom",
+          "path": "tests/runs/glowstone/assets/mcmod/textures/block/q_836777f3_bottom.png",
+          "report": "glowstone_bottom",
+          "opaque": 26,
+          "bbox": [
+            5,
+            6,
+            11,
+            11
+          ],
+          "bbox_ok": true,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "PASS"
+        }
+      ],
+      "check_verdict": "PASS",
+      "all_transparent": false,
+      "semantic_note": "semantic: 一个基于检索特征生成的 Minecraft block_multi；它是发光颗粒/方块，包含发光颗粒。"
+    },
+    {
+      "id": "t05",
+      "slug": "bricks",
+      "query": "红砖",
+      "form": "block_multi",
+      "run_exit": 0,
+      "run_status": "PIPELINE PASS",
+      "command": "python3 run_pipeline.py --query \"红砖\" --form block_multi --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/bricks --package",
+      "answer_sha256": "e624b5821af73f0df40003bd0aeffca33458d114283f96b1c7ff7dceb5f0adc3",
+      "sprite_count": 3,
+      "faces": [
+        {
+          "label": "top",
+          "path": "tests/runs/bricks/assets/mcmod/textures/block/q_7ea27816_top.png",
+          "report": "bricks_top",
+          "opaque": 0,
+          "bbox": null,
+          "bbox_ok": false,
+          "border_ok": false,
+          "palette_ok": false,
+          "size": "16x16",
+          "verdict": "FAIL"
+        },
+        {
+          "label": "side",
+          "path": "tests/runs/bricks/assets/mcmod/textures/block/q_7ea27816_side.png",
+          "report": "bricks_side",
+          "opaque": 0,
+          "bbox": null,
+          "bbox_ok": false,
+          "border_ok": false,
+          "palette_ok": false,
+          "size": "16x16",
+          "verdict": "FAIL"
+        },
+        {
+          "label": "bottom",
+          "path": "tests/runs/bricks/assets/mcmod/textures/block/q_7ea27816_bottom.png",
+          "report": "bricks_bottom",
+          "opaque": 0,
+          "bbox": null,
+          "bbox_ok": false,
+          "border_ok": false,
+          "palette_ok": false,
+          "size": "16x16",
+          "verdict": "FAIL"
+        }
+      ],
+      "check_verdict": "FAIL",
+      "all_transparent": true,
+      "semantic_note": "semantic drift: concept描述含有 \"杖/晶体/蘑菇/斧头\" 等自证/合成索引特征"
+    },
+    {
+      "id": "t06",
+      "slug": "lapis_block",
+      "query": "青金石块",
+      "form": "block_multi",
+      "run_exit": 0,
+      "run_status": "PIPELINE PASS",
+      "command": "python3 run_pipeline.py --query \"青金石块\" --form block_multi --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/lapis_block --package",
+      "answer_sha256": "1268097f69d0d4c10b97c6e3020f83d5e09bb51fcf3f273d8184c99018991d45",
+      "sprite_count": 3,
+      "faces": [
+        {
+          "label": "top",
+          "path": "tests/runs/lapis_block/assets/mcmod/textures/block/q_975291d177f35757_top.png",
+          "report": "lapis_block_top",
+          "opaque": 0,
+          "bbox": null,
+          "bbox_ok": false,
+          "border_ok": false,
+          "palette_ok": false,
+          "size": "16x16",
+          "verdict": "FAIL"
+        },
+        {
+          "label": "side",
+          "path": "tests/runs/lapis_block/assets/mcmod/textures/block/q_975291d177f35757_side.png",
+          "report": "lapis_block_side",
+          "opaque": 0,
+          "bbox": null,
+          "bbox_ok": false,
+          "border_ok": false,
+          "palette_ok": false,
+          "size": "16x16",
+          "verdict": "FAIL"
+        },
+        {
+          "label": "bottom",
+          "path": "tests/runs/lapis_block/assets/mcmod/textures/block/q_975291d177f35757_bottom.png",
+          "report": "lapis_block_bottom",
+          "opaque": 0,
+          "bbox": null,
+          "bbox_ok": false,
+          "border_ok": false,
+          "palette_ok": false,
+          "size": "16x16",
+          "verdict": "FAIL"
+        }
+      ],
+      "check_verdict": "FAIL",
+      "all_transparent": true,
+      "semantic_note": "semantic drift: concept描述含有 \"杖/晶体/蘑菇/斧头\" 等自证/合成索引特征"
+    },
+    {
+      "id": "t07",
+      "slug": "poppy",
+      "query": "虞美人",
+      "form": "cross",
+      "run_exit": 0,
+      "run_status": "PIPELINE PASS",
+      "command": "python3 run_pipeline.py --query \"虞美人\" --form cross --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/poppy --package",
+      "answer_sha256": "d04cf46be0fc41c5e3c09cd9a17cfb5e741c567240f7c79b4650d099dd57542e",
+      "sprite_count": 1,
+      "faces": [
+        {
+          "label": "sprite",
+          "path": "tests/runs/poppy/sprite.png",
+          "report": "poppy",
+          "opaque": 70,
+          "bbox": [
+            3,
+            4,
+            12,
+            16
+          ],
+          "bbox_ok": false,
+          "border_ok": false,
+          "palette_ok": false,
+          "size": "16x16",
+          "verdict": "FAIL"
+        }
+      ],
+      "check_verdict": "FAIL",
+      "all_transparent": false,
+      "semantic_note": "semantic drift: concept描述含有 \"杖/晶体/蘑菇/斧头\" 等自证/合成索引特征"
+    },
+    {
+      "id": "t08",
+      "slug": "oak_sapling",
+      "query": "橡树树苗",
+      "form": "cross",
+      "run_exit": 0,
+      "run_status": "PIPELINE PASS",
+      "command": "python3 run_pipeline.py --query \"橡树树苗\" --form cross --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/oak_sapling --package",
+      "answer_sha256": "44b896089c188c600dc05950cc36f87ed2b559122807340cad5a571937556a46",
+      "sprite_count": 1,
+      "faces": [
+        {
+          "label": "sprite",
+          "path": "tests/runs/oak_sapling/sprite.png",
+          "report": "oak_sapling",
+          "opaque": 32,
+          "bbox": [
+            5,
+            5,
+            11,
+            16
+          ],
+          "bbox_ok": false,
+          "border_ok": false,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "FAIL"
+        }
+      ],
+      "check_verdict": "FAIL",
+      "all_transparent": false,
+      "semantic_note": "semantic drift: concept描述含有 \"杖/晶体/蘑菇/斧头\" 等自证/合成索引特征"
+    },
+    {
+      "id": "t09",
+      "slug": "pig",
+      "query": "猪",
+      "form": "entity_uv",
+      "run_exit": 1,
+      "run_status": "PIPELINE FAIL: unexpected extra data after index grid (LLM output 33 rows for 64x32; raw_answer contains 246 non -1 index values, not all -1; no PNG)",
+      "command": "python3 run_pipeline.py --query \"猪\" --form entity_uv --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/pig --package",
+      "answer_sha256": "4a50aa7a41d53ccdae950b55a6e65e1dceed372475fed10e016d2e3a52110f29",
+      "sprite_count": 0,
+      "faces": [],
+      "check_verdict": "N/A",
+      "all_transparent": false,
+      "semantic_note": "semantic drift: concept描述含有 \"杖/晶体/蘑菇/斧头\" 等自证/合成索引特征",
+      "raw_answer_path": "tests/runs/pig/raw_answer.txt",
+      "raw_answer_size_bytes": 6864,
+      "raw_answer_non_minus1_count": 246
+    },
+    {
+      "id": "t10",
+      "slug": "creeper",
+      "query": "苦力怕",
+      "form": "entity_uv",
+      "run_exit": 1,
+      "run_status": "PIPELINE FAIL: unexpected extra data after index grid (LLM output 33 rows for 64x32; raw_answer all -1; no PNG)",
+      "command": "python3 run_pipeline.py --query \"苦力怕\" --form entity_uv --top 5 --llm-cmd 'python3 llm_client.py --prompt-file {prompt_file}' --out tests/runs/creeper --package",
+      "answer_sha256": "35f5dd0b669a7d767430f2f8b3e77126d931a51f3238869fa955361f79709e74",
+      "sprite_count": 0,
+      "faces": [],
+      "check_verdict": "N/A",
+      "all_transparent": false,
+      "semantic_note": "semantic drift: concept描述含有 \"杖/晶体/蘑菇/斧头\" 等自证/合成索引特征",
+      "raw_answer_path": "tests/runs/creeper/raw_answer.txt",
+      "raw_answer_size_bytes": 7036,
+      "raw_answer_non_minus1_count": 0
+    },
+    {
+      "id": "t11",
+      "slug": "chest",
+      "query": "箱子",
+      "form": "block_custom",
+      "run_exit": 0,
+      "run_status": "VALIDATE PASS (5 checks)",
+      "command": "python3 package_asset.py --template chest --name chest --out tests/runs/chest/resourcepack --pack-mcmeta",
+      "answer_sha256": null,
+      "sprite_count": 2,
+      "faces": [
+        {
+          "label": "chest_all",
+          "path": "tests/runs/chest/resourcepack/assets/demo/textures/block/chest_all.png",
+          "report": "chest_all",
+          "opaque": 196,
+          "bbox": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "bbox_ok": true,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "PASS"
+        },
+        {
+          "label": "chest_particle",
+          "path": "tests/runs/chest/resourcepack/assets/demo/textures/block/chest_particle.png",
+          "report": "chest_particle",
+          "opaque": 196,
+          "bbox": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "bbox_ok": true,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "PASS"
+        }
+      ],
+      "check_verdict": "PASS",
+      "all_transparent": false,
+      "semantic_note": ""
+    },
+    {
+      "id": "t12",
+      "slug": "stone_brick_stairs",
+      "query": "石砖楼梯",
+      "form": "block_custom",
+      "run_exit": 0,
+      "run_status": "VALIDATE PASS (9 checks)",
+      "command": "python3 package_asset.py --template stairs --name stone_brick_stairs --out tests/runs/stone_brick_stairs/resourcepack --pack-mcmeta",
+      "answer_sha256": null,
+      "sprite_count": 4,
+      "faces": [
+        {
+          "label": "bottom",
+          "path": "tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_bottom.png",
+          "report": "stone_brick_stairs_bottom",
+          "opaque": 196,
+          "bbox": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "bbox_ok": true,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "PASS"
+        },
+        {
+          "label": "top",
+          "path": "tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_top.png",
+          "report": "stone_brick_stairs_top",
+          "opaque": 196,
+          "bbox": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "bbox_ok": true,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "PASS"
+        },
+        {
+          "label": "side",
+          "path": "tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_side.png",
+          "report": "stone_brick_stairs_side",
+          "opaque": 196,
+          "bbox": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "bbox_ok": true,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "PASS"
+        },
+        {
+          "label": "particle",
+          "path": "tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_particle.png",
+          "report": "stone_brick_stairs_particle",
+          "opaque": 196,
+          "bbox": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "bbox_ok": true,
+          "border_ok": true,
+          "palette_ok": true,
+          "size": "16x16",
+          "verdict": "PASS"
+        }
+      ],
+      "check_verdict": "PASS",
+      "all_transparent": false,
+      "semantic_note": ""
+    }
+  ]
+}

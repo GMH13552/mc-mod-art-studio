@@ -173,6 +173,26 @@ def _render_raw_faces(raw_text: str, out_dir: Path, pack: dict) -> list[Path]:
     return saved
 
 
+def _assert_nonempty_pngs(paths: list[Path], query: str) -> None:
+    """非空门禁：任何一张生成 PNG 不透明像素为 0 即 FAIL，不再报告 PASS。"""
+    from PIL import Image
+
+    empties: list[str] = []
+    for p in paths:
+        with Image.open(p) as im:
+            rgba = im.convert("RGBA")
+            opaque = sum(1 for _, _, _, a in rgba.getdata() if a >= t2t.ALPHA_THRESHOLD)
+        if opaque == 0:
+            empties.append("%s (opaque_pixels=0)" % p)
+        else:
+            print("      -> nonempty check: %s opaque=%d" % (p, opaque))
+    if empties:
+        raise RuntimeError(
+            "generated PNG has 0 opaque pixels (all transparent) for query %r: %s"
+            % (query, "; ".join(empties))
+        )
+
+
 def _write_audit_evidence(pack: dict, raw_text: str, out_dir: Path, subagent_id: str | None) -> None:
     """写 raw_answer.txt / raw_answer.sha256 / hashes.json（复用 audit_generation 格式）。"""
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -201,102 +221,23 @@ def _write_audit_evidence(pack: dict, raw_text: str, out_dir: Path, subagent_id:
     print("      -> prompt.sha256=%s" % prompt_hash)
 
 
-def _raw_to_hex_rows(raw_text: str) -> list[str]:
-    """把 palette+index 的 raw 文本（取第一个 face）转成 HEX GRID 行（---- 透明）。"""
-    import re
-    try:
-        blocks = pa.split_face_blocks(raw_text)
-    except Exception:
-        blocks = []
-    block = blocks[0][1] if blocks else raw_text
-    pal: dict[int, str] = {}
-    in_pal = False
-    idx_lines: list[str] = []
-    for line in block.splitlines():
-        ls = line.strip()
-        if ls.upper().startswith("PALETTE"):
-            in_pal = True
-            continue
-        if in_pal:
-            m = re.match(r"^\s*(\d+)\s*:\s*(#[0-9a-fA-F]{6})", ls)
-            if m:
-                pal[int(m.group(1))] = m.group(2).upper()
-            elif ls.upper().startswith("INDEX GRID"):
-                in_pal = False
-                continue
-        if ls.upper().startswith("INDEX GRID"):
-            idx_started = True
-            continue
-        if ls and not ls.startswith(("FILE", "W=", "FORM", "===")) and re.match(r"^-?[0-9#]", ls):
-            idx_lines.append(ls)
-    rows: list[str] = []
-    for ln in idx_lines:
-        toks = ln.split()
-        if len(toks) < 16:
-            continue
-        cells = []
-        for t in toks[:16]:
-            try:
-                idx = int(t)
-            except ValueError:
-                cells.append("----")
-                continue
-            cells.append(pal.get(idx, "----") if idx >= 0 else "----")
-        rows.append(" ".join(cells))
-        if len(rows) == 16:
-            break
-    return rows
-
-
-def _hex_sample_sections() -> list[tuple[str, list[str]]]:
-    """返回真实生成样本的 HEX GRID 段：蘑菇幼苗 + 蘑菇萤石。"""
-    base = Path(__file__).resolve().parent / "examples"
-    out: list[tuple[str, list[str]]] = []
-    for title, rel in (
-        ("蘑菇幼苗", "mushroom_sprout/raw_answer.txt"),
-        ("蘑菇萤石", "mushroom_glowstone/raw_answer.txt"),
-    ):
-        p = base / rel
-        if not p.exists():
-            continue
-        rows = _raw_to_hex_rows(p.read_text(encoding="utf-8"))
-        if rows:
-            out.append((title, rows))
-    return out
-
-
-def _skeleton_ascii(sk: dict) -> list[str]:
-    """把 structure_skeleton 转成 16x16 ASCII 布局图（H=手柄占位，C=水晶占位，.=透明）。"""
-    grid: list[list[str]] = [["." for _ in range(16)] for _ in range(16)]
-    handle = sk.get("handle") or {}
-    for w in handle.get("waypoints", []):
-        if len(w) == 2:
-            x, y = int(w[0]), int(w[1])
-            if 0 <= x < 16 and 0 <= y < 16:
-                grid[y][x] = "H"
-                if x + 1 < 16:
-                    grid[y][x + 1] = "H"
-    cc = sk.get("crystal_cluster") or {}
-    for x in cc.get("spike_columns", []):
-        for dy in range(int(cc.get("height_px", 3))):
-            y = int(cc.get("base_y", 6)) - dy
-            if 0 <= x < 16 and 0 <= y < 16:
-                grid[y][x] = "C"
-    return ["".join(row) for row in grid]
-
-
 def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     """生成紧凑 prompt：设计要点 + PALETTE/INDEX GRID（-1 0 1 索引模式）。
 
     通用设计原则（不针对某个具体物品）：方向统一、连接自然、剪影可辨、
-    纹样贴合形状；输出固定格式，不写解释。
+    纹样贴合形状、1px 描边/材质高光/纹理/明暗分层；输出固定格式，不写解释。
     """
     cc = pack.get("concept_card") or {}
     lines = []
+    asset_label = cc.get("item_name") or pack.get("query", "")
     lines.append("# 任务")
     lines.append("生成一个 %s 的 Minecraft 资源：%s" % (
-        pack.get("form", "item"), cc.get("item_name") or pack.get("query", "")
+        pack.get("form", "item"), asset_label
     ))
+    lines.append("")
+    lines.append("# 本体硬约束（最重要）")
+    lines.append("- 必须生成「%s」这个物体本身；参考节点不能改变主体类别、形状或语义。" % asset_label)
+    lines.append("- 参考节点只允许借用配色、材质、明暗、尺度与局部图案；若参考节点与 %s 语义冲突，请忽略其形状与语义。" % asset_label)
     lines.append("")
     lines.append("# 设计要点（先理解，再直接输出）")
     if cc.get("description"):
@@ -339,6 +280,10 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     lines.append("- 剪影可辨：只看形状也能认出“这是什么”；部件之间用描边/色差/空隙区分，不要糊成实心团块。")
     lines.append("- 纹样贴合形状：纹理/高光/图案沿部件的走向与明暗面流动，不脱离形状。")
     lines.append("")
+    lines.append("# 通用像素细节（每个物体都适用）")
+    for rule in getattr(cg, "GENERIC_PIXEL_DETAIL_RULES", []) or []:
+        lines.append("- %s" % rule)
+    lines.append("")
     lines.append("# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）")
     lines.append("- 先写 2~3 行设计分析（主方向/部件走向/连接点），放在 FORMAT 之前；face 块内禁止解释。")
     lines.append("- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；-1=透明，非负整数引用 PALETTE；非 -1 像素必须 >= 40；禁止全 -1 空图。")
@@ -352,8 +297,8 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     return "\n".join(lines)
 
 
-def _hex_contract_text(pack: dict) -> str:
-    """生成 PALETTE + INDEX GRID 格式骨架（--1 0 1 索引模式）。"""
+def _palette_index_contract_text(pack: dict) -> str:
+    """生成 PALETTE + INDEX GRID 格式骨架（-1 0 1 索引模式）。"""
     form = pack.get("form", "item")
     faces = pack.get("output_contract", {}).get("faces") or [
         {"face": "sprite", "file": "assets/mcmod/textures/item/sprite.png", "width": 16, "height": 16}
@@ -423,7 +368,7 @@ def run(args: argparse.Namespace) -> int:
         )
         pack = bsp.build_prompt_pack_v2(ns)
         pack["prompt"] = _build_compact_prompt(pack, vision=bool(args.llm_image))  # 用紧凑 HEX prompt；vision 模式更短（图作引导）
-        pack.setdefault("output_contract", {})["text"] = _hex_contract_text(pack)
+        pack.setdefault("output_contract", {})["text"] = _palette_index_contract_text(pack)
         bsp.write_v2_prompt_pack(pack, out_dir / "prompt_pack.json")
         print("      -> prompt_pack.json (%d anchors, concept=%s)" % (
             len(pack.get("anchors", [])),
@@ -444,6 +389,7 @@ def run(args: argparse.Namespace) -> int:
         saved = _render_raw_faces(raw_text, out_dir, pack)
         if not saved:
             raise RuntimeError("no PNG generated from raw_answer")
+        _assert_nonempty_pngs(saved, args.query)
 
         # 7. package_asset (optional)
         if args.package:

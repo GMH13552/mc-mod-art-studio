@@ -5,6 +5,8 @@ my_asset_index.json
 retrieval_examples/
 prompt_packs_v2/
 generated_assets*/
+generated/
+out/
 example_resourcepack*/
 v4_compose_selftest_assets/
 v3_selftest_user_model.json
@@ -19,3 +21,6 @@ v3_selftest_user_model.json
 *.key
 *_token*
 text_to_texture_selftest_assets/
+
+# 测试本地大产物：tests/runs 不入库；tests/reports、tests/evidence、tests/results/summary* 保留
+tests/runs/

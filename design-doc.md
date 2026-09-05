@@ -18,7 +18,8 @@
 | 转换 | `text_to_texture.py` / `compose_asset.py` | PNG |
 | 打包 | `package_asset.py` | 资源包目录 + manifest |
 | 校验 | `audit_generation.py` / `validate_raw_answers_v3.py` | 哈希/格式审计 |
-| 一键整合 | `run_pipeline.py` | 串起 scan → retrieve → concept → prompt → raw → PNG → package |
+| 像素校验 | `check_pixel_asset.py` | 非空/bbox/描边/色阶/部件分离 evidence |
+| 一键整合 | `run_pipeline.py` | 串起 scan → retrieve → concept → prompt → raw → PNG → package，并执行非空门禁 |
 
 ## 3. 概念卡 schema（v5 设计升级）
 
@@ -56,6 +57,30 @@ reference_nodes: [
 6. **形状-纹样一体**：`shape_pattern.part_pattern_flow` 把“部件形状 → 纹样走向”绑定在一起；
    先用形状确定结构，再让纹样贴合形状的走向/边缘/明暗面，**纹样不得脱离形状独立存在**。
 
+### 3.1 通用像素细节规则
+
+提示词优化引入**不绑定具体物品的通用像素细节规则**，维护在
+`concept_grounder.GENERIC_PIXEL_DETAIL_RULES`，并在提示包/紧凑 prompt 中逐条注入：
+
+1. 外轮廓 `1px 深色描边`；部件接缝用暗色分隔，不做均匀黑框。
+2. 材质高光沿形状走向，暗部在背光侧；按金属/木/石/发光/软质语义推理高光强度与纹理。
+3. 材质纹理贴合形状；有原版参考则参考质感，没有则按语义合理推理。
+4. 每个部件至少 `base/light/dark` 三档色阶，用 `1px` 明暗过渡表现体积。
+5. 整体方向一致，部件连接自然、不悬空。
+
+详细设计见 `docs/prompt-design.md`。这些规则与 `check_pixel_asset.py` 的非空/bbox/
+深色描边/明暗分桶检查对齐。
+
+### 3.2 非空门禁与 parser 容错
+
+- `run_pipeline._assert_nonempty_pngs()`：生成后逐张检查不透明像素；出现全透明 PNG 即
+  输出 `PIPELINE: FAIL` 并列出文件，不再误报 PASS。
+- `text_to_texture.py` 容错：
+  - `PALETTE` 行允许行尾 `#` 注释；
+  - INDEX/HEX GRID 多余透明尾列可裁剪、缺少尾部透明列自动补 `-1` / `----`；
+  - entity_uv 多出的尾行按容错处理，不因整段多余数据整体 FAIL。
+- 对应 v2 广谱测试结果见 `tests/results/v2/summary.md`。
+
 ## 4. 示例
 
 ### alien_crystal_wand（异形水晶法杖）
@@ -72,7 +97,9 @@ reference_nodes: [
 
 ## 5. 核心仓库边界
 
-- 只包含核心脚本、`builtin_models_fallback/` 模板 JSON 与两个示例。
+- 只包含核心脚本、`builtin_models_fallback/` 模板 JSON、两个示例、`docs/` 设计说明、
+  `evidence/` 可复用审核与 `tests/` 的非自证测试集/证据/汇总。
 - 不包含 `mc_asset_library*`、`generated_assets*`、`prompt_packs*`、`retrieval_examples*`、
   `concept_examples*`、`example_resourcepack*`、`style_*`、v4 日志/自测目录、其他 `minecraft_texture_tool` 文件。
+- `tests/runs/` 为本地大产物，不入库；克隆后按 `tests/README.md` 重新生成。
 - 所有自检使用合成资源，不依赖原版贴图。

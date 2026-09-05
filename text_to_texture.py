@@ -56,7 +56,7 @@ except ImportError as exc:  # pragma: no cover
     raise SystemExit("Pillow is required: pip install pillow") from exc
 
 HEADER_RE = re.compile(r"^\s*W\s*=\s*(\d+)\s+H\s*=\s*(\d+)\s*$", re.I)
-PALETTE_LINE_RE = re.compile(r"^\s*(\d+)\s*:\s*(#[0-9a-fA-F]{6})(?:\s+a=(\d+))?\s*$")
+PALETTE_LINE_RE = re.compile(r"^\s*(\d+)\s*:\s*(#[0-9a-fA-F]{6})(?:\s+a=(\d+))?(?:\s+#.*)?$")
 HEX_TOKEN_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 HEX_LINE_RE = re.compile(r"^#[0-9a-fA-F]{6}(?:\s|$)")
 ALPHA_THRESHOLD = 8
@@ -224,10 +224,22 @@ def _parse_index_grid(lines: list[str], start: int, w: int, h: int, palette: lis
     if len(rows) != h:
         raise ValueError("index grid has %d rows; expected %d" % (len(rows), h))
     # There must not be extra data rows beyond h.  Noise lines (blank lines,
-    # comments, section labels) are allowed after the grid.
+    # comments, section labels) are allowed after the grid.  A trailing
+    # all-transparent row (``-1``/``.``) is tolerated.  For large entity_uv
+    # grids (64x32/64x64), LLM answers often emit one or more extra rows; the
+    # declared W/H is the contract, so crop those trailing rows instead of
+    # failing the whole texture.
+    entity_uv_like = w >= 64 and h in (32, 64)
     while i < len(lines):
         s = lines[i].strip()
         if s and not _is_comment_or_label(s):
+            tokens = s.split()
+            if tokens and all(t in ("-1", ".") for t in tokens):
+                i += 1
+                continue
+            if entity_uv_like:
+                i += 1
+                continue
             raise ValueError("unexpected extra data after index grid: %r" % s)
         i += 1
     return rows

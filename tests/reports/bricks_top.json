@@ -1,0 +1,92 @@
+{
+  "tool": "check_pixel_asset.py",
+  "version": "1.0.0",
+  "input": {
+    "path": "tests/runs/bricks/resourcepack/assets/demo/textures/block/q_7ea27816_top.png",
+    "width": 16,
+    "height": 16
+  },
+  "metrics": {
+    "opaque_count": 0,
+    "opaque_min": 20,
+    "alpha_min": 8,
+    "size_ok": true,
+    "bbox": null,
+    "margins": {
+      "left": 0,
+      "top": 0,
+      "right": 0,
+      "bottom": 0
+    },
+    "min_margin": 1,
+    "bbox_ok": false,
+    "boundary_pixel_count": 0,
+    "boundary_dark_pixel_count": 0,
+    "boundary_dark_ratio": 0.0,
+    "boundary_dark_lum": 90,
+    "min_border_dark_ratio": 0.15,
+    "mean_boundary_luminance": 0.0,
+    "mean_all_luminance": 0.0,
+    "boundary_vs_all_delta": 0.0,
+    "border_ok": false,
+    "palette": {
+      "total_pixels": 0,
+      "dark_count": 0,
+      "mid_count": 0,
+      "bright_count": 0,
+      "dark_lum": 80,
+      "bright_lum": 160,
+      "dominant_color": null,
+      "dominant_color_count": 0,
+      "dominant_color_ratio": 0.0
+    },
+    "palette_ok": false,
+    "component_count": 0,
+    "component_sizes": [],
+    "part_separation": false,
+    "min_components": 2,
+    "separation_required": false,
+    "separation_ok": null
+  },
+  "verdict": {
+    "overall": "FAIL",
+    "checks": [
+      {
+        "id": "non_empty",
+        "ok": false,
+        "summary": "不透明像素数 >= 20",
+        "detail": "opaque_pixels=0 threshold=20"
+      },
+      {
+        "id": "size",
+        "ok": true,
+        "summary": "尺寸为 16x16",
+        "detail": "size=16x16"
+      },
+      {
+        "id": "bbox",
+        "ok": false,
+        "summary": "剪影 bbox 四周至少 1px 透明",
+        "detail": "bbox=None margins={'left': 0, 'top': 0, 'right': 0, 'bottom': 0}"
+      },
+      {
+        "id": "border",
+        "ok": false,
+        "summary": "外轮廓存在足够暗色描边像素（暗色边界占比 >= 0.15）",
+        "detail": "boundary_pixels=0 dark_boundary=0 ratio=0.0000"
+      },
+      {
+        "id": "palette",
+        "ok": false,
+        "summary": "调色板同时含暗色/亮色/主色",
+        "detail": "dark=0 mid=0 bright=0 dominant=None count=0"
+      },
+      {
+        "id": "part_separation",
+        "ok": null,
+        "summary": "部件分离为启发式报告（未用 --require-separation 纳入判定）",
+        "detail": "components=0 sizes=[]"
+      }
+    ]
+  }
+}

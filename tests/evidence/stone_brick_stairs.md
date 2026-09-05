@@ -1,0 +1,29 @@
+# stone_brick_stairs 运行证据
+
+- 命令：`python3 package_asset.py --template stairs --name stone_brick_stairs --out tests/runs/stone_brick_stairs/resourcepack --pack-mcmeta`
+- 执行日期：2026-09-05 (UTC)
+- 仓库 commit：`02ec21bbf537558aadcee5025f93044a06f3b1e0`
+- form：block_custom
+- 产物：
+  - `tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_bottom.png`
+  - `tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_top.png`
+  - `tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_side.png`
+  - `tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_particle.png`
+- raw_answer sha256：N/A
+- PNG 尺寸：
+  - `bottom`: 16x16
+  - `top`: 16x16
+  - `side`: 16x16
+  - `particle`: 16x16
+- check_pixel_asset 命令：
+  - `python3 check_pixel_asset.py tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_bottom.png --expected-size 16x16 --out tests/reports/stone_brick_stairs_bottom.json`
+  - `python3 check_pixel_asset.py tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_top.png --expected-size 16x16 --out tests/reports/stone_brick_stairs_top.json`
+  - `python3 check_pixel_asset.py tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_side.png --expected-size 16x16 --out tests/reports/stone_brick_stairs_side.json`
+  - `python3 check_pixel_asset.py tests/runs/stone_brick_stairs/resourcepack/assets/demo/textures/block/stone_brick_stairs_particle.png --expected-size 16x16 --out tests/reports/stone_brick_stairs_particle.json`
+- check_pixel_asset 结果：PASS
+  - bottom: PASS (opaque=196 bbox=[1, 1, 15, 15] border=True palette=True)
+  - top: PASS (opaque=196 bbox=[1, 1, 15, 15] border=True palette=True)
+  - side: PASS (opaque=196 bbox=[1, 1, 15, 15] border=True palette=True)
+  - particle: PASS (opaque=196 bbox=[1, 1, 15, 15] border=True palette=True)
+- 观察与问题：
+  - run_status: VALIDATE PASS (9 checks)
