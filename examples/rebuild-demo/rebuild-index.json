@@ -1,0 +1,146 @@
+[
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/cow.png",
+    "name": "cow.png",
+    "category": "entity",
+    "md5": "64e4fcacfe84ee63b91898364c883d40",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/red_mooshroom.png",
+    "name": "red_mooshroom.png",
+    "category": "entity",
+    "md5": "00fbc3ceee0959ddcabd3f43355ce6e4",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/skeleton/skeleton.png",
+    "name": "skeleton.png",
+    "category": "entity",
+    "md5": "88910a4a570d759c9cc22ea557936ba3",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/villager/villager.png",
+    "name": "villager.png",
+    "category": "entity",
+    "md5": "8da291f5374bae0356045285be0f1954",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/brown_mooshroom.png",
+    "name": "brown_mooshroom.png",
+    "category": "entity",
+    "md5": "6277957e2237b75654202092d47727c9",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png",
+    "name": "iron_sword.png",
+    "category": "item",
+    "md5": "d8489670a89dcd89008870e245f75d5f",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stone_sword.png",
+    "name": "stone_sword.png",
+    "category": "item",
+    "md5": "69dfc029cc40510af01285ca16aed1a3",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/wooden_sword.png",
+    "name": "wooden_sword.png",
+    "category": "item",
+    "md5": "e4934a7f6d2c1ef603cdcc05ca7ffcd7",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/shears.png",
+    "name": "shears.png",
+    "category": "item",
+    "md5": "17f92294a2e4de7086c6b916fd48b732",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/leather.png",
+    "name": "leather.png",
+    "category": "item",
+    "md5": "074eb989d8d88e20269414e654152236",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/rabbit_hide.png",
+    "name": "rabbit_hide.png",
+    "category": "item",
+    "md5": "aaf2994fb3ad098468f2aefc283c3551",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png",
+    "name": "stick.png",
+    "category": "item",
+    "md5": "ccd09839f4d1c71729bd222884e8f7dd",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/carrot_on_a_stick.png",
+    "name": "carrot_on_a_stick.png",
+    "category": "item",
+    "md5": "7c936afa1d8da350da636ee8f68374b3",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png",
+    "name": "oak_planks.png",
+    "category": "block",
+    "md5": "2b7c6bc281025a86308a0331623bb2d6",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/bone_block_side.png",
+    "name": "bone_block_side.png",
+    "category": "block",
+    "md5": "da8f5260eee6417c6c9b62e4ef5de5e7",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/bone_block_top.png",
+    "name": "bone_block_top.png",
+    "category": "block",
+    "md5": "27fe0d379df13c2c5ff2b5b5c0339a30",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/soul_fire_0.png",
+    "name": "soul_fire_0.png",
+    "category": "block",
+    "md5": "bf4e3e98bc177b997ce91bf6cc9d9ba2",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  },
+  {
+    "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/soul_fire_1.png",
+    "name": "soul_fire_1.png",
+    "category": "block",
+    "md5": "99166aaca8a09480b689a1b491cfb9e2",
+    "palette_count": 0,
+    "opaque_pixel_count": 0
+  }
+]

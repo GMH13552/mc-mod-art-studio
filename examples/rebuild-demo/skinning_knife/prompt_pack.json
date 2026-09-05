@@ -1,0 +1,1742 @@
+{
+  "name": "q_526576ae5c0f5200ff1a65b0",
+  "query": "剥皮小刀：新物品，短小刀身像刀，短柄，不是长剑/木棍",
+  "form": "item",
+  "form_note": "s3-rebuild custom retrieval",
+  "form_source": "manual_parts_silhouette_bank",
+  "type": "item",
+  "size": "16x16",
+  "width": 16,
+  "height": 16,
+  "fusion": "retrieval features fusion",
+  "retrieval_method": "rule",
+  "retrieval_method_note": "s3-rebuild selects exact local full-library assets by name.",
+  "anchors": [
+    {
+      "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png",
+      "name": "iron_sword.png",
+      "category": "item",
+      "role": "shape",
+      "features": {
+        "shape": "剑",
+        "pattern": "无明显图案",
+        "colors": [
+          "#444444",
+          "#181818",
+          "#D8D8D8",
+          "#FFFFFF",
+          "#BEBEBE"
+        ],
+        "parts": [
+          "剑刃",
+          "护手",
+          "柄"
+        ],
+        "attraction": []
+      },
+      "score": 100,
+      "matched_terms": [],
+      "palette_count": 0,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n.............XXX\n............XXXX\n...........XXXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XX...XXXXX....\n..XXX.XXXXX.....\n...XXXXXXX......\n...XXXXXX.......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXXX....XX......\nXXX.............\nXXX.............\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n.............+++\n............+@@#\n...........+@=@#\n..........+@=@#.\n.........+@==#..\n........+@==#...\n..++...+===#....\n..+++.+===#.....\n...+=#===#......\n...+==+=#.......\n....+++#........\n...OO#++#.......\n..OO#.##+#......\n++O#....##......\n++#.............\n###.............\n```\n\n## Palette (hex)\n```\n 0: #444444\n 1: #ffffff\n 2: #181818\n 3: #bebebe\n 4: #d8d8d8\n 5: #6b6b6b\n 6: #969696\n 7: #493615\n 8: #684e1e\n 9: #896727\n10: #281e0b\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  0\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  1  2\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  3  1  2\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  3  1  2 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  3  4  2 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1  0  1  3  4  2 -1 -1 -1\n-1 -1  0  0 -1 -1 -1  0  4  3  4  2 -1 -1 -1 -1\n-1 -1  0  5  0 -1  0  4  3  4  2 -1 -1 -1 -1 -1\n-1 -1 -1  0  6  2  4  6  4  2 -1 -1 -1 -1 -1 -1\n-1 -1 -1  0  6  6  5  4  2 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0  5  0  2 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1  7  8  2  0  0  2 -1 -1 -1 -1 -1 -1 -1\n-1 -1  7  9 10 -1  2  2  0  2 -1 -1 -1 -1 -1 -1\n 0  0  8 10 -1 -1 -1 -1  2  2 -1 -1 -1 -1 -1 -1\n 0  5  2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 2  2  2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #444444",
+        " 1: #ffffff",
+        " 2: #181818",
+        " 3: #bebebe",
+        " 4: #d8d8d8",
+        " 5: #6b6b6b",
+        " 6: #969696",
+        " 7: #493615",
+        " 8: #684e1e",
+        " 9: #896727",
+        "10: #281e0b"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  0",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  1  2",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  3  1  2",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  3  1  2 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  3  4  2 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1  0  1  3  4  2 -1 -1 -1",
+        "-1 -1  0  0 -1 -1 -1  0  4  3  4  2 -1 -1 -1 -1",
+        "-1 -1  0  5  0 -1  0  4  3  4  2 -1 -1 -1 -1 -1",
+        "-1 -1 -1  0  6  2  4  6  4  2 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1  0  6  6  5  4  2 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0  5  0  2 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1  7  8  2  0  0  2 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1  7  9 10 -1  2  2  0  2 -1 -1 -1 -1 -1 -1",
+        " 0  0  8 10 -1 -1 -1 -1  2  2 -1 -1 -1 -1 -1 -1",
+        " 0  5  2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        " 2  2  2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"
+      ],
+      "reference_analysis": {
+        "source": "iron_sword.png",
+        "form": "item",
+        "palette_family": {
+          "count": 11,
+          "main": {
+            "hex": "#896727",
+            "rgb": [
+              137,
+              103,
+              39
+            ],
+            "lum": 0.41414745098039213,
+            "sat": 0.5568181818181818
+          },
+          "light": {
+            "hex": "#FFFFFF",
+            "rgb": [
+              255,
+              255,
+              255
+            ],
+            "lum": 1.0,
+            "sat": 0.0
+          },
+          "dark": {
+            "hex": "#181818",
+            "rgb": [
+              24,
+              24,
+              24
+            ],
+            "lum": 0.09411764705882353,
+            "sat": 0.0
+          },
+          "outline": {
+            "hex": "#181818",
+            "rgb": [
+              24,
+              24,
+              24
+            ],
+            "lum": 0.09411764705882353,
+            "sat": 0.0
+          },
+          "mean": {
+            "luminance": 0.4570697326203209,
+            "saturation": 0.20280690255731137
+          },
+          "range": {
+            "luminance": [
+              0.09411764705882353,
+              1.0
+            ],
+            "saturation": [
+              0.0,
+              0.5686274509803921
+            ]
+          },
+          "summary": "主色=#896727 (L=0.41)；亮色=#FFFFFF (L=1.00)；暗色=#181818 (L=0.09)；描边=#181818 (L=0.09)；明度均值=0.46 范围=0.09~1.00；饱和度均值=0.20 范围=0.00~0.57"
+        },
+        "material_signature": {
+          "tokens": [
+            "金属",
+            "石",
+            "发光"
+          ],
+          "summary": "金属、石、发光"
+        },
+        "structure_hints": {
+          "hints": [
+            "弧形/曲线",
+            "单件"
+          ],
+          "part_count": 1,
+          "aspect_ratio": 1.0,
+          "symmetric": false,
+          "summary": "弧形/曲线；单件"
+        },
+        "uv_regions": {
+          "regions": {},
+          "summary": "（非实体 UV 形式，无区域）"
+        },
+        "silhouette": [
+          ".............XXX",
+          "............XXXX",
+          "...........XXXXX",
+          "..........XXXXX.",
+          ".........XXXXX..",
+          "........XXXXX...",
+          "..XX...XXXXX....",
+          "..XXX.XXXXX.....",
+          "...XXXXXXX......",
+          "...XXXXXX.......",
+          "....XXXX........",
+          "...XXXXXX.......",
+          "..XXX.XXXX......",
+          "XXXX....XX......",
+          "XXX.............",
+          "XXX............."
+        ],
+        "silhouette_candidates": [
+          {
+            "token": "compact:iron_sword.png",
+            "source": "iron_sword.png",
+            "kind": "compact_fragment",
+            "fragment": ".............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............",
+            "note": "只含 X/. 剪影；整体轮廓基础（非 Palette/Index grid）"
+          }
+        ],
+        "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png",
+        "category": "item",
+        "role": "shape",
+        "size": "16x16"
+      }
+    },
+    {
+      "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stone_sword.png",
+      "name": "stone_sword.png",
+      "category": "item",
+      "role": "shape",
+      "features": {
+        "shape": "剑",
+        "pattern": "纹理/斑点",
+        "colors": [
+          "#494949",
+          "#212121",
+          "#95918D",
+          "#787777",
+          "#B3B1AF"
+        ],
+        "parts": [
+          "剑刃",
+          "护手",
+          "柄"
+        ],
+        "attraction": []
+      },
+      "score": 100,
+      "matched_terms": [],
+      "palette_count": 0,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n.............XXX\n............XXXX\n...........XXXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XX...XXXXX....\n..XXX.XXXXX.....\n...XXXXXXX......\n...XXXXXX.......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXXX....XX......\nXXX.............\nXXX.............\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n.............+++\n............+==#\n...........+===#\n..........+===#.\n.........+===#..\n........+===#...\n..++...+===#....\n..+++.+===#.....\n...+=#===#......\n...+==+=#.......\n....+++#........\n...OO#++#.......\n..OO#.##+#......\n++O#....##......\n++#.............\n###.............\n```\n\n## Palette (hex)\n```\n 0: #494949\n 1: #95918d\n 2: #b3b1af\n 3: #212121\n 4: #787777\n 5: #5a5a5a\n 6: #493615\n 7: #684e1e\n 8: #896727\n 9: #281e0b\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  0\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  3\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1 -1 -1\n-1 -1  0  0 -1 -1 -1  0  4  2  1  3 -1 -1 -1 -1\n-1 -1  0  5  0 -1  0  4  2  4  3 -1 -1 -1 -1 -1\n-1 -1 -1  0  4  3  4  1  4  3 -1 -1 -1 -1 -1 -1\n-1 -1 -1  0  4  4  5  4  3 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0  5  0  3 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1  6  7  3  0  0  3 -1 -1 -1 -1 -1 -1 -1\n-1 -1  6  8  9 -1  3  3  0  3 -1 -1 -1 -1 -1 -1\n 0  0  7  9 -1 -1 -1 -1  3  3 -1 -1 -1 -1 -1 -1\n 0  5  3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 3  3  3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #494949",
+        " 1: #95918d",
+        " 2: #b3b1af",
+        " 3: #212121",
+        " 4: #787777",
+        " 5: #5a5a5a",
+        " 6: #493615",
+        " 7: #684e1e",
+        " 8: #896727",
+        " 9: #281e0b"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  0",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  3",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1 -1 -1",
+        "-1 -1  0  0 -1 -1 -1  0  4  2  1  3 -1 -1 -1 -1",
+        "-1 -1  0  5  0 -1  0  4  2  4  3 -1 -1 -1 -1 -1",
+        "-1 -1 -1  0  4  3  4  1  4  3 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1  0  4  4  5  4  3 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0  5  0  3 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1  6  7  3  0  0  3 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1  6  8  9 -1  3  3  0  3 -1 -1 -1 -1 -1 -1",
+        " 0  0  7  9 -1 -1 -1 -1  3  3 -1 -1 -1 -1 -1 -1",
+        " 0  5  3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        " 3  3  3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"
+      ],
+      "reference_analysis": {
+        "source": "stone_sword.png",
+        "form": "item",
+        "palette_family": {
+          "count": 10,
+          "main": {
+            "hex": "#684E1E",
+            "rgb": [
+              104,
+              78,
+              30
+            ],
+            "lum": 0.3139686274509804,
+            "sat": 0.5522388059701492
+          },
+          "light": {
+            "hex": "#B3B1AF",
+            "rgb": [
+              179,
+              177,
+              175
+            ],
+            "lum": 0.6952188235294117,
+            "sat": 0.025641025641025546
+          },
+          "dark": {
+            "hex": "#281E0B",
+            "rgb": [
+              40,
+              30,
+              11
+            ],
+            "lum": 0.12060470588235293,
+            "sat": 0.5686274509803921
+          },
+          "outline": {
+            "hex": "#212121",
+            "rgb": [
+              33,
+              33,
+              33
+            ],
+            "lum": 0.12941176470588234,
+            "sat": 0.0
+          },
+          "mean": {
+            "luminance": 0.35691592156862745,
+            "saturation": 0.22970646905534972
+          },
+          "range": {
+            "luminance": [
+              0.12060470588235293,
+              0.6952188235294117
+            ],
+            "saturation": [
+              0.0,
+              0.5686274509803921
+            ]
+          },
+          "summary": "主色=#684E1E (L=0.31)；亮色=#B3B1AF (L=0.70)；暗色=#281E0B (L=0.12)；描边=#212121 (L=0.13)；明度均值=0.36 范围=0.12~0.70；饱和度均值=0.23 范围=0.00~0.57"
+        },
+        "material_signature": {
+          "tokens": [
+            "金属",
+            "石"
+          ],
+          "summary": "金属、石"
+        },
+        "structure_hints": {
+          "hints": [
+            "弧形/曲线",
+            "单件"
+          ],
+          "part_count": 1,
+          "aspect_ratio": 1.0,
+          "symmetric": false,
+          "summary": "弧形/曲线；单件"
+        },
+        "uv_regions": {
+          "regions": {},
+          "summary": "（非实体 UV 形式，无区域）"
+        },
+        "silhouette": [
+          ".............XXX",
+          "............XXXX",
+          "...........XXXXX",
+          "..........XXXXX.",
+          ".........XXXXX..",
+          "........XXXXX...",
+          "..XX...XXXXX....",
+          "..XXX.XXXXX.....",
+          "...XXXXXXX......",
+          "...XXXXXX.......",
+          "....XXXX........",
+          "...XXXXXX.......",
+          "..XXX.XXXX......",
+          "XXXX....XX......",
+          "XXX.............",
+          "XXX............."
+        ],
+        "silhouette_candidates": [
+          {
+            "token": "compact:stone_sword.png",
+            "source": "stone_sword.png",
+            "kind": "compact_fragment",
+            "fragment": ".............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............",
+            "note": "只含 X/. 剪影；整体轮廓基础（非 Palette/Index grid）"
+          }
+        ],
+        "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stone_sword.png",
+        "category": "item",
+        "role": "shape",
+        "size": "16x16"
+      }
+    },
+    {
+      "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/wooden_sword.png",
+      "name": "wooden_sword.png",
+      "category": "item",
+      "role": "shape",
+      "features": {
+        "shape": "剑",
+        "pattern": "无明显图案",
+        "colors": [
+          "#372910",
+          "#20180A",
+          "#755821",
+          "#594319",
+          "#866526"
+        ],
+        "parts": [
+          "剑刃",
+          "护手",
+          "柄"
+        ],
+        "attraction": []
+      },
+      "score": 100,
+      "matched_terms": [],
+      "palette_count": 0,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n.............XXX\n............XXXX\n...........XXXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XX...XXXXX....\n..XXX.XXXXX.....\n...XXXXXXX......\n...XXXXXX.......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXXX....XX......\nXXX.............\nXXX.............\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n.............###\n............#OO#\n...........#OOO#\n..........#OOO#.\n.........#OOO#..\n........#OOO#...\n..##...#OOO#....\n..#O#.#OOO#.....\n...#O#OOO#......\n...#OOOO#.......\n....#O##........\n...OO####.......\n..OO#.####......\n##O#....##......\n#O#.............\n###.............\n```\n\n## Palette (hex)\n```\n 0: #372910\n 1: #755821\n 2: #866526\n 3: #20180a\n 4: #594319\n 5: #473614\n 6: #493615\n 7: #684e1e\n 8: #896727\n 9: #281e0b\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  0\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  3\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1 -1 -1\n-1 -1  0  0 -1 -1 -1  0  4  2  1  3 -1 -1 -1 -1\n-1 -1  0  5  0 -1  0  4  2  4  3 -1 -1 -1 -1 -1\n-1 -1 -1  0  4  3  4  1  4  3 -1 -1 -1 -1 -1 -1\n-1 -1 -1  0  4  4  5  4  3 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0  5  0  3 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1  6  7  3  0  0  3 -1 -1 -1 -1 -1 -1 -1\n-1 -1  6  8  9 -1  3  3  0  3 -1 -1 -1 -1 -1 -1\n 0  0  7  9 -1 -1 -1 -1  3  3 -1 -1 -1 -1 -1 -1\n 0  5  3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n 3  3  3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #372910",
+        " 1: #755821",
+        " 2: #866526",
+        " 3: #20180a",
+        " 4: #594319",
+        " 5: #473614",
+        " 6: #493615",
+        " 7: #684e1e",
+        " 8: #896727",
+        " 9: #281e0b"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  0  0",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  3",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1  0  1  2  1  3 -1 -1 -1",
+        "-1 -1  0  0 -1 -1 -1  0  4  2  1  3 -1 -1 -1 -1",
+        "-1 -1  0  5  0 -1  0  4  2  4  3 -1 -1 -1 -1 -1",
+        "-1 -1 -1  0  4  3  4  1  4  3 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1  0  4  4  5  4  3 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0  5  0  3 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1  6  7  3  0  0  3 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1  6  8  9 -1  3  3  0  3 -1 -1 -1 -1 -1 -1",
+        " 0  0  7  9 -1 -1 -1 -1  3  3 -1 -1 -1 -1 -1 -1",
+        " 0  5  3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        " 3  3  3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"
+      ],
+      "reference_analysis": {
+        "source": "wooden_sword.png",
+        "form": "item",
+        "palette_family": {
+          "count": 10,
+          "main": {
+            "hex": "#493615",
+            "rgb": [
+              73,
+              54,
+              21
+            ],
+            "lum": 0.21826196078431373,
+            "sat": 0.5531914893617021
+          },
+          "light": {
+            "hex": "#896727",
+            "rgb": [
+              137,
+              103,
+              39
+            ],
+            "lum": 0.41414745098039213,
+            "sat": 0.5568181818181818
+          },
+          "dark": {
+            "hex": "#20180A",
+            "rgb": [
+              32,
+              24,
+              10
+            ],
+            "lum": 0.0968235294117647,
+            "sat": 0.5238095238095238
+          },
+          "outline": {
+            "hex": "#20180A",
+            "rgb": [
+              32,
+              24,
+              10
+            ],
+            "lum": 0.0968235294117647,
+            "sat": 0.5238095238095238
+          },
+          "mean": {
+            "luminance": 0.25741482352941175,
+            "saturation": 0.5543963830683047
+          },
+          "range": {
+            "luminance": [
+              0.0968235294117647,
+              0.41414745098039213
+            ],
+            "saturation": [
+              0.5238095238095238,
+              0.5686274509803921
+            ]
+          },
+          "summary": "主色=#493615 (L=0.22)；亮色=#896727 (L=0.41)；暗色=#20180A (L=0.10)；描边=#20180A (L=0.10)；明度均值=0.26 范围=0.10~0.41；饱和度均值=0.55 范围=0.52~0.57"
+        },
+        "material_signature": {
+          "tokens": [
+            "中性"
+          ],
+          "summary": "中性"
+        },
+        "structure_hints": {
+          "hints": [
+            "弧形/曲线",
+            "单件"
+          ],
+          "part_count": 1,
+          "aspect_ratio": 1.0,
+          "symmetric": false,
+          "summary": "弧形/曲线；单件"
+        },
+        "uv_regions": {
+          "regions": {},
+          "summary": "（非实体 UV 形式，无区域）"
+        },
+        "silhouette": [
+          ".............XXX",
+          "............XXXX",
+          "...........XXXXX",
+          "..........XXXXX.",
+          ".........XXXXX..",
+          "........XXXXX...",
+          "..XX...XXXXX....",
+          "..XXX.XXXXX.....",
+          "...XXXXXXX......",
+          "...XXXXXX.......",
+          "....XXXX........",
+          "...XXXXXX.......",
+          "..XXX.XXXX......",
+          "XXXX....XX......",
+          "XXX.............",
+          "XXX............."
+        ],
+        "silhouette_candidates": [
+          {
+            "token": "compact:wooden_sword.png",
+            "source": "wooden_sword.png",
+            "kind": "compact_fragment",
+            "fragment": ".............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............",
+            "note": "只含 X/. 剪影；整体轮廓基础（非 Palette/Index grid）"
+          }
+        ],
+        "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/wooden_sword.png",
+        "category": "item",
+        "role": "shape",
+        "size": "16x16"
+      }
+    },
+    {
+      "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/shears.png",
+      "name": "shears.png",
+      "category": "item",
+      "role": "shape",
+      "features": {
+        "shape": "item 透明剪影",
+        "pattern": "无明显图案",
+        "colors": [
+          "#A8A8A8",
+          "#6F352B",
+          "#5C2D1F",
+          "#D5D5D5",
+          "#707070"
+        ],
+        "parts": [
+          "主体"
+        ],
+        "attraction": []
+      },
+      "score": 100,
+      "matched_terms": [],
+      "palette_count": 0,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n........XXXXX...\n.......XXXXX.X..\n......XXXXX.XX..\n.....XXXXX.XXX..\n....XXXXX.XXXX..\n....XXX..XXXXX..\n...XXX...XXXX...\n...XXX..XXXX....\n...XXXXXXXX.....\n..X..XXXXX......\n..X..XXX........\n...XX...........\n................\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n........R====...\n.......R+===.=..\n......RR===.==..\n.....RR===.===..\n....RRR+=.====..\n....RRR..===+R..\n...RRR...+=RR...\n...RRR..RRRR....\n...==RRRRRR.....\n..=..+RRRR......\n..+..+RR........\n...++...........\n................\n................\n```\n\n## Palette (hex)\n```\n 0: #6f352b\n 1: #a8a8a8\n 2: #d5d5d5\n 3: #707070\n 4: #8b4336\n 5: #a64f3f\n 6: #5c2d1f\n 7: #424242\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1  0  1  2  2  1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0  3  2  2  1 -1  1 -1 -1\n-1 -1 -1 -1 -1 -1  0  4  1  2  1 -1  1  2 -1 -1\n-1 -1 -1 -1 -1  0  5  1  2  1 -1  1  2  2 -1 -1\n-1 -1 -1 -1  0  5  6  3  1 -1  1  2  2  1 -1 -1\n-1 -1 -1 -1  0  5  6 -1 -1  1  2  1  3  6 -1 -1\n-1 -1 -1  0  5  6 -1 -1 -1  3  1  0  6 -1 -1 -1\n-1 -1 -1  0  4  6 -1 -1  0  0  0  6 -1 -1 -1 -1\n-1 -1 -1  1  1  0  0  0  4  4  6 -1 -1 -1 -1 -1\n-1 -1  1 -1 -1  3  4  4  6  6 -1 -1 -1 -1 -1 -1\n-1 -1  3 -1 -1  7  6  6 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1  7  7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #6f352b",
+        " 1: #a8a8a8",
+        " 2: #d5d5d5",
+        " 3: #707070",
+        " 4: #8b4336",
+        " 5: #a64f3f",
+        " 6: #5c2d1f",
+        " 7: #424242"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1  0  1  2  2  1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1  0  3  2  2  1 -1  1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  0  4  1  2  1 -1  1  2 -1 -1",
+        "-1 -1 -1 -1 -1  0  5  1  2  1 -1  1  2  2 -1 -1",
+        "-1 -1 -1 -1  0  5  6  3  1 -1  1  2  2  1 -1 -1",
+        "-1 -1 -1 -1  0  5  6 -1 -1  1  2  1  3  6 -1 -1",
+        "-1 -1 -1  0  5  6 -1 -1 -1  3  1  0  6 -1 -1 -1",
+        "-1 -1 -1  0  4  6 -1 -1  0  0  0  6 -1 -1 -1 -1",
+        "-1 -1 -1  1  1  0  0  0  4  4  6 -1 -1 -1 -1 -1",
+        "-1 -1  1 -1 -1  3  4  4  6  6 -1 -1 -1 -1 -1 -1",
+        "-1 -1  3 -1 -1  7  6  6 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1  7  7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"
+      ],
+      "reference_analysis": {
+        "source": "shears.png",
+        "form": "item",
+        "palette_family": {
+          "count": 8,
+          "main": {
+            "hex": "#8B4336",
+            "rgb": [
+              139,
+              67,
+              54
+            ],
+            "lum": 0.3190925490196078,
+            "sat": 0.4404145077720206
+          },
+          "light": {
+            "hex": "#D5D5D5",
+            "rgb": [
+              213,
+              213,
+              213
+            ],
+            "lum": 0.8352941176470589,
+            "sat": 0.0
+          },
+          "dark": {
+            "hex": "#5C2D1F",
+            "rgb": [
+              92,
+              45,
+              31
+            ],
+            "lum": 0.21169176470588236,
+            "sat": 0.4959349593495935
+          },
+          "outline": {
+            "hex": "#5C2D1F",
+            "rgb": [
+              92,
+              45,
+              31
+            ],
+            "lum": 0.21169176470588236,
+            "sat": 0.4959349593495935
+          },
+          "mean": {
+            "luminance": 0.41926460784313724,
+            "saturation": 0.22846119600858772
+          },
+          "range": {
+            "luminance": [
+              0.21169176470588236,
+              0.8352941176470589
+            ],
+            "saturation": [
+              0.0,
+              0.4959349593495935
+            ]
+          },
+          "summary": "主色=#8B4336 (L=0.32)；亮色=#D5D5D5 (L=0.84)；暗色=#5C2D1F (L=0.21)；描边=#5C2D1F (L=0.21)；明度均值=0.42 范围=0.21~0.84；饱和度均值=0.23 范围=0.00~0.50"
+        },
+        "material_signature": {
+          "tokens": [
+            "金属",
+            "石",
+            "发光"
+          ],
+          "summary": "金属、石、发光"
+        },
+        "structure_hints": {
+          "hints": [
+            "弧形/曲线",
+            "多部件(3)"
+          ],
+          "part_count": 3,
+          "aspect_ratio": 1.0,
+          "symmetric": false,
+          "summary": "弧形/曲线；多部件(3)"
+        },
+        "uv_regions": {
+          "regions": {},
+          "summary": "（非实体 UV 形式，无区域）"
+        },
+        "silhouette": [
+          "........XXXXX...",
+          ".......XXXXX.X..",
+          "......XXXXX.XX..",
+          ".....XXXXX.XXX..",
+          "....XXXXX.XXXX..",
+          "....XXX..XXXXX..",
+          "...XXX...XXXX...",
+          "...XXX..XXXX....",
+          "...XXXXXXXX.....",
+          "..X..XXXXX......",
+          "..X..XXX........",
+          "...XX..........."
+        ],
+        "silhouette_candidates": [
+          {
+            "token": "compact:shears.png",
+            "source": "shears.png",
+            "kind": "compact_fragment",
+            "fragment": "......XXXXX.\n.....XXXXX.X\n....XXXXX.XX\n...XXXXX.XXX\n..XXXXX.XXXX\n..XXX..XXXXX\n.XXX...XXXX.\n.XXX..XXXX..\n.XXXXXXXX...\nX..XXXXX....\nX..XXX......\n.XX.........",
+            "note": "只含 X/. 剪影；整体轮廓基础（非 Palette/Index grid）"
+          }
+        ],
+        "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/shears.png",
+        "category": "item",
+        "role": "shape",
+        "size": "16x16"
+      }
+    },
+    {
+      "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/leather.png",
+      "name": "leather.png",
+      "category": "item",
+      "role": "shape",
+      "features": {
+        "shape": "item 透明剪影",
+        "pattern": "无明显图案",
+        "colors": [
+          "#C65C35",
+          "#9E492A",
+          "#542716",
+          "#3D1C10",
+          "#D76B43"
+        ],
+        "parts": [
+          "主体"
+        ],
+        "attraction": []
+      },
+      "score": 100,
+      "matched_terms": [],
+      "palette_count": 0,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n......XXXX......\n..XX.XXXXXX.XX..\n..XXXXXXXXXXXX..\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n....XXXXXXXX....\n....XXXXXXXX....\n....XXXXXXXX....\n....XXXXXXXX....\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n...XXXXXXXXXX...\n..XXXXXXXXXXXX..\n..XXX..XX..XXX..\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n......OOOO......\n..OO.OOOORO.OO..\n..OOOOOOOOOOOO..\n...OOOOOOOOOO...\n...OOOOOOOORO...\n....OOROOOOO....\n....OOOOOOOO....\n....OOOOOOOO....\n....OOOOOOOO....\n...OROOOOOORO...\n...OOOOOOOORO...\n...OOOOOROOOO...\n..OROOORROOORO..\n..OOO..OO..OOO..\n................\n```\n\n## Palette (hex)\n```\n 0: #542716\n 1: #9e492a\n 2: #d76b43\n 3: #c65c35\n 4: #893b25\n 5: #3d1c10\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  0  0  0 -1 -1 -1 -1 -1 -1\n-1 -1  0  0 -1  0  1  2  3  4  0 -1  0  0 -1 -1\n-1 -1  0  1  0  3  2  2  2  1  3  0  1  5 -1 -1\n-1 -1 -1  0  3  3  1  2  2  2  3  1  5 -1 -1 -1\n-1 -1 -1  0  1  2  1  2  2  1  3  4  5 -1 -1 -1\n-1 -1 -1 -1  0  2  4  3  2  3  1  5 -1 -1 -1 -1\n-1 -1 -1 -1  0  1  3  3  2  3  1  5 -1 -1 -1 -1\n-1 -1 -1 -1  0  3  3  1  2  3  3  5 -1 -1 -1 -1\n-1 -1 -1 -1  0  3  3  1  2  3  3  5 -1 -1 -1 -1\n-1 -1 -1  0  4  1  3  1  3  1  1  4  5 -1 -1 -1\n-1 -1 -1  0  3  3  3  3  3  3  3  4  5 -1 -1 -1\n-1 -1 -1  0  3  1  1  1  4  1  3  1  5 -1 -1 -1\n-1 -1  0  4  1  5  5  4  4  5  5  1  4  5 -1 -1\n-1 -1  0  5  5 -1 -1  5  5 -1 -1  5  5  5 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #542716",
+        " 1: #9e492a",
+        " 2: #d76b43",
+        " 3: #c65c35",
+        " 4: #893b25",
+        " 5: #3d1c10"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  0  0  0  0 -1 -1 -1 -1 -1 -1",
+        "-1 -1  0  0 -1  0  1  2  3  4  0 -1  0  0 -1 -1",
+        "-1 -1  0  1  0  3  2  2  2  1  3  0  1  5 -1 -1",
+        "-1 -1 -1  0  3  3  1  2  2  2  3  1  5 -1 -1 -1",
+        "-1 -1 -1  0  1  2  1  2  2  1  3  4  5 -1 -1 -1",
+        "-1 -1 -1 -1  0  2  4  3  2  3  1  5 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0  1  3  3  2  3  1  5 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0  3  3  1  2  3  3  5 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0  3  3  1  2  3  3  5 -1 -1 -1 -1",
+        "-1 -1 -1  0  4  1  3  1  3  1  1  4  5 -1 -1 -1",
+        "-1 -1 -1  0  3  3  3  3  3  3  3  4  5 -1 -1 -1",
+        "-1 -1 -1  0  3  1  1  1  4  1  3  1  5 -1 -1 -1",
+        "-1 -1  0  4  1  5  5  4  4  5  5  1  4  5 -1 -1",
+        "-1 -1  0  5  5 -1 -1  5  5 -1 -1  5  5  5 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"
+      ],
+      "reference_analysis": {
+        "source": "leather.png",
+        "form": "item",
+        "palette_family": {
+          "count": 6,
+          "main": {
+            "hex": "#9E492A",
+            "rgb": [
+              158,
+              73,
+              42
+            ],
+            "lum": 0.3483639215686275,
+            "sat": 0.5800000000000001
+          },
+          "light": {
+            "hex": "#D76B43",
+            "rgb": [
+              215,
+              107,
+              67
+            ],
+            "lum": 0.49832470588235295,
+            "sat": 0.6491228070175439
+          },
+          "dark": {
+            "hex": "#3D1C10",
+            "rgb": [
+              61,
+              28,
+              16
+            ],
+            "lum": 0.13391921568627452,
+            "sat": 0.5844155844155844
+          },
+          "outline": {
+            "hex": "#3D1C10",
+            "rgb": [
+              61,
+              28,
+              16
+            ],
+            "lum": 0.13391921568627452,
+            "sat": 0.5844155844155844
+          },
+          "mean": {
+            "luminance": 0.31575738562091504,
+            "saturation": 0.5918076564194227
+          },
+          "range": {
+            "luminance": [
+              0.13391921568627452,
+              0.49832470588235295
+            ],
+            "saturation": [
+              0.5747126436781608,
+              0.6491228070175439
+            ]
+          },
+          "summary": "主色=#9E492A (L=0.35)；亮色=#D76B43 (L=0.50)；暗色=#3D1C10 (L=0.13)；描边=#3D1C10 (L=0.13)；明度均值=0.32 范围=0.13~0.50；饱和度均值=0.59 范围=0.57~0.65"
+        },
+        "material_signature": {
+          "tokens": [
+            "中性"
+          ],
+          "summary": "中性"
+        },
+        "structure_hints": {
+          "hints": [
+            "弧形/曲线",
+            "对称",
+            "单件"
+          ],
+          "part_count": 1,
+          "aspect_ratio": 0.86,
+          "symmetric": true,
+          "summary": "弧形/曲线；对称；单件"
+        },
+        "uv_regions": {
+          "regions": {},
+          "summary": "（非实体 UV 形式，无区域）"
+        },
+        "silhouette": [
+          "......XXXX......",
+          "..XX.XXXXXX.XX..",
+          "..XXXXXXXXXXXX..",
+          "...XXXXXXXXXX...",
+          "...XXXXXXXXXX...",
+          "....XXXXXXXX....",
+          "....XXXXXXXX....",
+          "....XXXXXXXX....",
+          "....XXXXXXXX....",
+          "...XXXXXXXXXX...",
+          "...XXXXXXXXXX...",
+          "...XXXXXXXXXX...",
+          "..XXXXXXXXXXXX..",
+          "..XXX..XX..XXX.."
+        ],
+        "silhouette_candidates": [
+          {
+            "token": "compact:leather.png",
+            "source": "leather.png",
+            "kind": "compact_fragment",
+            "fragment": "....XXXX....\nXX.XXXXXX.XX\nXXXXXXXXXXXX\n.XXXXXXXXXX.\n..XXXXXXXX..\n..XXXXXXXX..\n..XXXXXXXX..\n..XXXXXXXX..\n.XXXXXXXXXX.\n.XXXXXXXXXX.\nXXXXXXXXXXXX\nXXX..XX..XXX",
+            "note": "只含 X/. 剪影；整体轮廓基础（非 Palette/Index grid）"
+          }
+        ],
+        "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/leather.png",
+        "category": "item",
+        "role": "shape",
+        "size": "16x16"
+      }
+    },
+    {
+      "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png",
+      "name": "stick.png",
+      "category": "item",
+      "role": "shape",
+      "features": {
+        "shape": "长条/木棍",
+        "pattern": "无明显图案",
+        "colors": [
+          "#281E0B",
+          "#493615",
+          "#896727",
+          "#684E1E"
+        ],
+        "parts": [
+          "棍身"
+        ],
+        "attraction": []
+      },
+      "score": 100,
+      "matched_terms": [],
+      "palette_count": 0,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n................\n.............XX.\n............XXX.\n...........XXX..\n..........XXX...\n.........XXX....\n........XXX.....\n.......XXX......\n......XXX.......\n.....XXX........\n....XXX.........\n...XXX..........\n..XXX...........\n..XX............\n................\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n................\n.............O#.\n............OO#.\n...........OO#..\n..........OO#...\n.........OO#....\n........OO#.....\n.......OO#......\n......OO#.......\n.....OO#........\n....OO#.........\n...OO#..........\n..OO#...........\n..##............\n................\n```\n\n## Palette (hex)\n```\n 0: #493615\n 1: #281e0b\n 2: #896727\n 3: #684e1e\n```\n\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  2  1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  2  1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  3  1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1  0  2  1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1  0  3  1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0  2  1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  0  3  1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  0  2  1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1  0  3  1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1  0  2  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1  0  2  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1  1  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```",
+      "seed_palette": [
+        " 0: #493615",
+        " 1: #281e0b",
+        " 2: #896727",
+        " 3: #684e1e"
+      ],
+      "seed_index": [
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  2  1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  2  1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1  0  3  1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1  0  2  1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1  0  3  1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1  0  2  1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1  0  3  1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1  0  2  1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1  0  3  1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1  0  2  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1  0  2  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1  1  1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1",
+        "-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"
+      ],
+      "reference_analysis": {
+        "source": "stick.png",
+        "form": "item",
+        "palette_family": {
+          "count": 4,
+          "main": {
+            "hex": "#493615",
+            "rgb": [
+              73,
+              54,
+              21
+            ],
+            "lum": 0.21826196078431373,
+            "sat": 0.5531914893617021
+          },
+          "light": {
+            "hex": "#896727",
+            "rgb": [
+              137,
+              103,
+              39
+            ],
+            "lum": 0.41414745098039213,
+            "sat": 0.5568181818181818
+          },
+          "dark": {
+            "hex": "#281E0B",
+            "rgb": [
+              40,
+              30,
+              11
+            ],
+            "lum": 0.12060470588235293,
+            "sat": 0.5686274509803921
+          },
+          "outline": {
+            "hex": "#281E0B",
+            "rgb": [
+              40,
+              30,
+              11
+            ],
+            "lum": 0.12060470588235293,
+            "sat": 0.5686274509803921
+          },
+          "mean": {
+            "luminance": 0.2667456862745098,
+            "saturation": 0.5577189820326063
+          },
+          "range": {
+            "luminance": [
+              0.12060470588235293,
+              0.41414745098039213
+            ],
+            "saturation": [
+              0.5522388059701492,
+              0.5686274509803921
+            ]
+          },
+          "summary": "主色=#493615 (L=0.22)；亮色=#896727 (L=0.41)；暗色=#281E0B (L=0.12)；描边=#281E0B (L=0.12)；明度均值=0.27 范围=0.12~0.41；饱和度均值=0.56 范围=0.55~0.57"
+        },
+        "material_signature": {
+          "tokens": [
+            "中性"
+          ],
+          "summary": "中性"
+        },
+        "structure_hints": {
+          "hints": [
+            "单件"
+          ],
+          "part_count": 1,
+          "aspect_ratio": 1.0,
+          "symmetric": false,
+          "summary": "单件"
+        },
+        "uv_regions": {
+          "regions": {},
+          "summary": "（非实体 UV 形式，无区域）"
+        },
+        "silhouette": [
+          ".............XX.",
+          "............XXX.",
+          "...........XXX..",
+          "..........XXX...",
+          ".........XXX....",
+          "........XXX.....",
+          ".......XXX......",
+          "......XXX.......",
+          ".....XXX........",
+          "....XXX.........",
+          "...XXX..........",
+          "..XXX...........",
+          "..XX............"
+        ],
+        "silhouette_candidates": [
+          {
+            "token": "compact:stick.png",
+            "source": "stick.png",
+            "kind": "compact_fragment",
+            "fragment": "...........XX\n..........XXX\n.........XXX.\n........XXX..\n.......XXX...\n......XXX....\n....XXX......\n...XXX.......\n..XXX........\n.XXX.........\nXXX..........\nXX...........",
+            "note": "只含 X/. 剪影；整体轮廓基础（非 Palette/Index grid）"
+          }
+        ],
+        "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png",
+        "category": "item",
+        "role": "shape",
+        "size": "16x16"
+      }
+    },
+    {
+      "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png",
+      "name": "oak_planks.png",
+      "category": "block",
+      "role": "shape",
+      "features": {
+        "shape": "方块/满铺",
+        "pattern": "木板条纹",
+        "colors": [
+          "#B8945F",
+          "#AF8F55",
+          "#9F844D",
+          "#C29D62",
+          "#67502C"
+        ],
+        "parts": [
+          "贴图主体"
+        ],
+        "attraction": []
+      },
+      "score": 100,
+      "matched_terms": [],
+      "palette_count": 0,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\nOOOOOOOOOOOOOOOO\n```\n\n## Palette (hex)\n```\n 0: #b8945f\n 1: #af8f55\n 2: #c29d62\n 3: #967441\n 4: #9f844d\n 5: #7e6237\n 6: #67502c\n```\n\n## Index grid (-1 = transparent)\n```\n 0  1  0  2  2  2  2  2  0  2  2  2  2  2  0  3\n 0  0  1  1  3  4  1  0  0  0  1  1  0  0  4  4\n 1  0  0  0  1  0  1  4  4  4  4  1  1  0  0  3\n 3  5  5  3  3  5  6  6  5  5  6  5  6  6  5  6\n 0  2  4  2  2  2  2  4  2  2  2  0  1  1  4  0\n 1  0  0  1  4  1  4  3  4  1  1  0  0  0  0  1\n 4  4  1  0  1  1  1  3  0  0  0  1  1  4  4  4\n 6  6  5  5  3  5  6  6  6  6  5  5  5  3  5  6\n 0  2  2  0  1  1  2  2  2  2  2  2  2  2  0  4\n 0  1  0  0  0  0  1  4  4  4  1  4  1  4  4  3\n 2  0  1  1  4  4  4  4  1  1  1  1  4  4  0  4\n 6  6  5  3  3  5  6  6  6  5  3  5  5  6  6  6\n 2  4  0  2  2  0  0  4  2  2  2  4  2  0  2  2\n 1  1  0  0  4  4  1  4  4  0  0  1  0  1  1  1\n 1  4  4  1  0  1  4  3  0  0  1  4  4  4  4  4\n 6  5  5  6  6  5  3  3  3  5  6  5  6  6  6  6\n```",
+      "seed_palette": [
+        " 0: #b8945f",
+        " 1: #af8f55",
+        " 2: #c29d62",
+        " 3: #967441",
+        " 4: #9f844d",
+        " 5: #7e6237",
+        " 6: #67502c"
+      ],
+      "seed_index": [
+        " 0  1  0  2  2  2  2  2  0  2  2  2  2  2  0  3",
+        " 0  0  1  1  3  4  1  0  0  0  1  1  0  0  4  4",
+        " 1  0  0  0  1  0  1  4  4  4  4  1  1  0  0  3",
+        " 3  5  5  3  3  5  6  6  5  5  6  5  6  6  5  6",
+        " 0  2  4  2  2  2  2  4  2  2  2  0  1  1  4  0",
+        " 1  0  0  1  4  1  4  3  4  1  1  0  0  0  0  1",
+        " 4  4  1  0  1  1  1  3  0  0  0  1  1  4  4  4",
+        " 6  6  5  5  3  5  6  6  6  6  5  5  5  3  5  6",
+        " 0  2  2  0  1  1  2  2  2  2  2  2  2  2  0  4",
+        " 0  1  0  0  0  0  1  4  4  4  1  4  1  4  4  3",
+        " 2  0  1  1  4  4  4  4  1  1  1  1  4  4  0  4",
+        " 6  6  5  3  3  5  6  6  6  5  3  5  5  6  6  6",
+        " 2  4  0  2  2  0  0  4  2  2  2  4  2  0  2  2",
+        " 1  1  0  0  4  4  1  4  4  0  0  1  0  1  1  1",
+        " 1  4  4  1  0  1  4  3  0  0  1  4  4  4  4  4",
+        " 6  5  5  6  6  5  3  3  3  5  6  5  6  6  6  6"
+      ],
+      "reference_analysis": {
+        "source": "oak_planks.png",
+        "form": "item",
+        "palette_family": {
+          "count": 7,
+          "main": {
+            "hex": "#9F844D",
+            "rgb": [
+              159,
+              132,
+              77
+            ],
+            "lum": 0.5245850980392157,
+            "sat": 0.3474576271186441
+          },
+          "light": {
+            "hex": "#C29D62",
+            "rgb": [
+              194,
+              157,
+              98
+            ],
+            "lum": 0.6298290196078431,
+            "sat": 0.44036697247706413
+          },
+          "dark": {
+            "hex": "#67502C",
+            "rgb": [
+              103,
+              80,
+              44
+            ],
+            "lum": 0.32270823529411763,
+            "sat": 0.40136054421768713
+          },
+          "outline": {
+            "hex": "#67502C",
+            "rgb": [
+              103,
+              80,
+              44
+            ],
+            "lum": 0.32270823529411763,
+            "sat": 0.40136054421768713
+          },
+          "mean": {
+            "luminance": 0.5011222408963586,
+            "saturation": 0.3888686513820355
+          },
+          "range": {
+            "luminance": [
+              0.32270823529411763,
+              0.6298290196078431
+            ],
+            "saturation": [
+              0.3474576271186441,
+              0.44036697247706413
+            ]
+          },
+          "summary": "主色=#9F844D (L=0.52)；亮色=#C29D62 (L=0.63)；暗色=#67502C (L=0.32)；描边=#67502C (L=0.32)；明度均值=0.50 范围=0.32~0.63；饱和度均值=0.39 范围=0.35~0.44"
+        },
+        "material_signature": {
+          "tokens": [
+            "中性"
+          ],
+          "summary": "中性"
+        },
+        "structure_hints": {
+          "hints": [
+            "对称",
+            "单件"
+          ],
+          "part_count": 1,
+          "aspect_ratio": 1.0,
+          "symmetric": true,
+          "summary": "对称；单件"
+        },
+        "uv_regions": {
+          "regions": {},
+          "summary": "（非实体 UV 形式，无区域）"
+        },
+        "silhouette": [
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX",
+          "XXXXXXXXXXXXXXXX"
+        ],
+        "silhouette_candidates": [
+          {
+            "token": "compact:oak_planks.png",
+            "source": "oak_planks.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；整体轮廓基础（非 Palette/Index grid）"
+          }
+        ],
+        "path": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png",
+        "category": "block",
+        "role": "shape",
+        "size": "16x16"
+      }
+    }
+  ],
+  "features": {
+    "summary": "形状：剑；item 透明剪影；长条/木棍；方块/满铺\n图案：无明显图案；纹理/斑点；木板条纹\n颜色：#444444 #181818 #D8D8D8 #FFFFFF #BEBEBE #494949 #212121 #95918D #787777 #B3B1AF #372910 #20180A #755821 #594319 #866526 #A8A8A8 #6F352B #5C2D1F #D5D5D5 #707070 #C65C35 #9E492A #542716 #3D1C10 #D76B43 #281E0B #493615 #896727 #684E1E #B8945F #AF8F55 #9F844D #C29D62 #67502C\n部位：剑刃；护手；柄；主体；棍身；贴图主体\n吸引点：-",
+    "shape": [
+      "剑",
+      "item 透明剪影",
+      "长条/木棍",
+      "方块/满铺"
+    ],
+    "pattern": [
+      "无明显图案",
+      "纹理/斑点",
+      "木板条纹"
+    ],
+    "colors": [
+      "#444444",
+      "#181818",
+      "#D8D8D8",
+      "#FFFFFF",
+      "#BEBEBE",
+      "#494949",
+      "#212121",
+      "#95918D",
+      "#787777",
+      "#B3B1AF",
+      "#372910",
+      "#20180A",
+      "#755821",
+      "#594319",
+      "#866526",
+      "#A8A8A8",
+      "#6F352B",
+      "#5C2D1F",
+      "#D5D5D5",
+      "#707070",
+      "#C65C35",
+      "#9E492A",
+      "#542716",
+      "#3D1C10",
+      "#D76B43",
+      "#281E0B",
+      "#493615",
+      "#896727",
+      "#684E1E",
+      "#B8945F",
+      "#AF8F55",
+      "#9F844D",
+      "#C29D62",
+      "#67502C"
+    ],
+    "parts": [
+      "剑刃",
+      "护手",
+      "柄",
+      "主体",
+      "棍身",
+      "贴图主体"
+    ],
+    "attraction": [],
+    "sources": {
+      "shape": [
+        "iron_sword.png",
+        "shears.png",
+        "stick.png",
+        "oak_planks.png"
+      ],
+      "pattern": [
+        "iron_sword.png",
+        "stone_sword.png",
+        "oak_planks.png"
+      ],
+      "colors": [
+        "iron_sword.png",
+        "iron_sword.png",
+        "iron_sword.png",
+        "iron_sword.png",
+        "iron_sword.png",
+        "stone_sword.png",
+        "stone_sword.png",
+        "stone_sword.png",
+        "stone_sword.png",
+        "stone_sword.png",
+        "wooden_sword.png",
+        "wooden_sword.png",
+        "wooden_sword.png",
+        "wooden_sword.png",
+        "wooden_sword.png",
+        "shears.png",
+        "shears.png",
+        "shears.png",
+        "shears.png",
+        "shears.png",
+        "leather.png",
+        "leather.png",
+        "leather.png",
+        "leather.png",
+        "leather.png",
+        "stick.png",
+        "stick.png",
+        "stick.png",
+        "stick.png",
+        "oak_planks.png",
+        "oak_planks.png",
+        "oak_planks.png",
+        "oak_planks.png",
+        "oak_planks.png"
+      ],
+      "parts": [
+        "iron_sword.png",
+        "iron_sword.png",
+        "iron_sword.png",
+        "shears.png",
+        "stick.png",
+        "oak_planks.png"
+      ],
+      "attraction": []
+    },
+    "anchor_count": 7
+  },
+  "style_rules": {
+    "palette": [
+      "- 调色板数量 6-11；避免高饱和荧光色，保留少量亮/暗阶。"
+    ],
+    "light_dark": [
+      "- 左上偏亮、右下偏暗；局部使用 1px 色阶表现体积。",
+      "- 每个部件至少 base/light/dark 三档色阶；亮部高光沿形状走向，暗部在背光侧。"
+    ],
+    "outline": [
+      "- 外轮廓使用 1px 深色/暗色自然描边，不做均匀黑框。",
+      "- 部件接缝用暗色分隔；不同材质（金属/木/石/发光/软质）按语义使用不同高光强度与纹理提示，不给死例子。"
+    ],
+    "noise": [
+      "- 使用少量 1px 噪点/抖动，避免大面积平涂和模糊渐变。",
+      "- 材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。"
+    ]
+  },
+  "few_shot": {
+    "asset": "stone_pickaxe.png",
+    "type": "item",
+    "form": "item",
+    "path": "builtin_fallback",
+    "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n.......X........\n.......X........\n.......X........\n```\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n.......O........\n.......O........\n.......O........\n```\n## Palette (hex)\n```\n 0: #888888\n```\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```\n\n> 内置极简 few-shot：仅示意格式，不包含任何原版贴图；实际生成必须使用新形状/图案。\n",
+    "fallback_note": "style_cards/snippets 不存在，使用内置极简 few-shot（非原版素材）。"
+  },
+  "file_contract": {
+    "form": "item",
+    "modid": "mcmod",
+    "files": [
+      {
+        "path": "assets/mcmod/textures/item/q_526576ae5c0f5200ff1a65b0.png",
+        "kind": "texture",
+        "width": 16,
+        "height": 16,
+        "alpha": true,
+        "face": "sprite",
+        "note": "单张 16x16 透明背景物品贴图"
+      },
+      {
+        "path": "assets/mcmod/models/item/q_526576ae5c0f5200ff1a65b0.json",
+        "kind": "model",
+        "format": "item/generated",
+        "face": null,
+        "note": "item model，texture 指向 layer0"
+      }
+    ],
+    "templates": {
+      "assets/mcmod/models/item/q_526576ae5c0f5200ff1a65b0.json": {
+        "parent": "minecraft:item/generated",
+        "textures": {
+          "layer0": "mcmod:item/q_526576ae5c0f5200ff1a65b0"
+        }
+      }
+    },
+    "note": "文件路径按 Minecraft 资源包约定；templates 为空白/示例 JSON。"
+  },
+  "output_contract": {
+    "form": "item",
+    "faces": [
+      {
+        "face": "sprite",
+        "file": "assets/mcmod/textures/item/q_526576ae5c0f5200ff1a65b0.png",
+        "width": 16,
+        "height": 16,
+        "palette_placeholder": "#RRGGBB",
+        "grid_format": "共 16 行，每行 16 个整数；-1 表示透明，非负整数引用 PALETTE 索引。",
+        "seed_contract": null,
+        "seed_note": "格式骨架：不嵌入完整锚点 grid；输出必须由 LLM 新生成，不得复制参考贴图。"
+      }
+    ],
+    "text": "FORM=item\nFACES=1\n\n=== face: sprite ===\nFILE: assets/mcmod/textures/item/q_526576ae5c0f5200ff1a65b0.png\nW=16 H=16\n\nPALETTE\n# 在此列出 5~8 个颜色，每行：索引 十六进制，例如 0: #10282A\n\nINDEX GRID\n# 共 16 行，每行 16 个整数；-1=透明，非负整数引用上面 PALETTE 索引；非 -1 像素必须 >= 40；禁止全 -1 空图。",
+    "note": "声明每个 face 需要输出的像素块文本的格式骨架（W/H 模板 + PALETTE 占位 + index grid 行列规则）；不提供任何完整锚点 grid，实际像素内容必须由 LLM 新生成。"
+  },
+  "output_contract_note": "按 form 声明的像素块输出清单；实际 LLM 应逐 face 输出可被 text_to_texture.py 解析的文本块。",
+  "concept_card": {
+    "item_name": "剥皮小刀 (Skinning Knife)",
+    "description": "一把短柄剥皮/狩猎小刀：刀身短小、刀尖略微上翘，护手短窄，刀柄用皮革缠绕并露出木质芯；整体明显是一把小刀，不是长剑/大剑。硬性：必须包含完整刀柄（4-6px）；刀尖到柄尾整体至少 10px 高/长；刀刃短但可辨。",
+    "parts": [
+      "刀刃 blade",
+      "护手/颈 guard",
+      "刀柄 handle"
+    ],
+    "face_regions": {
+      "sprite": "单张 16x16 透明背景物品贴图；主题：无明显图案；纹理/斑点；木板条纹"
+    },
+    "visual_goals": [
+      "sprite 使用 #444444 #181818 #D8D8D8 #FFFFFF #BEBEBE 配色，绘制无明显图案；纹理/斑点；木板条纹；轮廓/剪影保持 剑；item 透明剪影；长条/木棍；方块/满铺。"
+    ],
+    "minecraft_reference": "iron_sword.png；stone_sword.png；wooden_sword.png；shears.png；leather.png；stick.png；oak_planks.png",
+    "avoid": [
+      "不要画成长剑/大剑：刀刃长度必须短（6-9px），柄 4-6px。",
+      "不要画成木棍/皮革靴；刀柄必须有皮革+木的复合感。",
+      "不要复制 iron_sword.png 的逐像素/斜向满画布构图。",
+      "保持 16x16 透明背景、四边至少 1px 透明边距。",
+      "禁止只有刀刃没有手柄；手柄缺失即为失败。",
+      "禁止过于空/只有几像素；不透明像素应 > 40 且整体 bbox 至少 10px 高。",
+      "禁止把刀画成锯齿/镐/长剑；必须能看出是一把短刀。"
+    ],
+    "palette_scheme": {
+      "base": "#BEBEBE",
+      "light": "#FFFFFF",
+      "dark": "#444444",
+      "accent": "#896727",
+      "outline": "#181818",
+      "border_note": "刀刃外轮廓 1px 深灰；刀柄用深褐描边；刃与柄之间用暗色护手分隔。",
+      "saturation_note": "金属保持冷灰，刀柄为暖棕；两种材质用明度/色相自然区分，不做荧光。"
+    },
+    "shape_pattern": {
+      "silhouette": "16x16 透明 item：短刀居中，刀尖朝上/右上，刀刃约占上 2/3（长度 6-9px），护手 1-2px，刀柄占下 1/3（4-6px）；四周至少 1px 透明边距，禁止贴边。",
+      "parts": [
+        "刀刃 blade",
+        "护手/颈 guard",
+        "刀柄 handle"
+      ],
+      "border": "刀刃外轮廓 1px 深灰；刀柄用深褐描边；刃与柄之间用暗色护手分隔。",
+      "shading": "左上偏亮、右下偏暗；内部用 1px 色阶表现体积；实体 UV 按各区域明暗独立处理。",
+      "detail_pattern": "沿部件贴合的材质纹理（皮革/金属/骨/木纹/魂火）；禁止脱离形状独立存在。",
+      "shape_lock_optional": true,
+      "part_pattern_flow": [
+        {
+          "part": "刀刃 blade",
+          "shape": "短小弯曲/上翘刀片（像刀，不像剑）",
+          "pattern": "金属灰阶 + 1px 刃口高光 + 少量划痕",
+          "flow": "高光沿刀刃弧度/刃线走；背光侧用深灰暗部；长度控制在小刀范围。"
+        },
+        {
+          "part": "护手/颈 guard",
+          "shape": "刀刃与刀柄之间的 1-2px 窄条",
+          "pattern": "深灰/深褐分隔",
+          "flow": "护手沿横向包住柄根，连接处与主轴对齐。"
+        },
+        {
+          "part": "刀柄 handle",
+          "shape": "2-3px 宽短柄，有皮革缠绳 + 木芯",
+          "pattern": "皮革缠绳 + 木芯颗粒",
+          "flow": "缠绳线沿柄的横向环绕，木纹沿柄的纵向；左亮右暗表现圆柱体积。"
+        }
+      ],
+      "integration_note": "先用形状确定结构，再让纹样贴合每个部件的走向/边缘/明暗面；纹样不得脱离形状独立存在。",
+      "silhouette_candidates": [
+        {
+          "part": "刀刃 blade",
+          "candidates": [
+            {
+              "token": "iron-sword-blade",
+              "source": "iron_sword.png",
+              "kind": "shape_token",
+              "note": "来源：iron_sword.png 刃部轮廓"
+            },
+            {
+              "token": "stone-sword-blade",
+              "source": "stone_sword.png",
+              "kind": "shape_token",
+              "note": "来源：stone_sword.png 刃部轮廓"
+            },
+            {
+              "token": "wooden-sword-blade",
+              "source": "wooden_sword.png",
+              "kind": "shape_token",
+              "note": "来源：wooden_sword.png 刃部轮廓"
+            },
+            {
+              "token": "compact:iron_sword.png",
+              "source": "iron_sword.png",
+              "kind": "compact_fragment",
+              "fragment": ".............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............",
+              "note": "只含 X/. 剪影；iron_sword.png 区域/整体轮廓",
+              "region": null
+            }
+          ]
+        },
+        {
+          "part": "护手/颈 guard",
+          "candidates": [
+            {
+              "token": "iron-sword-shape",
+              "source": "iron_sword.png",
+              "kind": "shape_token",
+              "note": "来源：iron_sword.png 整体/部件轮廓"
+            },
+            {
+              "token": "stone-sword-shape",
+              "source": "stone_sword.png",
+              "kind": "shape_token",
+              "note": "来源：stone_sword.png 整体/部件轮廓"
+            },
+            {
+              "token": "wooden-sword-shape",
+              "source": "wooden_sword.png",
+              "kind": "shape_token",
+              "note": "来源：wooden_sword.png 整体/部件轮廓"
+            },
+            {
+              "token": "compact:iron_sword.png",
+              "source": "iron_sword.png",
+              "kind": "compact_fragment",
+              "fragment": ".............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............",
+              "note": "只含 X/. 剪影；iron_sword.png 区域/整体轮廓",
+              "region": null
+            }
+          ]
+        },
+        {
+          "part": "刀柄 handle",
+          "candidates": [
+            {
+              "token": "iron-sword-blade",
+              "source": "iron_sword.png",
+              "kind": "shape_token",
+              "note": "来源：iron_sword.png 刃部轮廓"
+            },
+            {
+              "token": "stone-sword-blade",
+              "source": "stone_sword.png",
+              "kind": "shape_token",
+              "note": "来源：stone_sword.png 刃部轮廓"
+            },
+            {
+              "token": "wooden-sword-blade",
+              "source": "wooden_sword.png",
+              "kind": "shape_token",
+              "note": "来源：wooden_sword.png 刃部轮廓"
+            },
+            {
+              "token": "compact:iron_sword.png",
+              "source": "iron_sword.png",
+              "kind": "compact_fragment",
+              "fragment": ".............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............",
+              "note": "只含 X/. 剪影；iron_sword.png 区域/整体轮廓",
+              "region": null
+            }
+          ]
+        }
+      ]
+    },
+    "reference_nodes": [
+      {
+        "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png",
+        "role": "shape",
+        "reason": "形状参考：剑；图案参考：无明显图案；配色参考：#444444 #181818 #D8D8D8"
+      },
+      {
+        "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stone_sword.png",
+        "role": "shape",
+        "reason": "形状参考：剑；图案参考：纹理/斑点；配色参考：#494949 #212121 #95918D"
+      },
+      {
+        "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/wooden_sword.png",
+        "role": "shape",
+        "reason": "形状参考：剑；图案参考：无明显图案；配色参考：#372910 #20180A #755821"
+      },
+      {
+        "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/shears.png",
+        "role": "shape",
+        "reason": "形状参考：item 透明剪影；图案参考：无明显图案；配色参考：#A8A8A8 #6F352B #5C2D1F"
+      },
+      {
+        "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/leather.png",
+        "role": "shape",
+        "reason": "形状参考：item 透明剪影；图案参考：无明显图案；配色参考：#C65C35 #9E492A #542716"
+      },
+      {
+        "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png",
+        "role": "shape",
+        "reason": "形状参考：长条/木棍；图案参考：无明显图案；配色参考：#281E0B #493615 #896727"
+      },
+      {
+        "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png",
+        "role": "shape",
+        "reason": "形状参考：方块/满铺；图案参考：木板条纹；配色参考：#B8945F #AF8F55 #9F844D"
+      }
+    ],
+    "form": "item",
+    "query": "剥皮小刀：新物品，短小刀身像刀，短柄，不是长剑/木棍",
+    "source": "concept_grounder:offline_rule",
+    "method": "rule",
+    "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+    "retrieval_anchor_count": 7,
+    "design_checklist": [
+      {
+        "id": "orientation",
+        "item": "方位/构图一致性",
+        "must": "所有部件沿同一条构图轴/方向，主体朝向一致；禁止出现‘手柄斜、头部正’、部件各朝各的现象。",
+        "self_check": "画之前先用一句话描述整体轴线（如左下→右上），再检查每个部件是否落在这条轴上。"
+      },
+      {
+        "id": "connection",
+        "item": "连接点对齐",
+        "must": "部件之间的连接点与主轴/中心对齐，不偏心、不悬空、不错位。",
+        "self_check": "检查杖头/部件是否锚定在手柄/主体的顶端端点，连接处是否位于轴线上。"
+      },
+      {
+        "id": "semantic",
+        "item": "语义可辨",
+        "must": "16x16 剪影一眼能看出‘这是什么’；主体清晰，不依赖文字说明。",
+        "self_check": "遮住颜色只看 alpha 剪影，仍能认出物品/方块/十字植物语义。"
+      },
+      {
+        "id": "segment_border",
+        "item": "外轮廓描边与部件接缝",
+        "must": "外轮廓用 1px 深色描边，部件接缝用暗色分隔；不做均匀黑框。",
+        "self_check": "检查外轮廓像素是否为 1px 深色/暗色，部件交界处是否有暗色缝。"
+      },
+      {
+        "id": "material_highlight",
+        "item": "材质高光方向",
+        "must": "亮部高光沿形状走向，暗部在背光侧；不同材质（金属/木/石/发光/软质）用不同高光强度与纹理提示，由模型根据语义推理，不给死例子。",
+        "self_check": "每个部件先标出受光面/背光面，再检查高光与暗部是否沿形状方向流动。"
+      },
+      {
+        "id": "material_texture",
+        "item": "材质纹理贴合",
+        "must": "材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。",
+        "self_check": "纹理是否沿部件边缘/走向/明暗面分布，不横跨形状乱画。"
+      },
+      {
+        "id": "palette",
+        "item": "配色层次",
+        "must": "包含 base/light/dark/outline；每个部件至少 base/light/dark 三档色阶；有明暗体积和自然描边，避免荧光平涂。",
+        "self_check": "每个部件至少有亮部/暗部/描边三档色阶；饱和度不过高。"
+      },
+      {
+        "id": "pattern_flow",
+        "item": "纹样与形状一体",
+        "must": "纹样沿形状的走向/边缘/明暗面流动，不脱离形状独立存在。",
+        "self_check": "逐部件核对 part_pattern_flow：纹样方向是否与部件形状一致。"
+      },
+      {
+        "id": "frame",
+        "item": "边框/背景",
+        "must": "透明背景、主体不贴边、不留明显空洞；16x16 尺寸内主体占位合理（约 8~14px）。",
+        "self_check": "检查 bbox 是否居中、四周是否留至少 1px 透明边。"
+      }
+    ]
+  },
+  "silhouette_bank": [
+    {
+      "part": "刀刃 blade",
+      "candidates": [
+        {
+          "token": "iron-sword-blade",
+          "source": "iron_sword.png",
+          "kind": "shape_token",
+          "note": "来源：iron_sword.png 刃部轮廓"
+        },
+        {
+          "token": "stone-sword-blade",
+          "source": "stone_sword.png",
+          "kind": "shape_token",
+          "note": "来源：stone_sword.png 刃部轮廓"
+        },
+        {
+          "token": "wooden-sword-blade",
+          "source": "wooden_sword.png",
+          "kind": "shape_token",
+          "note": "来源：wooden_sword.png 刃部轮廓"
+        },
+        {
+          "token": "compact:iron_sword.png",
+          "source": "iron_sword.png",
+          "kind": "compact_fragment",
+          "fragment": ".............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............",
+          "note": "只含 X/. 剪影；iron_sword.png 区域/整体轮廓",
+          "region": null
+        }
+      ]
+    },
+    {
+      "part": "护手/颈 guard",
+      "candidates": [
+        {
+          "token": "iron-sword-shape",
+          "source": "iron_sword.png",
+          "kind": "shape_token",
+          "note": "来源：iron_sword.png 整体/部件轮廓"
+        },
+        {
+          "token": "stone-sword-shape",
+          "source": "stone_sword.png",
+          "kind": "shape_token",
+          "note": "来源：stone_sword.png 整体/部件轮廓"
+        },
+        {
+          "token": "wooden-sword-shape",
+          "source": "wooden_sword.png",
+          "kind": "shape_token",
+          "note": "来源：wooden_sword.png 整体/部件轮廓"
+        },
+        {
+          "token": "compact:iron_sword.png",
+          "source": "iron_sword.png",
+          "kind": "compact_fragment",
+          "fragment": ".............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............",
+          "note": "只含 X/. 剪影；iron_sword.png 区域/整体轮廓",
+          "region": null
+        }
+      ]
+    },
+    {
+      "part": "刀柄 handle",
+      "candidates": [
+        {
+          "token": "iron-sword-blade",
+          "source": "iron_sword.png",
+          "kind": "shape_token",
+          "note": "来源：iron_sword.png 刃部轮廓"
+        },
+        {
+          "token": "stone-sword-blade",
+          "source": "stone_sword.png",
+          "kind": "shape_token",
+          "note": "来源：stone_sword.png 刃部轮廓"
+        },
+        {
+          "token": "wooden-sword-blade",
+          "source": "wooden_sword.png",
+          "kind": "shape_token",
+          "note": "来源：wooden_sword.png 刃部轮廓"
+        },
+        {
+          "token": "compact:iron_sword.png",
+          "source": "iron_sword.png",
+          "kind": "compact_fragment",
+          "fragment": ".............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............",
+          "note": "只含 X/. 剪影；iron_sword.png 区域/整体轮廓",
+          "region": null
+        }
+      ]
+    }
+  ],
+  "novelty": 0.9,
+  "no_original_ref": false,
+  "reference_block": "## 原版参考（结构化语法 + 少量片段）\n> 借鉴但不照抄：形状/纹理/配色可按需要修改。\n> 禁止逐像素复制；只学习以下配色家族/材质签名/结构hint/UV 区域等“参考语法”。\n\n### 参考语法：iron_sword.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png\n- 配色家族：主色=#896727 (L=0.41)；亮色=#FFFFFF (L=1.00)；暗色=#181818 (L=0.09)；描边=#181818 (L=0.09)；明度均值=0.46 范围=0.09~1.00；饱和度均值=0.20 范围=0.00~0.57\n- 材质签名：金属、石、发光\n- 结构提示：弧形/曲线；单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：stone_sword.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stone_sword.png\n- 配色家族：主色=#684E1E (L=0.31)；亮色=#B3B1AF (L=0.70)；暗色=#281E0B (L=0.12)；描边=#212121 (L=0.13)；明度均值=0.36 范围=0.12~0.70；饱和度均值=0.23 范围=0.00~0.57\n- 材质签名：金属、石\n- 结构提示：弧形/曲线；单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：wooden_sword.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/wooden_sword.png\n- 配色家族：主色=#493615 (L=0.22)；亮色=#896727 (L=0.41)；暗色=#20180A (L=0.10)；描边=#20180A (L=0.10)；明度均值=0.26 范围=0.10~0.41；饱和度均值=0.55 范围=0.52~0.57\n- 材质签名：中性\n- 结构提示：弧形/曲线；单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：shears.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/shears.png\n- 配色家族：主色=#8B4336 (L=0.32)；亮色=#D5D5D5 (L=0.84)；暗色=#5C2D1F (L=0.21)；描边=#5C2D1F (L=0.21)；明度均值=0.42 范围=0.21~0.84；饱和度均值=0.23 范围=0.00~0.50\n- 材质签名：金属、石、发光\n- 结构提示：弧形/曲线；多部件(3)\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：leather.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/leather.png\n- 配色家族：主色=#9E492A (L=0.35)；亮色=#D76B43 (L=0.50)；暗色=#3D1C10 (L=0.13)；描边=#3D1C10 (L=0.13)；明度均值=0.32 范围=0.13~0.50；饱和度均值=0.59 范围=0.57~0.65\n- 材质签名：中性\n- 结构提示：弧形/曲线；对称；单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：stick.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png\n- 配色家族：主色=#493615 (L=0.22)；亮色=#896727 (L=0.41)；暗色=#281E0B (L=0.12)；描边=#281E0B (L=0.12)；明度均值=0.27 范围=0.12~0.41；饱和度均值=0.56 范围=0.55~0.57\n- 材质签名：中性\n- 结构提示：单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：oak_planks.png\n- 来源信息：类别=block；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png\n- 配色家族：主色=#9F844D (L=0.52)；亮色=#C29D62 (L=0.63)；暗色=#67502C (L=0.32)；描边=#67502C (L=0.32)；明度均值=0.50 范围=0.32~0.63；饱和度均值=0.39 范围=0.35~0.44\n- 材质签名：中性\n- 结构提示：对称；单件\n- UV 区域：（非实体 UV 形式，无区域）",
+  "reference_block_meta": {
+    "include_compact": false,
+    "compact_limit": 0
+  },
+  "prompt": "# 任务\n生成一个 item 的 Minecraft 资源：剥皮小刀 (Skinning Knife)\n\n# 本体硬约束（最重要）\n- 必须生成「剥皮小刀 (Skinning Knife)」这个物体本身；参考节点不能改变主体类别、形状或语义。\n- 参考节点只允许借用配色、材质、明暗、尺度与局部图案；若参考节点与 剥皮小刀 (Skinning Knife) 语义冲突，请忽略其形状与语义。\n\n# 形式硬约束（item：16x16 透明物品贴图）\n- 这是 16x16 透明背景物品贴图；主体居中、四周保留至少 1px 透明边距，禁止铺满到边缘。\n\n# 设计要点（先理解，再直接输出）\n- 语义：一把短柄剥皮/狩猎小刀：刀身短小、刀尖略微上翘，护手短窄，刀柄用皮革缠绕并露出木质芯；整体明显是一把小刀，不是长剑/大剑。硬性：必须包含完整刀柄（4-6px）；刀尖到柄尾整体至少 10px 高/长；刀刃短但可辨。\n- 调色板（5~8 色）：base=#BEBEBE light=#FFFFFF dark=#444444 accent=#896727 outline=#181818\n  描边：刀刃外轮廓 1px 深灰；刀柄用深褐描边；刃与柄之间用暗色护手分隔。\n  饱和度：金属保持冷灰，刀柄为暖棕；两种材质用明度/色相自然区分，不做荧光。\n- 形状：16x16 透明 item：短刀居中，刀尖朝上/右上，刀刃约占上 2/3（长度 6-9px），护手 1-2px，刀柄占下 1/3（4-6px）；四周至少 1px 透明边距，禁止贴边。\n- 形状-纹样一体：\n  · 刀刃 blade：形状=短小弯曲/上翘刀片（像刀，不像剑） 纹样=金属灰阶 + 1px 刃口高光 + 少量划痕 走向=高光沿刀刃弧度/刃线走；背光侧用深灰暗部；长度控制在小刀范围。\n  · 护手/颈 guard：形状=刀刃与刀柄之间的 1-2px 窄条 纹样=深灰/深褐分隔 走向=护手沿横向包住柄根，连接处与主轴对齐。\n  · 刀柄 handle：形状=2-3px 宽短柄，有皮革缠绳 + 木芯 纹样=皮革缠绳 + 木芯颗粒 走向=缠绳线沿柄的横向环绕，木纹沿柄的纵向；左亮右暗表现圆柱体积。\n### 部件轮廓候选 silhouette_candidates（2-4 个/部件）\n> 形状候选 = 菜单，不是锁。\n> - 可选其中一个；\n> - 可组合多个；\n> - 可大改形状（加长/加粗/弯曲/变形/换比例都允许）；\n> - 禁止把候选当成最终网格/逐像素复制候选剪影。\n\n- [刀刃 blade]\n  - 候选 1：iron-sword-blade（来源：iron_sword.png）；来源：iron_sword.png 刃部轮廓\n  - 候选 2：stone-sword-blade（来源：stone_sword.png）；来源：stone_sword.png 刃部轮廓\n  - 候选 3：wooden-sword-blade（来源：wooden_sword.png）；来源：wooden_sword.png 刃部轮廓\n  - 候选 4：compact:iron_sword.png（来源：iron_sword.png）；只含 X/. 剪影；iron_sword.png 区域/整体轮廓\n    ```\n.............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............\n    ```\n\n- [护手/颈 guard]\n  - 候选 1：iron-sword-shape（来源：iron_sword.png）；来源：iron_sword.png 整体/部件轮廓\n  - 候选 2：stone-sword-shape（来源：stone_sword.png）；来源：stone_sword.png 整体/部件轮廓\n  - 候选 3：wooden-sword-shape（来源：wooden_sword.png）；来源：wooden_sword.png 整体/部件轮廓\n  - 候选 4：compact:iron_sword.png（来源：iron_sword.png）；只含 X/. 剪影；iron_sword.png 区域/整体轮廓\n    ```\n.............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............\n    ```\n\n- [刀柄 handle]\n  - 候选 1：iron-sword-blade（来源：iron_sword.png）；来源：iron_sword.png 刃部轮廓\n  - 候选 2：stone-sword-blade（来源：stone_sword.png）；来源：stone_sword.png 刃部轮廓\n  - 候选 3：wooden-sword-blade（来源：wooden_sword.png）；来源：wooden_sword.png 刃部轮廓\n  - 候选 4：compact:iron_sword.png（来源：iron_sword.png）；只含 X/. 剪影；iron_sword.png 区域/整体轮廓\n    ```\n.............XXX\n............XXXX\n..........XXXXX.\n.........XXXXX..\n........XXXXX...\n..XXX.XXXXX.....\n...XXXXXXX......\n....XXXX........\n...XXXXXX.......\n..XXX.XXXX......\nXXX.............\nXXX.............\n    ```\n\n- 设计自检（输出前逐项自查）：方位/构图一致性；连接点对齐；语义可辨；外轮廓描边与部件接缝；材质高光方向；材质纹理贴合；配色层次；纹样与形状一体；边框/背景\n- 硬性避免（违反即失败）：\n  · 不要画成长剑/大剑：刀刃长度必须短（6-9px），柄 4-6px。\n  · 不要画成木棍/皮革靴；刀柄必须有皮革+木的复合感。\n  · 不要复制 iron_sword.png 的逐像素/斜向满画布构图。\n  · 保持 16x16 透明背景、四边至少 1px 透明边距。\n  · 禁止只有刀刃没有手柄；手柄缺失即为失败。\n  · 禁止过于空/只有几像素；不透明像素应 > 40 且整体 bbox 至少 10px 高。\n  · 禁止把刀画成锯齿/镐/长剑；必须能看出是一把短刀。\n- 参考节点（仅语义参考，禁止复制像素）：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stone_sword.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/wooden_sword.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/shears.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/leather.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png(shape)\n\n## 原版参考（结构化语法 + 少量片段）\n> 借鉴但不照抄：形状/纹理/配色可按需要修改。\n> 禁止逐像素复制；只学习以下配色家族/材质签名/结构hint/UV 区域等“参考语法”。\n\n### 参考语法：iron_sword.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png\n- 配色家族：主色=#896727 (L=0.41)；亮色=#FFFFFF (L=1.00)；暗色=#181818 (L=0.09)；描边=#181818 (L=0.09)；明度均值=0.46 范围=0.09~1.00；饱和度均值=0.20 范围=0.00~0.57\n- 材质签名：金属、石、发光\n- 结构提示：弧形/曲线；单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：stone_sword.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stone_sword.png\n- 配色家族：主色=#684E1E (L=0.31)；亮色=#B3B1AF (L=0.70)；暗色=#281E0B (L=0.12)；描边=#212121 (L=0.13)；明度均值=0.36 范围=0.12~0.70；饱和度均值=0.23 范围=0.00~0.57\n- 材质签名：金属、石\n- 结构提示：弧形/曲线；单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：wooden_sword.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/wooden_sword.png\n- 配色家族：主色=#493615 (L=0.22)；亮色=#896727 (L=0.41)；暗色=#20180A (L=0.10)；描边=#20180A (L=0.10)；明度均值=0.26 范围=0.10~0.41；饱和度均值=0.55 范围=0.52~0.57\n- 材质签名：中性\n- 结构提示：弧形/曲线；单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：shears.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/shears.png\n- 配色家族：主色=#8B4336 (L=0.32)；亮色=#D5D5D5 (L=0.84)；暗色=#5C2D1F (L=0.21)；描边=#5C2D1F (L=0.21)；明度均值=0.42 范围=0.21~0.84；饱和度均值=0.23 范围=0.00~0.50\n- 材质签名：金属、石、发光\n- 结构提示：弧形/曲线；多部件(3)\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：leather.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/leather.png\n- 配色家族：主色=#9E492A (L=0.35)；亮色=#D76B43 (L=0.50)；暗色=#3D1C10 (L=0.13)；描边=#3D1C10 (L=0.13)；明度均值=0.32 范围=0.13~0.50；饱和度均值=0.59 范围=0.57~0.65\n- 材质签名：中性\n- 结构提示：弧形/曲线；对称；单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：stick.png\n- 来源信息：类别=item；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png\n- 配色家族：主色=#493615 (L=0.22)；亮色=#896727 (L=0.41)；暗色=#281E0B (L=0.12)；描边=#281E0B (L=0.12)；明度均值=0.27 范围=0.12~0.41；饱和度均值=0.56 范围=0.55~0.57\n- 材质签名：中性\n- 结构提示：单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n### 参考语法：oak_planks.png\n- 来源信息：类别=block；role=shape；尺寸=16x16\n- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png\n- 配色家族：主色=#9F844D (L=0.52)；亮色=#C29D62 (L=0.63)；暗色=#67502C (L=0.32)；描边=#67502C (L=0.32)；明度均值=0.50 范围=0.32~0.63；饱和度均值=0.39 范围=0.35~0.44\n- 材质签名：中性\n- 结构提示：对称；单件\n- UV 区域：（非实体 UV 形式，无区域）\n\n# 通用设计原则（每个物体都适用）\n- 整体方向统一：所有部件沿同一主方向/轴线；附属物方向与主体一致或围绕主体自然分叉，禁止主体与附属朝向相反。\n- 连接点自然：部件相接处与主轴/重心对齐，不悬空、不偏心、不错位。\n- 剪影可辨：只看形状也能认出“这是什么”；部件之间用描边/色差/空隙区分，不要糊成实心团块。\n- 纹样贴合形状：纹理/高光/图案沿部件的走向与明暗面流动，不脱离形状。\n- 细长部件：所有细长部件（杆/柄/弦/茎/边框等）宽度控制在 1~2px，不能糊成 3px 以上实心色带。\n- 负空间：部件之间与内部孔洞保留至少 1px 透明负空间（block_multi 整面不透明方块除外），避免实心团块。\n- 禁止实心团块：主体必须有内部明暗/纹理/负空间，不能无细节地满涂成一个大色块。\n- 参考完整资源：不要只看单张示例图；方块类要同时理解顶/侧/底三面、模型与 blockstate 契约，实体要按标准 UV 图集/区域语义理解，多面/实体统一走结构化输出。\n\n# 通用像素细节（每个物体都适用）\n- 边框/描边：外轮廓用 1px 深色描边；部件接缝用暗色分隔；不做均匀黑框。\n- 材质高光：亮部高光沿形状走向，暗部在背光侧；金属/木/石/发光/软质等不同材质按语义推理使用不同高光强度与纹理提示，不给死例子。\n- 纹理：材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。\n- 明暗分层：每个部件至少 base/light/dark 三档色阶；用 1px 明暗过渡表现体积，避免平涂。\n- 方向/连接：整体方向一致，部件连接自然、不悬空。\n- 细长部件：所有细长部件（杆/柄/弦/茎/边框等）宽度控制在 1~2px，必要时保留内部明暗/细节，不能糊成 3px 以上实心色带。\n- 负空间（透明/镂空）：透明间隙和内部镂空是像素资产的一部分；部件之间与内部孔洞保留至少 1px 透明负空间（block_multi 整面不透明方块除外），避免实心团块。\n- 禁止实心团块：主体必须有内部结构（明暗/纹理/负空间），不能无细节地满涂成一个大色块；轮廓/部件间用描边或透明间隙区分。\n- 透明边距（物品/植物/实体图集）：非方块多面纹理（item/cross/entity_uv）与画布四边保留至少 1px 透明边距；block_multi 的 top/side/bottom 例外，必须是 16x16 全不透明且边缘连续。\n\n# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）\n- 先写 2~3 行设计分析（主方向/部件走向/连接点），放在 FORMAT 之前；face 块内禁止解释。\n- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；-1=透明，非负整数引用 PALETTE；非 -1 像素必须 >= 40；禁止全 -1 空图。\n# 文件契约摘要（输出文件 / model / blockstate；不贴大 JSON）\n- face sprite -> assets/mcmod/textures/item/q_526576ae5c0f5200ff1a65b0.png\n- model assets/mcmod/models/item/q_526576ae5c0f5200ff1a65b0.json (parent=item/generated)\n\nFORM=item\nFACES=1\n\n=== face: sprite ===\nFILE: assets/mcmod/textures/item/q_526576ae5c0f5200ff1a65b0.png\nW=16 H=16\n\nPALETTE\n# 占位说明：在此列出 LLM 自己生成的调色板，每行一个索引与 #RRGGBB\n# 例如：0: #AABBCC（仅格式示意，禁止复制参考贴图）\n\nINDEX GRID\n# 共 16 行，每行 16 个整数；-1 表示透明，非负整数引用上面 PALETTE 的索引。\n# 非 -1 像素数量要求：16x16 至少 40 个；禁止输出全 -1 的空图。\n# 以下是 16x16 真实生成样本的 INDEX GRID（蘑菇幼苗），仅用于展示“如何用索引填色/哪些位置用哪个颜色”；禁止复制它的形状与配色：\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  2  0  0  2 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1  2  0  0  1  0  2 -1 -1 -1 -1 -1\n-1 -1 -1 -1  2  0  0  1  0  0  1  2 -1 -1 -1 -1\n-1 -1 -1 -1  2  0  1  0  0  1  0  2 -1 -1 -1 -1\n-1 -1 -1 -1  2  0  0  1  0  0  1  2 -1 -1 -1 -1\n-1 -1 -1 -1  3  3  4  3  3  3  4  3 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1  7  5  6  7 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1\n# 注意：该样本的 PALETTE 有 0~7 共 8 个颜色索引；你的输出调色板也必须更丰富（至少 5~8 色：主色/亮部/暗部/强调色/描边色/中间色），并用这些索引填充细节。样本只是格式示范，不代表你只能用这几色。\n\n> 设计分析放在 FORMAT 之前；face 块内只允许 PALETTE + INDEX GRID 数据；ENTITY UV 语义是格式元数据，不写入 face 块。\n"
+}

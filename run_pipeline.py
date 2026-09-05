@@ -41,6 +41,7 @@ import scan_mc_assets as sc  # noqa: E402
 import retrieve_assets as ra  # noqa: E402
 import concept_grounder as cg  # noqa: E402
 import build_style_prompt as bsp  # noqa: E402
+import reference_analyzer as refa  # noqa: E402
 import text_to_texture as t2t  # noqa: E402
 import package_asset as pa  # noqa: E402
 import entity_uv_spec as eu  # noqa: E402
@@ -116,12 +117,26 @@ def _generate_raw_text(args: argparse.Namespace, prompt_text: str) -> str:
         cmd = args.llm_cmd.replace("{prompt}", prompt_text)
         cmd = cmd.replace("{prompt_file}", _prompt_file_placeholder(prompt_text))
         if args.llm_image:
-            img = str(Path(args.llm_image).resolve())
-            if not Path(img).exists():
-                raise FileNotFoundError("--llm-image not found: %s" % img)
-            cmd = cmd.replace("{image}", img)
-            if "{image}" not in args.llm_cmd:
-                cmd += " --image %s" % img
+            image_paths: list[str] = []
+            for raw in args.llm_image:
+                for item in str(raw).split(","):
+                    item = item.strip()
+                    if item:
+                        image_paths.append(str(Path(item).resolve()))
+            if not image_paths:
+                raise ValueError("--llm-image: no image paths after expanding commas")
+            missing = [p for p in image_paths if not Path(p).exists()]
+            if missing:
+                raise FileNotFoundError("--llm-image not found: %s" % "; ".join(missing))
+            # 兼容外部命令里的 {image} 占位符：有几个占位符就替换几个；多出的图追加 --image。
+            remaining = [p for p in image_paths]
+            while "{image}" in cmd and remaining:
+                cmd = cmd.replace("{image}", remaining.pop(0), 1)
+            if "{image}" in cmd:
+                # 占位符多于图片时移除残留，避免传给模型奇怪文本。
+                cmd = cmd.replace("{image}", "")
+            if remaining:
+                cmd += " " + " ".join("--image %s" % p for p in remaining)
         print("[5/7] llm-cmd: %s" % cmd)
         proc = subprocess.run(
             cmd, shell=True,
@@ -338,10 +353,21 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
             lines.append("  · %s：形状=%s 纹样=%s 走向=%s" % (
                 item.get("part", ""), item.get("shape", ""),
                 item.get("pattern", ""), item.get("flow", "")))
+    silhouette_candidates = sp.get("silhouette_candidates") or pack.get("silhouette_bank") or []
+    if silhouette_candidates:
+        candidate_block = refa.render_silhouette_candidates(silhouette_candidates)
+        if candidate_block:
+            lines.append(candidate_block)
+            lines.append("")
     chk = cc.get("design_checklist") or []
     if chk:
         lines.append("- 设计自检（输出前逐项自查）：%s" % "；".join(
             c.get("item", "") for c in chk))
+    avoid = cc.get("avoid") or []
+    if avoid:
+        lines.append("- 硬性避免（违反即失败）：")
+        for a in avoid:
+            lines.append("  · %s" % a)
     refs = cc.get("reference_nodes") or []
     if refs:
         lines.append("- 参考节点（仅语义参考，禁止复制像素）：%s" % "、".join(
@@ -539,8 +565,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--raw", default=None, help="现成 LLM raw_answer 文件路径")
     parser.add_argument("--llm-cmd", default=None,
                         help="外部 LLM 命令；支持 {prompt} / {prompt_file} / {image} 替换")
-    parser.add_argument("--llm-image", default=None,
-                        help="参考 PNG 路径；传给支持视觉的模型（如 deepseek-v4-flash-vision-exp）")
+    parser.add_argument("--llm-image", action="append", default=[],
+                        help="参考 PNG 路径；可多次使用（--llm-image a.png --llm-image b.png）或用逗号分隔（--llm-image a.png,b.png）；"
+                             "全部传给支持视觉的模型（如 deepseek-v4-flash-vision-exp）")
     parser.add_argument("--prompt-only", action="store_true",
                         help="只生成并打印 prompt 文本，不生成 raw/PNG")
     parser.add_argument("--package", action="store_true", help="同时打包成资源包")

@@ -8,7 +8,7 @@ Java Edition 原版实体模型大多是硬编码的：资源包只能替换
 直接替换实体模型。本模块提供：
 
 - 玩家皮肤 64x64 / 64x32 标准布局坐标（Java 原版皮肤布局）。
-- 猪 / 苦力怕等原版生物 64x32 atlas 的关键区域坐标（源自原版贴图/UV 模板）。
+- 猪 / 苦力怕 / cow / red_mooshroom 等原版生物 64x32 atlas 的关键区域坐标（源自原版贴图/UV 模板）。
 - 生成给 LLM 的 “ENTITY UV 语义” 提示文本，避免 LLM 把 64x32 当成单个侧视图。
 
 坐标约定：Pillow 半开区间 [x1, y1, x2, y2)，左上为 (0,0)。
@@ -43,6 +43,19 @@ PLAYER_64x32_REGIONS: dict[str, tuple[int, int, int, int]] = {
 #       `assets/minecraft/textures/entity/creeper/creeper.png` 64x32，
 #       以及 papercraft.robhack.com 的 mob UV template（20x 缩放 1280x640）。
 # 这些粗粒度区域用于“标准模型是否可能加载”的占位检查；精细 face 坐标见 docs。
+# cow / red_mooshroom 共用 64x32 atlas 区域（源自 cow.png / red_mooshroom.png）。
+# 这里按语义拆出 head / horns / muzzle / body / legs 等粗粒度区域，
+# 供 reference_analyzer 的实体部件轮廓候选与 check_entity_uv 区域占位检查使用。
+_COW_REGIONS: dict[str, tuple[int, int, int, int]] = {
+    "head": (0, 0, 32, 16),
+    "horns": (0, 0, 32, 6),
+    "ears": (0, 0, 32, 4),
+    "muzzle": (0, 8, 16, 16),
+    "body": (16, 16, 64, 32),
+    "legs": (0, 16, 16, 32),
+    "tail": (48, 16, 64, 32),
+}
+
 MOB_ENTITY_REGIONS: dict[str, dict[str, tuple[int, int, int, int]]] = {
     "pig": {
         "head": (0, 0, 32, 16),
@@ -54,16 +67,22 @@ MOB_ENTITY_REGIONS: dict[str, dict[str, tuple[int, int, int, int]]] = {
         "body": (16, 16, 40, 32),
         "legs": (0, 16, 16, 26),
     },
+    "cow": dict(_COW_REGIONS),
+    "red_mooshroom": dict(_COW_REGIONS),
 }
 
 # Java 资源包替换路径（放在 assets/minecraft/textures/entity/ 下才能覆盖原版实体）
 MOB_VANILLA_TEXTURE_PATHS: dict[str, str] = {
     "pig": "assets/minecraft/textures/entity/pig/pig.png",
     "creeper": "assets/minecraft/textures/entity/creeper/creeper.png",
+    "cow": "assets/minecraft/textures/entity/cow/cow.png",
+    "red_mooshroom": "assets/minecraft/textures/entity/cow/red_mooshroom.png",
 }
 
 _ENTITY_KEYWORDS: list[tuple[str, tuple[str, ...]]] = [
     ("player", ("玩家", "player", "皮肤", "skin", "人物", "steve", "alex")),
+    ("red_mooshroom", ("red_mooshroom", "红蘑菇牛", "红色蘑菇牛", "蘑菇牛", "mooshroom", "mushroom cow")),
+    ("cow", ("牛", "cow", "cows")),
     ("pig", ("猪", "pig", "pork")),
     ("creeper", ("苦力怕", "creeper", "爬行者")),
 ]
@@ -126,5 +145,5 @@ def contract_text(width: int, height: int, entity: str | None = None) -> str:
                      "如果是原版生物请使用该生物的 Vanilla 64x32 atlas 布局）。")
         lines.append("- 原版硬编码实体只能替换 `assets/minecraft/textures/entity/<原版路径>.png`；"
                      "自定义实体模型需要 OptiFine CEM / Bedrock geometry / 模组 renderer。")
-        lines.append("- 待生成后可使用 `check_entity_uv.py --entity pig|creeper|player` 验证区域占位。")
+        lines.append("- 待生成后可使用 `check_entity_uv.py --entity pig|creeper|cow|red_mooshroom|player` 验证区域占位。")
     return "\n".join(lines)

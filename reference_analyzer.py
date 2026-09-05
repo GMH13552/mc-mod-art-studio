@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import re
 import statistics
+import sys
 from typing import Any, Iterable
 
 # 彩色 hex -> RGB
@@ -320,6 +321,16 @@ def analyze_compact(
     """把一份原版 compact 文本提炼成结构化语法 dict。"""
     colors = _parse_palette(compact_text)
     rows = _parse_silhouette(compact_text)
+    fragment = _crop_silhouette_fragment(rows) if rows else None
+    silhouette_candidates = []
+    if fragment:
+        silhouette_candidates.append({
+            "token": "compact:%s" % (name or "compact"),
+            "source": name or "compact",
+            "kind": "compact_fragment",
+            "fragment": fragment,
+            "note": "只含 X/. 剪影；整体轮廓基础（非 Palette/Index grid）",
+        })
     return {
         "source": name or "compact",
         "form": form,
@@ -327,6 +338,8 @@ def analyze_compact(
         "material_signature": _material_signature(colors),
         "structure_hints": _structure_hints(rows),
         "uv_regions": _uv_regions(uv_region, form),
+        "silhouette": rows or [],
+        "silhouette_candidates": silhouette_candidates,
     }
 
 
@@ -356,6 +369,427 @@ def _render_analysis(analysis: dict[str, Any]) -> list[str]:
     lines.append("- UV 区域：%s" % uv.get("summary", "-"))
     lines.append("")
     return lines
+
+
+# ---------------------------------------------------------------------------
+# silhouette bank：把“形状借鉴”变成可挑选、可组合、可大改的候选菜单
+# ---------------------------------------------------------------------------
+
+# 中文部件 -> 可能相关的原版锚点英文名
+_ZH_SOURCE_MAP: dict[str, tuple[str, ...]] = {
+    "牛": ("cow", "mooshroom"),
+    "猪": ("pig",),
+    "骷髅": ("skeleton",),
+    "骨": ("skeleton", "bone"),
+    "杖": ("staff", "rod", "wand", "blaze_rod", "stick"),
+    "柄": ("handle", "staff", "stick", "rod", "sword"),
+    "刀": ("sword", "shears", "knife"),
+    "刃": ("sword", "shears", "blade"),
+    "皮": ("leather", "hide", "villager"),
+    "菌": ("mushroom", "mooshroom"),
+    "菇": ("mushroom", "mooshroom"),
+    "角": ("cow", "goat", "mooshroom"),
+    "耳": ("cow", "mooshroom", "villager"),
+    "鼻": ("cow", "mooshroom", "pig"),
+}
+
+# 部件中的英文关键词 -> 锚点英文名（用于直接匹配）
+_PART_EN_HINTS = (
+    "head", "skull", "bone", "horn", "muzzle", "snout", "ear", "leg",
+    "blade", "sword", "shears", "handle", "shaft", "staff", "stick",
+    "rod", "wand", "hide", "leather", "cap", "mushroom", "eye", "soul",
+)
+
+# 部件 -> 2-4 个通用 shape token（不绑定某一张原版）
+_SHAPE_TOKEN_HINTS: list[tuple[tuple[str, ...], tuple[tuple[str, str], ...]]] = [
+    (("骷髅", "skull", "颅", "骨"), (
+        ("skull-round", "圆/方骨白头骨；眼窝+下颌暗部，适合杖顶/头饰"),
+        ("skull-flat", "扁平骨白颅骨；适合小幅杖顶"),
+    )),
+    (("角", "horn"), (
+        ("horn-split", "分叉角；顶部向外/向上分叉"),
+        ("horn-curved", "弯角；向后/下弯曲"),
+        ("horn-short", "短角；适合牛头/恶魔角"),
+    )),
+    (("鼻", "muzzle", "snout"), (
+        ("muzzle-block", "方形鼻口；宽而直的鼻端"),
+        ("muzzle-rounded", "圆形鼻口；钝圆鼻端"),
+    )),
+    (("头", "head"), (
+        ("round-head", "圆头轮廓；正面/侧面均可用"),
+        ("square-head", "方头轮廓；原版方块式头部"),
+    )),
+    (("耳", "ear"), (
+        ("ear-side", "侧耳；紧贴头两侧"),
+        ("ear-pointed", "尖耳；向外/上尖出"),
+    )),
+    (("腿", "leg"), (
+        ("leg-straight", "直立腿柱；四足基础"),
+        ("leg-tapered", "下收腿柱；蹄部收窄"),
+    )),
+    (("刃", "刀", "blade", "sword"), (
+        ("curved-blade", "略上翘的短刃；适合小刀/匕首"),
+        ("straight-tip", "直背短刃；原版短刀/剑基础"),
+        ("hook-tip", "钩形短刃；上翘/钩尖"),
+    )),
+    (("柄", "杖", "杆", "handle", "shaft", "staff", "stick", "rod"), (
+        ("thin-handle", "1-2px 直线细柄；适合杖身/握柄"),
+        ("wooden-curve", "微曲木质柄；带自然弧度"),
+        ("grip-rounded", "底部加粗握柄；防滑/分段"),
+    )),
+    (("皮", "hide", "leather"), (
+        ("hide-fringe", "皮料/织物边缘；窄条或流苏"),
+        ("hide-fold", "折叠皮面；多块皮料拼合"),
+    )),
+    (("菌", "菇", "mushroom", "cap", "伞"), (
+        ("cap-round", "半圆伞盖；蘑菇/菌盖"),
+        ("cap-flat", "扁平伞盖；蘑菇块/菌盖"),
+    )),
+    (("眼", "eye", "魂"), (
+        ("soul-eye", "魂火眼点；小面积发光"),
+        ("eye-socket", "黑色眼窝；骷髅/恶魔眼"),
+    )),
+    (("身", "体", "body"), (
+        ("body-block", "方形躯干；原版方块式身体"),
+        ("body-tapered", "收腰躯干；身体中段略收"),
+    )),
+    (("尾", "tail"), (
+        ("tail-short", "短尾；点状/小段尾"),
+        ("tail-long", "长尾；可弯曲尾"),
+    )),
+]
+
+# 无匹配部件时的通用 fallback，避免把“身体”误判成“骷髅头”。
+_DEFAULT_SHAPE_TOKEN_FALLBACK: tuple[tuple[str, str], ...] = (
+    ("generic-outline", "原版整体/部件轮廓；保持语义可辨认"),
+    ("plain-block", "原版方块/躯干轮廓；适合无特定形状的部件"),
+)
+
+
+def _part_anchor_score(part: str, anchor: dict[str, Any]) -> int:
+    """粗略计算“这个部件与该锚点有多相关”。"""
+    part_l = str(part).lower()
+    name_l = str(anchor.get("name", "") or "").lower()
+    path_l = str(anchor.get("path", "") or "").lower()
+    hay = name_l + " " + path_l
+    score = 0
+    for zh, ens in _ZH_SOURCE_MAP.items():
+        if zh in part and any(e in hay for e in ens):
+            score += 3
+    for token in _PART_EN_HINTS:
+        if token in part_l and token in hay:
+            score += 2
+    if anchor.get("category") == "entity" or "/entity/" in path_l or "entity/" in path_l:
+        score += 1
+    return score
+
+
+def _select_related_anchors(part: str, anchors: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """按部件相关度排序，返回最多 3 个最相关锚点；若无匹配返回全部。"""
+    ranked = sorted(
+        anchors or [],
+        key=lambda a: -_part_anchor_score(part, a),
+    )
+    best = ranked[0] if ranked else None
+    if best is None:
+        return []
+    # 如果最相关分数为 0，仍返回前 3 个默认锚点，保证候选不为空。
+    if _part_anchor_score(part, best) <= 0:
+        return ranked[:3]
+    # 保留所有分数>0 的锚点，最多 3 个；不足 3 个时补默认前 3 个。
+    positive = [a for a in ranked if _part_anchor_score(part, a) > 0]
+    if len(positive) >= 3:
+        return positive[:3]
+    merged = list(positive)
+    for a in ranked:
+        if a not in merged and len(merged) < 3:
+            merged.append(a)
+    return merged
+
+
+def _anchor_display_name(anchor: dict[str, Any]) -> str:
+    return str(anchor.get("name") or anchor.get("path") or "compact")
+
+
+def _source_shape_token(part: str, anchor: dict[str, Any]) -> tuple[str, str] | None:
+    """从锚点资产名生成一个来源相关的 shape token。"""
+    name_l = str(_anchor_display_name(anchor)).lower()
+    base = name_l.rsplit(".", 1)[0].replace(" ", "-").replace("_", "-")
+    if not base or base in ("compact", "unknown"):
+        return None
+    part_l = str(part).lower()
+    if "skull" in part_l or "骷髅" in part or "骨" in part:
+        return ("%s-skull" % base, "来源：%s 头部区域骨白头骨轮廓" % _anchor_display_name(anchor))
+    if "horn" in part_l or "角" in part:
+        return ("%s-horn" % base, "来源：%s 角/耳区域轮廓" % _anchor_display_name(anchor))
+    if "muzzle" in part_l or "鼻" in part or "snout" in part_l:
+        return ("%s-muzzle" % base, "来源：%s 鼻口区域轮廓" % _anchor_display_name(anchor))
+    if "head" in part_l or "头" in part:
+        return ("%s-head" % base, "来源：%s 头部区域轮廓" % _anchor_display_name(anchor))
+    if "ear" in part_l or "耳" in part:
+        return ("%s-ear" % base, "来源：%s 耳朵区域轮廓" % _anchor_display_name(anchor))
+    if "leg" in part_l or "腿" in part:
+        return ("%s-leg" % base, "来源：%s 腿部区域轮廓" % _anchor_display_name(anchor))
+    if "body" in part_l or "身" in part or "体" in part:
+        return ("%s-body" % base, "来源：%s 身体/躯干区域轮廓" % _anchor_display_name(anchor))
+    if "tail" in part_l or "尾" in part:
+        return ("%s-tail" % base, "来源：%s 尾部区域轮廓" % _anchor_display_name(anchor))
+    if "blade" in part_l or "刀" in part or "刃" in part:
+        return ("%s-blade" % base, "来源：%s 刃部轮廓" % _anchor_display_name(anchor))
+    if "handle" in part_l or "柄" in part or "杖" in part or "staff" in part_l:
+        return ("%s-handle" % base, "来源：%s 柄/杖身轮廓" % _anchor_display_name(anchor))
+    if "hide" in part_l or "皮" in part:
+        return ("%s-hide" % base, "来源：%s 皮料/织物边缘轮廓" % _anchor_display_name(anchor))
+    if "cap" in part_l or "菌" in part:
+        return ("%s-cap" % base, "来源：%s 菌盖/伞面轮廓" % _anchor_display_name(anchor))
+    return ("%s-shape" % base, "来源：%s 整体/部件轮廓" % _anchor_display_name(anchor))
+
+
+def _generic_shape_tokens(part: str) -> list[tuple[str, str]]:
+    for keywords, tokens in _SHAPE_TOKEN_HINTS:
+        if any(k in str(part).lower() or k in str(part) for k in keywords):
+            return list(tokens)
+    return list(_DEFAULT_SHAPE_TOKEN_FALLBACK)
+
+
+def _crop_silhouette_fragment(
+    rows: list[str],
+    box: tuple[int, int, int, int] | None = None,
+    max_rows: int = 12,
+    max_cols: int = 28,
+) -> str | None:
+    """把 X/. 剪影裁剪成紧凑片段，去掉空白行/列。"""
+    if not rows or not rows[0]:
+        return None
+    if box:
+        x1, y1, x2, y2 = (int(v) for v in box)
+        x1 = max(0, min(x1, len(rows[0]) if rows else 0))
+        y1 = max(0, min(y1, len(rows)))
+        x2 = max(x1, min(x2, len(rows[0]) if rows else 0))
+        y2 = max(y1, min(y2, len(rows)))
+        rows = [row[x1:x2] for row in rows[y1:y2]]
+
+    # 去掉上下全空行
+    def _nonempty(r: str) -> bool:
+        return any(ch in ("X", "x") for ch in r)
+
+    while rows and not _nonempty(rows[0]):
+        rows.pop(0)
+    while rows and not _nonempty(rows[-1]):
+        rows.pop(-1)
+    if not rows:
+        return None
+    # 去掉左右全空列
+    width = len(rows[0]) if rows else 0
+    left = width
+    right = 0
+    for r in rows:
+        indices = [i for i, ch in enumerate(r) if ch in ("X", "x")]
+        if indices:
+            left = min(left, indices[0])
+            right = max(right, indices[-1] + 1)
+    if left >= right:
+        return None
+    rows = [r[left:right] for r in rows]
+
+    # 限宽：取中间一段，保留轮廓中部
+    if rows and len(rows[0]) > max_cols:
+        w = len(rows[0])
+        start = max(0, (w - max_cols) // 2)
+        rows = [r[start:start + max_cols] for r in rows]
+
+    # 限高：均匀抽样，保留整体比例
+    if len(rows) > max_rows:
+        indices = [round(i * (len(rows) - 1) / (max_rows - 1)) for i in range(max_rows)]
+        rows = [rows[i] for i in indices]
+
+    # 归一化：统一小写 x -> X
+    rows = [r.replace("x", "X") for r in rows]
+    if not any(any(ch == "X" for ch in r) for r in rows):
+        return None
+    return "\n".join(rows)
+
+
+def _fragment_candidate_for_anchor(
+    part: str,
+    anchor: dict[str, Any],
+    form: str = "item",
+    entity: str | None = None,
+) -> dict[str, Any] | None:
+    """从锚点 compact_text 生成一个 X/. 剪影候选。"""
+    compact = anchor.get("compact_text") or ""
+    rows = _parse_silhouette(compact)
+    box = None
+    region = None
+    if form == "entity_uv" and entity:
+        import entity_uv_spec as eu
+        regions = eu.regions_for_entity(entity, 64, 32) or {}
+        part_l = str(part).lower()
+        # 从部件名找对应区域名
+        region_names = []
+        if "horn" in part_l or "角" in str(part):
+            region_names = ["horns", "head"]
+        elif "muzzle" in part_l or "鼻" in str(part) or "snout" in part_l:
+            region_names = ["muzzle", "head"]
+        elif "leg" in part_l or "腿" in str(part):
+            region_names = ["legs"]
+        elif "head" in part_l or "头" in str(part):
+            region_names = ["head"]
+        elif "ear" in part_l or "耳" in str(part):
+            region_names = ["ears", "head"]
+        elif "body" in part_l or "身" in str(part) or "体" in str(part):
+            region_names = ["body"]
+        elif "tail" in part_l or "尾" in str(part):
+            region_names = ["tail", "body"]
+        for rn in region_names:
+            if rn in regions:
+                box = tuple(int(v) for v in regions[rn])
+                region = rn
+                break
+    fragment = _crop_silhouette_fragment(rows, box=box)
+    if not fragment:
+        return None
+    source = _anchor_display_name(anchor)
+    token = "compact:%s" % source
+    kind = "compact_fragment"
+    note = "只含 X/. 剪影；%s 区域/整体轮廓" % (region or source)
+    return {
+        "token": token,
+        "source": source,
+        "kind": kind,
+        "fragment": fragment,
+        "note": note,
+        "region": region,
+    }
+
+
+def build_silhouette_bank(
+    parts: list[str] | None,
+    retrieval_anchors: list[dict[str, Any]] | None,
+    form: str = "item",
+    width: int = 16,
+    height: int = 16,
+    entity: str | None = None,
+) -> list[dict[str, Any]]:
+    """为每个部件生成 2-4 个轮廓基础候选。
+
+    返回 ``silhouette_candidates`` 列表（每个部件一条），包含 shape token 与
+    X/. compact fragment。候选是“菜单”不是锁：可选一个/可组合/可大改。
+    """
+    anchors = list(retrieval_anchors or [])
+    part_list = [str(p) for p in (parts or [])] or ["主体"]
+    bank: list[dict[str, Any]] = []
+    for part in part_list:
+        related = _select_related_anchors(part, anchors)
+        candidates: list[dict[str, Any]] = []
+        seen_tokens: set[str] = set()
+
+        # 1) 来源相关 shape token（优先）
+        for a in related:
+            src = _source_shape_token(part, a)
+            if not src:
+                continue
+            token, note = src
+            if token in seen_tokens:
+                continue
+            candidates.append({
+                "token": token,
+                "source": _anchor_display_name(a),
+                "kind": "shape_token",
+                "note": note,
+            })
+            seen_tokens.add(token)
+            if len(candidates) >= 4:
+                break
+
+        # 2) X/. compact fragment（从最相关 1-2 个锚点切，让模型看到可拿捏的轮廓）
+        if len(candidates) < 4:
+            for a in related[:2]:
+                if len(candidates) >= 4:
+                    break
+                frag = _fragment_candidate_for_anchor(part, a, form=form, entity=entity)
+                if frag and frag["token"] not in seen_tokens:
+                    candidates.append(frag)
+                    seen_tokens.add(frag["token"])
+
+        # 3) 通用 shape token（补足种类）
+        for token, note in _generic_shape_tokens(part):
+            if token in seen_tokens:
+                continue
+            candidates.append({
+                "token": token,
+                "source": "通用原版形状语法",
+                "kind": "shape_token",
+                "note": note,
+            })
+            seen_tokens.add(token)
+            if len(candidates) >= 4:
+                break
+
+        # 4) 兜底：候选不足 2 时补一个来源整体 compact
+        if len(candidates) < 2 and related:
+            frag = _fragment_candidate_for_anchor(part, related[0], form=form, entity=entity)
+            if frag:
+                candidates.append(frag)
+            else:
+                candidates.append({
+                    "token": "original-outline",
+                    "source": _anchor_display_name(related[0]),
+                    "kind": "shape_token",
+                    "note": "来源：%s 整体轮廓；仅作轮廓语法参考" % _anchor_display_name(related[0]),
+                })
+
+        # 5) 即使没有锚点，也要给出可操作的 2 个通用 token
+        if len(candidates) < 2:
+            for token, note in _generic_shape_tokens(part):
+                if token in seen_tokens:
+                    continue
+                candidates.append({
+                    "token": token,
+                    "source": "通用原版形状语法",
+                    "kind": "shape_token",
+                    "note": note,
+                })
+                seen_tokens.add(token)
+                if len(candidates) >= 2:
+                    break
+
+        candidates = candidates[:4]
+        bank.append({
+            "part": part,
+            "candidates": candidates,
+        })
+    return bank
+
+
+def render_silhouette_candidates(silhouette_bank: list[dict[str, Any]]) -> str:
+    """把 silhouette bank 渲染成 prompt 中的“部件轮廓候选”段。"""
+    lines: list[str] = []
+    lines.append("### 部件轮廓候选 silhouette_candidates（2-4 个/部件）")
+    lines.append("> 形状候选 = 菜单，不是锁。")
+    lines.append("> - 可选其中一个；")
+    lines.append("> - 可组合多个；")
+    lines.append("> - 可大改形状（加长/加粗/弯曲/变形/换比例都允许）；")
+    lines.append("> - 禁止把候选当成最终网格/逐像素复制候选剪影。")
+    lines.append("")
+    for entry in silhouette_bank or []:
+        part = entry.get("part", "主体")
+        lines.append("- [%s]" % part)
+        cands = entry.get("candidates", []) or []
+        for i, c in enumerate(cands, 1):
+            token = c.get("token", "shape")
+            source = c.get("source", "-")
+            note = c.get("note", "")
+            lines.append("  - 候选 %d：%s（来源：%s）%s" % (
+                i, token, source, ("；" + note) if note else ""
+            ))
+            frag = c.get("fragment")
+            if frag and c.get("kind") == "compact_fragment":
+                lines.append("    ```")
+                lines.append(frag)
+                lines.append("    ```")
+        lines.append("")
+    return "\n".join(lines).strip()
 
 
 def _normalize_compact_items(compact_text: Any) -> list[tuple[str, str]]:
@@ -434,8 +868,8 @@ def decide_reference_include(novelty: float) -> tuple[bool, int]:
     return True, 2
 
 
-if __name__ == "__main__":
-    # 简易自测：构造一段合成 compact，验证基本输出。
+def _run_self_test() -> int:
+    """简单自测：验证分析、候选生成与渲染入口。"""
     sample = """## Silhouette (X=opaque, .=transparent)
 ```
 ................
@@ -489,7 +923,28 @@ if __name__ == "__main__":
 ```
 """
     analysis = analyze_compact(sample, form="item", name="apple")
-    print(analysis["palette_family"]["summary"])
-    print(analysis["material_signature"]["summary"])
-    print(analysis["structure_hints"]["summary"])
-    print(render_reference_block(analysis, include_compact=True)[:400])
+    assert "palette_family" in analysis
+    assert "silhouette_candidates" in analysis
+    assert analysis["silhouette_candidates"], "silhouette_candidates should not be empty"
+
+    anchors = [
+        {"name": "cow.png", "path": "entity/cow/cow.png", "category": "entity",
+         "compact_text": sample},
+        {"name": "stick.png", "path": "item/stick.png", "category": "item",
+         "compact_text": sample},
+    ]
+    bank = build_silhouette_bank(["角 horns", "杖身/握柄 handle"], anchors, form="item")
+    assert len(bank) == 2
+    for entry in bank:
+        assert 2 <= len(entry["candidates"]) <= 4, entry
+    text = render_silhouette_candidates(bank)
+    assert "可选其中一个" in text
+    assert "可组合多个" in text
+    assert "可大改形状" in text
+
+    print("reference_analyzer self-test: PASS")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(_run_self_test())

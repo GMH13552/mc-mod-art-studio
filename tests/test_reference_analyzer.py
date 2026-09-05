@@ -126,6 +126,57 @@ class TestReferenceAnalyzer(unittest.TestCase):
         self.assertEqual(ra.decide_reference_include(0.7), (True, 1))
         self.assertEqual(ra.decide_reference_include(0.9), (False, 0))
 
+    def test_build_silhouette_bank_2_to_4_candidates(self) -> None:
+        anchors = [
+            {
+                "name": "cow.png",
+                "path": "entity/cow/cow.png",
+                "category": "entity",
+                "compact_text": SAMPLE_COMPACT,
+            },
+            {
+                "name": "stick.png",
+                "path": "item/stick.png",
+                "category": "item",
+                "compact_text": SAMPLE_COMPACT,
+            },
+        ]
+        bank = ra.build_silhouette_bank(
+            ["牛头 head", "杖身/握柄 handle"], anchors, form="item"
+        )
+        self.assertEqual(len(bank), 2)
+        for entry in bank:
+            self.assertGreaterEqual(len(entry["candidates"]), 2)
+            self.assertLessEqual(len(entry["candidates"]), 4)
+            for c in entry["candidates"]:
+                self.assertIn("token", c)
+                self.assertIn("source", c)
+                self.assertIn("kind", c)
+                self.assertIn(c["kind"], ("shape_token", "compact_fragment"))
+
+    def test_render_silhouette_candidates_has_choice_instructions(self) -> None:
+        anchors = [
+            {
+                "name": "cow.png",
+                "path": "entity/cow/cow.png",
+                "category": "entity",
+                "compact_text": SAMPLE_COMPACT,
+            },
+            {
+                "name": "stick.png",
+                "path": "item/stick.png",
+                "category": "item",
+                "compact_text": SAMPLE_COMPACT,
+            },
+        ]
+        bank = ra.build_silhouette_bank(["角 horns", "杖身/握柄 handle"], anchors, form="item")
+        text = ra.render_silhouette_candidates(bank)
+        self.assertIn("部件轮廓候选 silhouette_candidates", text)
+        self.assertIn("可选其中一个", text)
+        self.assertIn("可组合多个", text)
+        self.assertIn("可大改形状", text)
+        self.assertIn("禁止把候选当成最终网格", text)
+
 
 if __name__ == "__main__":
     unittest.main()

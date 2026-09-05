@@ -40,7 +40,7 @@ except ImportError:  # pragma: no cover
 
 ALPHA_THRESHOLD = 8
 MIN_MARGIN = 1
-SUPPORTED_ENTITIES = ("pig", "creeper", "player")
+SUPPORTED_ENTITIES = ("pig", "creeper", "cow", "red_mooshroom", "player")
 
 
 def _canvas_margins(img: Image.Image) -> dict[str, int]:
@@ -76,7 +76,7 @@ def _expected_size(entity: str, width: int, height: int) -> tuple[tuple[int, int
     """返回 (预期尺寸集合，说明文字)。None 表示不限定。"""
     if entity == "player":
         return ((64, 32), (64, 64)), "player skin 允许 64x32 (legacy) 或 64x64 (modern)"
-    if entity in ("pig", "creeper"):
+    if entity in eu.MOB_ENTITY_REGIONS:
         return ((64, 32),), "%s 原版纹理是 64x32" % entity
     return None, "%s 无内置尺寸约束（按实体自定义）" % entity
 

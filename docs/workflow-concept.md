@@ -41,6 +41,7 @@ user intent
    - palette family（主/亮/暗/描边 的均值/范围/色相关系）
    - material signature（木纹/石/金属/发光/生物皮肤 的关键 token）
    - structure hints（细长件、弧形、对称、UV 区域）
+   - silhouette bank（每个部件 2–4 个轮廓候选：shape token / X/. 剪影）
    - edge/tiling rules（side wrap、top-side 连续）
    │
    ▼
@@ -48,7 +49,7 @@ user intent
    │
    ▼
 [Prompt Builder]
-   组装 = 意图 + 参考语法（结构化摘要 + 少量 compact 片段示例）+
+   组装 = 意图 + 参考语法（结构化摘要 + silhouette bank + 少量 compact 片段示例）+
           通用像素规则 + 形式硬约束 + novelty 指令 + 输出契约
    │
    ▼
@@ -70,21 +71,26 @@ user intent
 1. **Reference Analyzer 是核心模块**
    正确做法：**把 compact 文本提炼成结构化语法**（调色板统计、材质 token、结构 hint、UV 区域），
    再决定是否附 1–2 个 compact 片段作为“样式示例”（不逐像素复制）。
-2. **Novelty 可调**
+2. **Silhouette Bank 提供形状语法**
+   每个部件给 2–4 个轮廓候选（shape token / 纯剪影），
+   并固定说明“可选一个/可组合/可大改/禁止当最终网格”；避免“过缩”或“过抄”。
+3. **Novelty 可调**
    参考层权重随 novelty 变化：novelty 越低，参考 compact 片段越多；越高，越少但保持语法。
-3. **Validator 增加 reference-proximity**
+4. **Validator 增加 reference-proximity**
    不是“和原版一样”，而是“用原版的语法（色系/亮度/描边/UV）量化”，
    防止输出既不像原版也不好看。
-4. **Post-process 最小化**
+5. **Post-process 最小化**
    允许 seam-stitch / 边距收缩这类结构性小修，但**禁止用写死单个物品的特化补丁**。
-5. **Human check 前置**
-   `examples/reset-demo/` 直接放 PNG，用户先看图；数字只是辅助。
+6. **Human check 前置**
+   `examples/rebuild-demo/` 与 `examples/reset-demo/` 直接放 PNG，用户先看图；数字只是辅助。
 
 ## 反模式
 
 - ❌ 删参考 → 无源瞎画。
 - ❌ 原样塞 compact → 模型抄格。
 - ❌ 只给语义不给参考 → 弓变实心、猪 UV 全乱。
+- ❌ 只给一句“短柄/细杖/方形皮”而不给轮廓候选 → 形状过缩。
+- ❌ 带完整 compact / 整件索引网格 → 模型抄格。
 - ❌ 写死单物品后处理（如 fix_bow）→ 治标不治本且是特化垃圾。
 - ❌ 只报数字不给人看图。
 
@@ -110,6 +116,30 @@ user intent
 - prompt 中按部件列出参考来源，并写：`部件 X 参考 A 的纹样，部件 Y 参考 B 的结构；整体是新物品，不是 A 或 B。`
 - novelty 越高，参考片段越少、重组合越自由；novelty 低时才允许整体更贴近单一原版。
 - 这是第一版 primary/secondary 融合的升级版：从“两个整件”升级为“每部件多个参考”。
+
+## 轮廓基础（silhouette bank）
+
+部件级参考不仅要借“纹理/配色/结构”，还要给“可挑选的形状基础”：
+
+```
+部件: 刀刃
+候选轮廓（2-4 个）:
+  - curved-blade      来自 iron_sword / stone_sword（刃口微弧）
+  - straight-tip      来自 shears / iron_sword（直背短刃）
+  - hook-tip          来自 shears（上翘/钩形短刃）
+指令:
+  - 可选一个；也可组合；也可大改形状
+  - 禁止把候选当最终像素答案
+```
+
+- `reference_analyzer.build_silhouette_bank(parts, retrieval_anchors, ...)` 负责为每个部件抽取 2–4 个候选；
+- 候选可以是 `shape token`（`skull-round`、`curved-blade`、`rabbit-hide-body`），
+  也可以是只含 `X/.` 的 `compact` 剪影片段；
+- 对 `form=entity_uv`，候选按原版 atlas 区域切（`head/horns/ears/muzzle/body/legs/tail`），
+  例如 cow/red_mooshroom 的 64x32 实体模板；
+- 视觉 LLM 可通过多张 `--image` / `--llm-image` 直接参考原版 PNG，与文本剪影互补。
+
+详见 `docs/silhouette-bank.md`。
 
 ## 配色也必须部件级（重要补充）
 - 全局调色板会抹掉材质差异；正确做法是**每个部件一张配色卡**。

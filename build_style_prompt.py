@@ -1041,11 +1041,41 @@ def build_prompt_pack_v2(args: argparse.Namespace) -> dict:
         # 不因概念卡失败阻断提示包生成；记录原因以便追踪。
         _v2_log("v4-concept: FAILED for %s: %s" % (args.name, exc))
 
+    # s2-shape：为每个部件生成 2-4 个轮廓基础候选（silhouette bank）。
+    silhouette_parts = []
+    if concept_card:
+        silhouette_parts = concept_card.get("parts", [])
+        sp = concept_card.get("shape_pattern") or {}
+        if isinstance(sp, dict):
+            silhouette_parts = sp.get("parts") or silhouette_parts
+    if not silhouette_parts:
+        silhouette_parts = features.get("parts", []) or ["主体"]
+    if no_original_ref:
+        # --no-original-ref 连原版轮廓候选也一并关闭。
+        silhouette_bank = []
+    else:
+        silhouette_bank = refa.build_silhouette_bank(
+            parts=silhouette_parts,
+            retrieval_anchors=anchors,
+            form=form,
+            width=width,
+            height=height,
+            entity=entity,
+        )
+    if concept_card is not None:
+        concept_card = dict(concept_card)
+        sp = concept_card.get("shape_pattern")
+        if isinstance(sp, dict):
+            sp = dict(sp)
+            sp["silhouette_candidates"] = silhouette_bank
+            concept_card["shape_pattern"] = sp
+
     prompt_text = _build_v2_prompt_text(
         args.name, retrieval, form, width, height, anchors, features,
         style_rules, few_shot, file_contract, output_contract,
         concept_card=concept_card,
         reference_block=reference_block,
+        silhouette_bank=silhouette_bank,
     )
 
     pack = {
@@ -1071,6 +1101,7 @@ def build_prompt_pack_v2(args: argparse.Namespace) -> dict:
             "按 form 声明的像素块输出清单；实际 LLM 应逐 face 输出可被 text_to_texture.py 解析的文本块。"
         ),
         "concept_card": concept_card,
+        "silhouette_bank": silhouette_bank or None,
         "novelty": novelty,
         "no_original_ref": no_original_ref,
         "reference_block": reference_block or "",
@@ -1116,6 +1147,7 @@ def _build_v2_prompt_text(
     few_shot: dict, file_contract: dict, output_contract: dict,
     concept_card: dict | None = None,
     reference_block: str | None = None,
+    silhouette_bank: list[dict] | None = None,
 ) -> str:
     """把 v2/v4 提示包渲染为可直接给 LLM 的中文提示文本。"""
     lines = []
@@ -1198,7 +1230,12 @@ def _build_v2_prompt_text(
                     ppf.get("pattern", ""), ppf.get("flow", ""),
                 ))
             lines.append("- 联动说明 integration_note：%s" % sp.get("integration_note", ""))
-            lines.append("")
+            bank_for_prompt = sp.get("silhouette_candidates") or (silhouette_bank or [])
+            if bank_for_prompt:
+                candidate_block = refa.render_silhouette_candidates(bank_for_prompt)
+                if candidate_block:
+                    lines.append(candidate_block)
+                    lines.append("")
         refs = concept_card.get("reference_nodes", [])
         if refs:
             lines.append("### 参考节点 reference_nodes（3~8 个）")
@@ -1783,6 +1820,32 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
         ok.append("v2 concept_card has palette_scheme/shape_pattern/reference_nodes (v5 design)")
         ok.append("v2 concept_card shape_pattern is shape-pattern integrated (part_pattern_flow)")
         ok.append("v2 concept_card has design_checklist (orientation/connection/border/highlight/texture/palette/pattern/frame, 9 items)")
+
+    # s2-shape：新生成的 prompt pack 应携带 silhouette bank，并渲染出候选菜单。
+    sb = data.get("silhouette_bank")
+    if sb is not None:
+        if not isinstance(sb, list) or not sb:
+            raise ValueError("v2 silhouette_bank must be a non-empty list")
+        for entry in sb:
+            if not isinstance(entry, dict) or not entry.get("part") or not isinstance(entry.get("candidates"), list):
+                raise ValueError("v2 silhouette_bank entry invalid: %r" % entry)
+            if not (2 <= len(entry["candidates"]) <= 4):
+                raise ValueError(
+                    "v2 silhouette_bank part %r must have 2..4 candidates, got %d"
+                    % (entry.get("part"), len(entry["candidates"]))
+                )
+            for cand in entry["candidates"]:
+                if cand.get("kind") not in ("shape_token", "compact_fragment"):
+                    raise ValueError("v2 silhouette_bank candidate kind invalid: %r" % cand)
+                if not cand.get("token") or not cand.get("source"):
+                    raise ValueError("v2 silhouette_bank candidate missing token/source: %r" % cand)
+        prompt_text = data.get("prompt", "")
+        if "部件轮廓候选 silhouette_candidates" not in prompt_text:
+            raise ValueError("v2 prompt missing silhouette_candidates section")
+        for marker in ("可选其中一个", "可组合多个", "可大改形状", "禁止把候选当成最终网格"):
+            if marker not in prompt_text:
+                raise ValueError("v2 prompt missing silhouette-bank instruction: %r" % marker)
+        ok.append("v2 silhouette_bank present with 2..4 candidates per part and rendered in prompt")
 
     prompt_text = data.get("prompt", "")
     design_flow_markers = (

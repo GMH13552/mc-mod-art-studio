@@ -1,0 +1,285 @@
+# 任务
+生成一个 entity_uv 的 Minecraft 资源：恶魔牛 (Demon Cow entity_uv)
+
+# 本体硬约束（最重要）
+- 必须生成「恶魔牛 (Demon Cow entity_uv)」这个物体本身；参考节点不能改变主体类别、形状或语义。
+- 参考节点只允许借用配色、材质、明暗、尺度与局部图案；若参考节点与 恶魔牛 (Demon Cow entity_uv) 语义冲突，请忽略其形状与语义。
+
+# 形式硬约束（entity_uv：标准 UV 图集/皮肤，不是单个侧视图）
+- 这不是单个侧视图，是标准 64x32/64x64 atlas；每个区域按语义填，禁止把整张图画成一个居中侧视剪影。
+- 按 entity_uv_spec 注入的区域坐标逐区域展开（头/身/腿/手臂等）；Java 资源包只能替换原版实体贴图路径，原版模型硬编码。
+- 参考完整资源：原版实体 64x32/64x64 texture atlas + 标准模型采样坐标，不是只看单张截图。
+
+# 设计要点（先理解，再直接输出）
+- 语义：一个恶魔化的牛实体纹理，替换原版 cow/red_mooshroom 的 64x32 atlas；保留牛的头/角/耳朵/鼻口/身体/腿的实体结构，配色改为暗红恶魔皮，角与眼窝用黑红，眼睛和角尖带青色魂火。整体是实体 UV 图集，不是 16x16 牛头图标。硬性：64x32 至少使用 4 种以上调色板索引；0 号只做描边/暗部；head/body/legs/角/眼都要有可见色阶与轮廓细节。
+- 调色板（5~8 色）：base=#A00F10 light=#E04A45 dark=#3A0708 accent=#01A7AC outline=#171414
+  描边：外轮廓 1px 深黑红 #171414；角/眼窝用更深 #2B0505；魂火用青色高光与白色核心。
+  饱和度：红色保持暗红色相，不荧光；青色只作局部魂火，占比小。
+- 形状：64x32 标准牛/红魔菌牛实体 atlas：头在左侧 32x16，身体在右 32x16，腿在左下半/身体下缘；必须参考 compact:cow.png/red_mooshroom.png 的 64x32 区域轮廓作为底，颜色/角/耳/眼/纹理重新画；每个 UV 区域都要有可见内容，不能只填一个颜色。
+- 形状-纹样一体：
+  · 头 head：形状=牛头（正面/侧面 UV 区域） 纹样=暗红皮 + 鼻梁高光 + 脸颊暗部；1px 深红描边 走向=沿头 UV 区域走；高光沿鼻梁纵向，暗部在脸颊两侧。
+  · 角 horns：形状=顶部双角 纹样=黑红角 + 角尖青色魂火 走向=角根与头连接，角尖朝上/两侧；魂火只点角尖。
+  · 耳朵 ears：形状=两侧耳朵 纹样=深红皮 + 内耳暗部 走向=耳根与头连接，不悬空。
+  · 鼻口 muzzle：形状=牛鼻口/嘴部区域 纹样=暗红皮 + 深色鼻孔 走向=位于 head 下方/muzzle 区域，轮廓圆钝。
+### 部件轮廓候选 silhouette_candidates（2-4 个/部件）
+> 形状候选 = 菜单，不是锁。
+> - 可选其中一个；
+> - 可组合多个；
+> - 可大改形状（加长/加粗/弯曲/变形/换比例都允许）；
+> - 禁止把候选当成最终网格/逐像素复制候选剪影。
+
+- [头 head]
+  - 候选 1：cow-head（来源：cow.png）；来源：cow.png 头部区域轮廓
+  - 候选 2：red-mooshroom-head（来源：red_mooshroom.png）；来源：red_mooshroom.png 头部区域轮廓
+  - 候选 3：brown-mooshroom-head（来源：brown_mooshroom.png）；来源：brown_mooshroom.png 头部区域轮廓
+  - 候选 4：compact:cow.png（来源：cow.png）；只含 X/. 剪影；head 区域/整体轮廓
+    ```
+....XXXXXXXXXXXXXXXX.XX.....
+....XXXXXXXXXXXXXXXXXXXX....
+....XXXXXXXXXXXXXXXXXXXX....
+....XXXXXXXXXXXXXXXX......XX
+....XXXXXXXXXXXXXXXX......XX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+................XXXXXXXXXXXX
+................XXXXXXXXXXXX
+    ```
+
+- [角 horns]
+  - 候选 1：cow-horn（来源：cow.png）；来源：cow.png 角/耳区域轮廓
+  - 候选 2：red-mooshroom-horn（来源：red_mooshroom.png）；来源：red_mooshroom.png 角/耳区域轮廓
+  - 候选 3：brown-mooshroom-horn（来源：brown_mooshroom.png）；来源：brown_mooshroom.png 角/耳区域轮廓
+  - 候选 4：compact:cow.png（来源：cow.png）；只含 X/. 剪影；horns 区域/整体轮廓
+    ```
+XXXXXXXXXXXXXXXX.XX.......
+XXXXXXXXXXXXXXXXXXXX......
+XXXXXXXXXXXXXXXXXXXX......
+XXXXXXXXXXXXXXXXXXXX......
+XXXXXXXXXXXXXXXX......XXXX
+XXXXXXXXXXXXXXXX......XXXX
+    ```
+
+- [耳朵 ears]
+  - 候选 1：cow-ear（来源：cow.png）；来源：cow.png 耳朵区域轮廓
+  - 候选 2：red-mooshroom-ear（来源：red_mooshroom.png）；来源：red_mooshroom.png 耳朵区域轮廓
+  - 候选 3：brown-mooshroom-ear（来源：brown_mooshroom.png）；来源：brown_mooshroom.png 耳朵区域轮廓
+  - 候选 4：compact:cow.png（来源：cow.png）；只含 X/. 剪影；ears 区域/整体轮廓
+    ```
+XXXXXXXXXXXXXXXX.XX.
+XXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXX
+    ```
+
+- [鼻口 muzzle]
+  - 候选 1：cow-muzzle（来源：cow.png）；来源：cow.png 鼻口区域轮廓
+  - 候选 2：red-mooshroom-muzzle（来源：red_mooshroom.png）；来源：red_mooshroom.png 鼻口区域轮廓
+  - 候选 3：brown-mooshroom-muzzle（来源：brown_mooshroom.png）；来源：brown_mooshroom.png 鼻口区域轮廓
+  - 候选 4：compact:cow.png（来源：cow.png）；只含 X/. 剪影；muzzle 区域/整体轮廓
+    ```
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+    ```
+
+- [眼睛/魂火 eyes]
+  - 候选 1：cow-shape（来源：cow.png）；来源：cow.png 整体/部件轮廓
+  - 候选 2：red-mooshroom-shape（来源：red_mooshroom.png）；来源：red_mooshroom.png 整体/部件轮廓
+  - 候选 3：brown-mooshroom-shape（来源：brown_mooshroom.png）；来源：brown_mooshroom.png 整体/部件轮廓
+  - 候选 4：compact:cow.png（来源：cow.png）；只含 X/. 剪影；cow.png 区域/整体轮廓
+    ```
+XXXX.XX.....................
+XXXXXXXX....................
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    ```
+
+- [身体 body]
+  - 候选 1：cow-body（来源：cow.png）；来源：cow.png 身体/躯干区域轮廓
+  - 候选 2：red-mooshroom-body（来源：red_mooshroom.png）；来源：red_mooshroom.png 身体/躯干区域轮廓
+  - 候选 3：brown-mooshroom-body（来源：brown_mooshroom.png）；来源：brown_mooshroom.png 身体/躯干区域轮廓
+  - 候选 4：compact:cow.png（来源：cow.png）；只含 X/. 剪影；body 区域/整体轮廓
+    ```
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    ```
+
+- [腿 legs]
+  - 候选 1：cow-leg（来源：cow.png）；来源：cow.png 腿部区域轮廓
+  - 候选 2：red-mooshroom-leg（来源：red_mooshroom.png）；来源：red_mooshroom.png 腿部区域轮廓
+  - 候选 3：brown-mooshroom-leg（来源：brown_mooshroom.png）；来源：brown_mooshroom.png 腿部区域轮廓
+  - 候选 4：compact:cow.png（来源：cow.png）；只含 X/. 剪影；legs 区域/整体轮廓
+    ```
+....XXXXXXXX....
+....XXXXXXXX....
+....XXXXXXXX....
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX
+    ```
+
+- [尾巴 tail]
+  - 候选 1：cow-tail（来源：cow.png）；来源：cow.png 尾部区域轮廓
+  - 候选 2：red-mooshroom-tail（来源：red_mooshroom.png）；来源：red_mooshroom.png 尾部区域轮廓
+  - 候选 3：brown-mooshroom-tail（来源：brown_mooshroom.png）；来源：brown_mooshroom.png 尾部区域轮廓
+  - 候选 4：compact:cow.png（来源：cow.png）；只含 X/. 剪影；tail 区域/整体轮廓
+    ```
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+XXXXXXXXXXXXXX
+    ```
+
+- 设计自检（输出前逐项自查）：方位/构图一致性；连接点对齐；语义可辨；外轮廓描边与部件接缝；材质高光方向；材质纹理贴合；配色层次；纹样与形状一体；边框/背景
+- 硬性避免（违反即失败）：
+  · 不要画成 16x16 居中牛头图标；这是 64x32 实体 atlas，必须按原版 cow/red_mooshroom 的 UV 区域展开。
+  · 不要复制 cow.png / red_mooshroom.png 的逐像素图案。
+  · 不要画成普通红牛；必须有黑角/黑眼窝与青色魂火点缀。
+  · 禁止整张 64x32 只用一种索引/一种颜色；若全图同色或同索引即为失败。
+  · 0 号索引只能用于描边和最深暗部，不能作为大面积底色；主色用 1/2/3 等索引。
+  · head/body/legs/角/眼等区域必须画出至少 2 个不同色阶，禁止区域留空成单色。
+- 参考节点（仅语义参考，禁止复制像素）：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/cow.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/red_mooshroom.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/brown_mooshroom.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/soul_fire_0.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/soul_fire_1.png(shape)
+
+## 原版参考（结构化语法 + 少量片段）
+> 借鉴但不照抄：形状/纹理/配色可按需要修改。
+> 禁止逐像素复制；只学习以下配色家族/材质签名/结构hint/UV 区域等“参考语法”。
+
+### 参考语法：cow.png
+- 来源信息：类别=entity；role=shape；尺寸=64x32
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/cow.png
+- 配色家族：主色=#966A6A (L=0.45)；亮色=#FFFFFF (L=1.00)；暗色=#000000 (L=0.00)；描边=#000000 (L=0.00)；明度均值=0.48 范围=0.00~1.00；饱和度均值=0.16 范围=0.00~0.95
+- 材质签名：金属、石、发光
+- 结构提示：细长；弧形/曲线；多部件(2)
+- UV 区域：head=0,0,32,16；horns=0,0,32,6；ears=0,0,32,4；muzzle=0,8,16,16；body=16,16,64,32；legs=0,16,16,32；tail=48,16,64,32
+
+### 参考语法：red_mooshroom.png
+- 来源信息：类别=entity；role=shape；尺寸=64x32
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/red_mooshroom.png
+- 配色家族：主色=#707070 (L=0.44)；亮色=#DCDCDC (L=0.86)；暗色=#000000 (L=0.00)；描边=#000000 (L=0.00)；明度均值=0.45 范围=0.00~0.86；饱和度均值=0.24 范围=0.00~0.95
+- 材质签名：金属、石、发光
+- 结构提示：细长；弧形/曲线；多部件(2)
+- UV 区域：head=0,0,32,16；horns=0,0,32,6；ears=0,0,32,4；muzzle=0,8,16,16；body=16,16,64,32；legs=0,16,16,32；tail=48,16,64,32
+
+### 参考语法：brown_mooshroom.png
+- 来源信息：类别=entity；role=shape；尺寸=64x32
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/brown_mooshroom.png
+- 配色家族：主色=#A6795A (L=0.50)；亮色=#DCDCDC (L=0.86)；暗色=#000000 (L=0.00)；描边=#000000 (L=0.00)；明度均值=0.50 范围=0.00~0.86；饱和度均值=0.28 范围=0.00~0.95
+- 材质签名：金属、石、发光
+- 结构提示：细长；弧形/曲线；多部件(2)
+- UV 区域：head=0,0,32,16；horns=0,0,32,6；ears=0,0,32,4；muzzle=0,8,16,16；body=16,16,64,32；legs=0,16,16,32；tail=48,16,64,32
+
+### 参考语法：soul_fire_0.png
+- 来源信息：类别=block；role=shape；尺寸=16x512
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/soul_fire_0.png
+- 配色家族：主色=#45EFF4 (L=0.80)；亮色=#FFFFFF (L=1.00)；暗色=#018085 (L=0.40)；描边=#018085 (L=0.40)；明度均值=0.76 范围=0.40~1.00；饱和度均值=0.94 范围=0.00~1.00
+- 材质签名：发光
+- 结构提示：竖向细长；弧形/曲线；多部件(43)
+- UV 区域：head=0,0,32,16；horns=0,0,32,6；ears=0,0,32,4；muzzle=0,8,16,16；body=16,16,64,32；legs=0,16,16,32；tail=48,16,64,32
+
+### 参考语法：soul_fire_1.png
+- 来源信息：类别=block；role=shape；尺寸=16x512
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/soul_fire_1.png
+- 配色家族：主色=#46EFF4 (L=0.80)；亮色=#FFFFFF (L=1.00)；暗色=#018085 (L=0.40)；描边=#018085 (L=0.40)；明度均值=0.77 范围=0.40~1.00；饱和度均值=0.94 范围=0.00~1.00
+- 材质签名：发光
+- 结构提示：竖向细长；弧形/曲线；多部件(43)
+- UV 区域：head=0,0,32,16；horns=0,0,32,6；ears=0,0,32,4；muzzle=0,8,16,16；body=16,16,64,32；legs=0,16,16,32；tail=48,16,64,32
+
+# 通用设计原则（每个物体都适用）
+- 整体方向统一：所有部件沿同一主方向/轴线；附属物方向与主体一致或围绕主体自然分叉，禁止主体与附属朝向相反。
+- 连接点自然：部件相接处与主轴/重心对齐，不悬空、不偏心、不错位。
+- 剪影可辨：只看形状也能认出“这是什么”；部件之间用描边/色差/空隙区分，不要糊成实心团块。
+- 纹样贴合形状：纹理/高光/图案沿部件的走向与明暗面流动，不脱离形状。
+- 细长部件：所有细长部件（杆/柄/弦/茎/边框等）宽度控制在 1~2px，不能糊成 3px 以上实心色带。
+- 负空间：部件之间与内部孔洞保留至少 1px 透明负空间（block_multi 整面不透明方块除外），避免实心团块。
+- 禁止实心团块：主体必须有内部明暗/纹理/负空间，不能无细节地满涂成一个大色块。
+- 参考完整资源：不要只看单张示例图；方块类要同时理解顶/侧/底三面、模型与 blockstate 契约，实体要按标准 UV 图集/区域语义理解，多面/实体统一走结构化输出。
+
+# 通用像素细节（每个物体都适用）
+- 边框/描边：外轮廓用 1px 深色描边；部件接缝用暗色分隔；不做均匀黑框。
+- 材质高光：亮部高光沿形状走向，暗部在背光侧；金属/木/石/发光/软质等不同材质按语义推理使用不同高光强度与纹理提示，不给死例子。
+- 纹理：材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。
+- 明暗分层：每个部件至少 base/light/dark 三档色阶；用 1px 明暗过渡表现体积，避免平涂。
+- 方向/连接：整体方向一致，部件连接自然、不悬空。
+- 细长部件：所有细长部件（杆/柄/弦/茎/边框等）宽度控制在 1~2px，必要时保留内部明暗/细节，不能糊成 3px 以上实心色带。
+- 负空间（透明/镂空）：透明间隙和内部镂空是像素资产的一部分；部件之间与内部孔洞保留至少 1px 透明负空间（block_multi 整面不透明方块除外），避免实心团块。
+- 禁止实心团块：主体必须有内部结构（明暗/纹理/负空间），不能无细节地满涂成一个大色块；轮廓/部件间用描边或透明间隙区分。
+- 透明边距（物品/植物/实体图集）：非方块多面纹理（item/cross/entity_uv）与画布四边保留至少 1px 透明边距；block_multi 的 top/side/bottom 例外，必须是 16x16 全不透明且边缘连续。
+
+# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）
+- 先写 2~3 行设计分析（主方向/部件走向/连接点），放在 FORMAT 之前；face 块内禁止解释。
+- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；-1=透明，非负整数引用 PALETTE；非 -1 像素必须 >= 40；禁止全 -1 空图。
+# 文件契约摘要（输出文件 / model / blockstate；不贴大 JSON）
+- face uv -> assets/mcmod/textures/entity/64x32.png
+- 原版实体替换路径：assets/minecraft/textures/entity/cow/cow.png（模型/blockstate 由原版硬编码，无需生成）
+
+FORM=entity_uv
+FACES=1
+
+=== face: uv ===
+FILE: assets/mcmod/textures/entity/64x32.png
+W=64 H=32
+
+PALETTE
+# 占位说明：在此列出 LLM 自己生成的调色板，每行一个索引与 #RRGGBB
+# 例如：0: #AABBCC（仅格式示意，禁止复制参考贴图）
+
+INDEX GRID
+# 共 32 行，每行 64 个整数；-1 表示透明，非负整数引用上面 PALETTE 的索引。
+# 非 -1 像素数量要求：16x16 至少 40 个；禁止输出全 -1 的空图。
+# 示例：至少填一部分非 -1 像素，并用 0/1/2 等索引表示颜色。
+
+
+# ENTITY UV 语义（最重要：这是标准 64x32/64x64 atlas，不是单个侧视图）
+- 这不是单个侧视图，也不是一张完整画布上的自由构图；必须按原版硬编码模型采样的区域坐标逐块展开像素。
+- 每个区域按语义填：头/身/腿/手臂等各画自己的内容；区域外可为透明/底色，区域内不能留空。
+- 当前尺寸：64x32（原版 cow 标准尺寸）
+- 原版 cow atlas 关键区域（坐标 x1,y1 -> x2,y2）：
+  - head: 0,0 -> 32,16
+  - horns: 0,0 -> 32,6
+  - ears: 0,0 -> 32,4
+  - muzzle: 0,8 -> 16,16
+  - body: 16,16 -> 64,32
+  - legs: 0,16 -> 16,32
+  - tail: 48,16 -> 64,32
+- Java 资源包只能替换贴图，不能换原版硬编码模型；原版替换路径为 `assets/minecraft/textures/entity/cow/cow.png`。
+- 必须按头/身/腿等区域分别绘制，至少保证每个区域都有像素。
+
+> 设计分析放在 FORMAT 之前；face 块内只允许 PALETTE + INDEX GRID 数据；ENTITY UV 语义是格式元数据，不写入 face 块。

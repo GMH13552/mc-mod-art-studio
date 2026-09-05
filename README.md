@@ -28,6 +28,20 @@
 
 `--no-original-ref` 可以完全关闭原版参考块，回到“仅语义摘要”模式。
 
+## 轮廓基础（silhouette bank）
+
+在“部件级参考”之上，s2 增加了一个形状语法层：`reference_analyzer.build_silhouette_bank()` 为每个部件抽取 **2–4 个轮廓候选**（`shape token` 或 `X/.` 剪影片段），并且 prompt 中固定写明：
+
+> 形状候选 = 菜单，不是锁。
+> - 可选其中一个；
+> - 可组合多个；
+> - 可大改形状（加长/加粗/弯曲/变形/换比例都允许）；
+> - 禁止把候选当成最终网格/逐像素复制候选剪影。
+
+这样解决“形状借鉴过缩/过抄”：既不给一句模糊描述让模型乱画，也不把整件原版 compact 当作答案。`form=entity_uv` 时按原版 atlas 区域（`head/horns/ears/muzzle/body/legs/tail` 等）切候选，而不是把实体压成 16x16 居中图标。视觉 LLM 可通过 `--llm-image` / `llm_client --image` 多次传入多张原版 PNG 参考。
+
+更多设计说明见 `docs/silhouette-bank.md`。
+
 ## 快速开始
 
 ```bash
@@ -87,18 +101,22 @@ export LLM_MODEL=deepseek-v4-flash
 扫描/索引 → 检索参考节点 → 语义概念卡 → 提示包 → LLM/raw_answer → PNG → 资源包
 ```
 
-## 效果图
+## 效果图（rebuild-demo）
 
-以下 4 张 PNG 来自 `examples/novel-demo/`，均为 Minecraft 原版没有的新资产，由 `demo_generate.py` 通过“部件级参考映射”生成，未复制任何原版素材。
+以下 4 张 PNG 来自 `examples/rebuild-demo/`，是当前主打演示，均带 **silhouette bank（轮廓候选/可大改）**。其中 `demon_cow` 使用 `entity_uv` 64x32（cow/red_mooshroom 实体模板），不再是 16x16 牛头图标。
 
-| 资产 | form | 图片 |
-|---|---|---|
-| 村民皮 (Villager Hide) | `item` | ![villager_hide](examples/novel-demo/villager_hide/sprite.png) |
-| 剥皮小刀 (Skinning Knife) | `item` | ![skinning_knife](examples/novel-demo/skinning_knife/sprite.png) |
-| 骷髅法杖 (Skeleton Staff) | `item` | ![skeleton_staff](examples/novel-demo/skeleton_staff/sprite.png) |
-| 恶魔牛 (Demon Cow) | `item` | ![demon_cow](examples/novel-demo/demon_cow/sprite.png) |
+| 资产 | form | 图片 | 轮廓基础摘要 |
+|---|---|---|---|
+| 恶魔牛 (Demon Cow) | `entity_uv` 64x32 | ![demon_cow](examples/rebuild-demo/demon_cow/sprite.png) | cow / red_mooshroom / brown_mooshroom / soul_fire 区域轮廓 |
+| 骷髅法杖 (Skeleton Staff) | `item` | ![skeleton_staff](examples/rebuild-demo/skeleton_staff/sprite.png) | skeleton head / bone_block / stick / iron_sword |
+| 剥皮小刀 (Skinning Knife) | `item` | ![skinning_knife](examples/rebuild-demo/skinning_knife/sprite.png) | iron/stone/wooden_sword / shears / leather / stick |
+| 村民皮 (Villager Hide) | `item` | ![villager_hide](examples/rebuild-demo/villager_hide/sprite.png) | leather / rabbit_hide / villager 毛边皮张 |
 
-## 部件级参考 / 配色素卡
+每个资产目录下的 `README.md` 记录部件 → 原版参考 → 轮廓基础 → 改了什么，以及 `prompt_pack.json` 中的 `silhouette_candidates`。汇总与复现命令见 `examples/rebuild-demo/README.md`。
+
+## 历史：novel-demo（第一版部件级参考）
+
+以下为早期 `examples/novel-demo/` 的展示，已被 `rebuild-demo` 取代/继承，保留作为历史参考。它以“部件级参考映射”为核心，但没有 silhouette bank；其中 `demon_cow` 原为 16x16 `item` 牛头图标（已在 rebuild-demo 修正为 `entity_uv` 64x32）。
 
 `novel-demo` 的生成采用“部件级参考映射”：不找一件最像的原版整件照抄，而是把新资产拆成**部件**，每个部件只从指定原版资产借用三样信息：
 
@@ -117,7 +135,7 @@ export LLM_MODEL=deepseek-v4-flash
 | 骷髅法杖 (Skeleton Staff) | 骷髅头/眼窝 ← `skeleton.png`（head region）+ `bone_block_side.png`（骨白/骨裂纹）；连接插座 ← `bone_block_side.png` + `stick.png`；杖身/握柄 ← `stick.png` + `oak_planks.png`（木纹/磨损） |
 | 恶魔牛 (Demon Cow) | 牛头 ← `cow.png` + `red_mooshroom.png`（红黑皮肤/鼻梁高光）；双角/耳朵 ← `cow.png` + `red_mooshroom.png`；眼睛/鼻口 ← `red_mooshroom.png` + `soul_fire_0.png`（青色魂火/黑色眼窝） |
 
-完整的逐部件来源表、原版参考 hash、`不借什么`、局部配色卡与复现命令见 `examples/novel-demo/README.md` 及各资产目录下的 `README.md`。
+完整的逐部件来源表、原版参考 hash、`不借什么`、局部配色卡与复现命令见 `examples/novel-demo/README.md` 及各资产目录下的 `README.md`（历史版）。当前主演示请以 `examples/rebuild-demo/README.md` 为准。
 
 ## 核心模块
 
@@ -127,8 +145,8 @@ export LLM_MODEL=deepseek-v4-flash
 | `scan_mc_assets.py` | 扫描 Minecraft/资源包/模组目录，生成本地资产索引 |
 | `retrieve_assets.py` | 按想法检索 1–8 个参考节点并提取结构化特征 |
 | `concept_grounder.py` | 生成语义概念卡（物品是什么、部件、配色、形状、参考） |
-| `reference_analyzer.py` | 把原版 compact 文本提炼为参考语法，生成不逐像素复制的参考块 |
-| `build_style_prompt.py` | 组装提示包：参考语法 + 通用像素规则 + 形式硬约束 + novelty |
+| `reference_analyzer.py` | 把原版 compact 文本提炼为参考语法，生成 `silhouette bank` 轮廓候选（形状 token / X/. 剪影）与不逐像素复制的参考块 |
+| `build_style_prompt.py` | 组装提示包：参考语法 + silhouette bank + 通用像素规则 + 形式硬约束 + novelty |
 | `text_to_texture.py` | 把 LLM 的 `PALETTE + INDEX GRID` 文本解析为 PNG |
 | `asset_to_text.py` | 把任意 PNG 转成逐像素文本（复用 `texture_to_text`） |
 | `minecraft_texture_tool/texture_to_text.py` | 底层确定性 PNG → 文本转换 |
@@ -191,17 +209,27 @@ python3 -m unittest discover -s tests -v
 ├── examples/                  # 最小示例 + 新资产效果图
 │   ├── alien_crystal_wand/    # item 离线示例
 │   ├── mushroom_sprout/       # cross 示例
-│   ├── novel-demo/            # 部件级参考新资产：村民皮/剥皮小刀/恶魔牛/骷髅法杖
+│   ├── novel-demo/            # 历史：第一版部件级参考（村民皮/剥皮小刀/恶魔牛/骷髅法杖）
 │   │   ├── villager_hide/     # sprite.png + README.md + prompt/raw/hash
 │   │   ├── skinning_knife/
 │   │   ├── demon_cow/
 │   │   ├── skeleton_staff/
-│   │   ├── README.md          # 资产清单 + 来源表 + 复现命令
+│   │   ├── README.md          # 资产清单 + 来源表 + 复现命令（历史版）
 │   │   └── demo_generate.py
+│   ├── rebuild-demo/          # 当前主演示：s2 silhouette bank + 4 个重做演示
+│   │   ├── demon_cow/         # entity_uv 64x32（cow/red_mooshroom 模板改）
+│   │   ├── skeleton_staff/
+│   │   ├── skinning_knife/
+│   │   ├── villager_hide/
+│   │   ├── README.md          # 资产清单 + 轮廓基础 + 复现命令
+│   │   ├── rebuild_generate.py
+│   │   └── build_programmatic_demos.py
 │   └── reset-demo/            # 旧版演示图（bow/bricks/creeper/pig，保留供 docs 示例/历史参考）
 ├── docs/
 │   ├── workflow-concept.md
 │   ├── prompt-design.md
+│   ├── silhouette-bank.md    # 轮廓基础/多图参考/cow 实体模板说明
+│   ├── shape-problem-analysis.md
 │   └── check_pixel_asset.md
 ├── tests/                     # 核心脚本单元测试
 ├── requirements.txt

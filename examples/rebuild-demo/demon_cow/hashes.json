@@ -1,0 +1,12 @@
+{
+  "prompt_sha256": "9a4c8e158f599e98bbe8de8c415483a01347193226ca6e04f48fc444d5207477",
+  "answer_sha256": "programmatic-fallback",
+  "png_sha256": "701cf982ae8cd9092d00ce77bae6c02a5136a50b4e99d61f22dab48d961103b8",
+  "attempts": "programmatic-fallback",
+  "novelty": 0.9,
+  "method": "programmatic template recolor (vanilla cow.png silhouette + demon palette)",
+  "silhouette_bank_parts": 8,
+  "errors": [
+    "LLM text-model output for this asset was unstable (all-one-color / empty / oval); final PNG uses vanilla template silhouette + new palette recoloring."
+  ]
+}

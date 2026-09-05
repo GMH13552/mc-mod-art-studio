@@ -1,0 +1,238 @@
+# 任务
+生成一个 item 的 Minecraft 资源：骷髅法杖 (Skeleton Staff)
+
+# 本体硬约束（最重要）
+- 必须生成「骷髅法杖 (Skeleton Staff)」这个物体本身；参考节点不能改变主体类别、形状或语义。
+- 参考节点只允许借用配色、材质、明暗、尺度与局部图案；若参考节点与 骷髅法杖 (Skeleton Staff) 语义冲突，请忽略其形状与语义。
+
+# 形式硬约束（item：16x16 透明物品贴图）
+- 这是 16x16 透明背景物品贴图；主体居中、四周保留至少 1px 透明边距，禁止铺满到边缘。
+
+# 设计要点（先理解，再直接输出）
+- 语义：一根顶端镶着骷髅头的新法杖/权杖：上方是骨白色、带可辨眼窝与下颌暗示的骷髅头，下方是木质杖身/握柄；杖身可以斜、可以粗一点，但必须保留手柄感（木纹、粗细、握持段）。
+- 调色板（5~8 色）：base=#E9E6D4 light=#FFFFFD dark=#CBC6A5 accent=#896727 outline=#2E2E2E
+  描边：骷髅外轮廓 1px 深灰 #2E2E2E；杖身用深褐描边；头与杖连接处用暗色插座分隔。
+  饱和度：骨白保持低饱和、偏暖；木柄为暗棕；避免荧光白/荧光青。
+- 形状：16x16 透明 item：竖直法杖（可略带 1-2px 斜度），顶部约 5-8px 为骷髅头（有眼窝/下颌暗示），中间为 1-3px 宽木杖，底部为握柄/尾端；整体居中，四边至少 1px 透明。
+- 形状-纹样一体：
+  · 骷髅头 skull：形状=圆/方头骨，眼窝大而深、下颌骨可辨 纹样=骨白底 + 深色眼窝 + 鼻洞/裂纹 走向=眼窝位于头骨中上部，左右对称但允许 1px 不对称；裂纹沿骨面走，不画成全身骨架。
+  · 眼窝/裂纹 eye sockets：形状=两个深色窝 + 1px 裂纹 纹样=深灰/黑灰 走向=眼窝用深灰黑填充，裂纹从眼窝/颧骨向外发散。
+  · 连接插座 socket：形状=骷髅头下的 1-3px 暗色小口/环 纹样=深灰/深褐 走向=插座包住杖顶端，与头骨底边对齐。
+  · 杖身/握柄 handle：形状=2-3px 宽木杖，底部可加粗手柄段；允许直线/微弯 纹样=木纹纵向 + 少量磨损；手柄段可用横向缠绕/加粗 走向=木纹沿杖身纵向；底端为握柄加粗段，与主轴对齐；有手柄味。
+### 部件轮廓候选 silhouette_candidates（2-4 个/部件）
+> 形状候选 = 菜单，不是锁。
+> - 可选其中一个；
+> - 可组合多个；
+> - 可大改形状（加长/加粗/弯曲/变形/换比例都允许）；
+> - 禁止把候选当成最终网格/逐像素复制候选剪影。
+
+- [骷髅头 skull]
+  - 候选 1：skeleton-skull（来源：skeleton.png）；来源：skeleton.png 头部区域骨白头骨轮廓
+  - 候选 2：bone-block-side-skull（来源：bone_block_side.png）；来源：bone_block_side.png 头部区域骨白头骨轮廓
+  - 候选 3：bone-block-top-skull（来源：bone_block_top.png）；来源：bone_block_top.png 头部区域骨白头骨轮廓
+  - 候选 4：compact:skeleton.png（来源：skeleton.png）；只含 X/. 剪影；skeleton.png 区域/整体轮廓
+    ```
+XXXXXXXXXXXXXX..............
+XXXXXXX......X..............
+XXXXXXX......X..............
+XXXXXXXXXXXXXXXXXXXXXX......
+XXXXXXXXXXXXXXXXXXXXXX......
+XXXXXXXXXXXXXXXXXXXXXX......
+..................X..XX..X..
+......XXXXXX....XXXXXXXXXXXX
+...........XXXXXX........XX.
+...........X.XX.X........XX.
+.........................XX.
+......XXXXXXXXXXXXXXXXXXXXXX
+    ```
+
+- [眼窝/裂纹 eye sockets]
+  - 候选 1：skeleton-shape（来源：skeleton.png）；来源：skeleton.png 整体/部件轮廓
+  - 候选 2：bone-block-side-shape（来源：bone_block_side.png）；来源：bone_block_side.png 整体/部件轮廓
+  - 候选 3：bone-block-top-shape（来源：bone_block_top.png）；来源：bone_block_top.png 整体/部件轮廓
+  - 候选 4：compact:skeleton.png（来源：skeleton.png）；只含 X/. 剪影；skeleton.png 区域/整体轮廓
+    ```
+XXXXXXXXXXXXXX..............
+XXXXXXX......X..............
+XXXXXXX......X..............
+XXXXXXXXXXXXXXXXXXXXXX......
+XXXXXXXXXXXXXXXXXXXXXX......
+XXXXXXXXXXXXXXXXXXXXXX......
+..................X..XX..X..
+......XXXXXX....XXXXXXXXXXXX
+...........XXXXXX........XX.
+...........X.XX.X........XX.
+.........................XX.
+......XXXXXXXXXXXXXXXXXXXXXX
+    ```
+
+- [连接插座 socket]
+  - 候选 1：skeleton-shape（来源：skeleton.png）；来源：skeleton.png 整体/部件轮廓
+  - 候选 2：bone-block-side-shape（来源：bone_block_side.png）；来源：bone_block_side.png 整体/部件轮廓
+  - 候选 3：bone-block-top-shape（来源：bone_block_top.png）；来源：bone_block_top.png 整体/部件轮廓
+  - 候选 4：compact:skeleton.png（来源：skeleton.png）；只含 X/. 剪影；skeleton.png 区域/整体轮廓
+    ```
+XXXXXXXXXXXXXX..............
+XXXXXXX......X..............
+XXXXXXX......X..............
+XXXXXXXXXXXXXXXXXXXXXX......
+XXXXXXXXXXXXXXXXXXXXXX......
+XXXXXXXXXXXXXXXXXXXXXX......
+..................X..XX..X..
+......XXXXXX....XXXXXXXXXXXX
+...........XXXXXX........XX.
+...........X.XX.X........XX.
+.........................XX.
+......XXXXXXXXXXXXXXXXXXXXXX
+    ```
+
+- [杖身/握柄 handle]
+  - 候选 1：stick-body（来源：stick.png）；来源：stick.png 身体/躯干区域轮廓
+  - 候选 2：carrot-on-a-stick-body（来源：carrot_on_a_stick.png）；来源：carrot_on_a_stick.png 身体/躯干区域轮廓
+  - 候选 3：iron-sword-body（来源：iron_sword.png）；来源：iron_sword.png 身体/躯干区域轮廓
+  - 候选 4：compact:stick.png（来源：stick.png）；只含 X/. 剪影；stick.png 区域/整体轮廓
+    ```
+...........XX
+..........XXX
+.........XXX.
+........XXX..
+.......XXX...
+......XXX....
+....XXX......
+...XXX.......
+..XXX........
+.XXX.........
+XXX..........
+XX...........
+    ```
+
+- 设计自检（输出前逐项自查）：方位/构图一致性；连接点对齐；语义可辨；外轮廓描边与部件接缝；材质高光方向；材质纹理贴合；配色层次；纹样与形状一体；边框/背景
+- 硬性避免（违反即失败）：
+  · 不要画成完整骷髅或骷髅骑士；不要画成普通木棍：顶部必须有明显可辨骷髅头。
+  · 不要画成光滑细直线：杖身要像有手柄的杖，而不是普通棍子。
+  · 不要复制 skeleton.png / bone_block_side.png / stick.png 的逐像素图案。
+  · 保持 16x16 透明背景、四边至少 1px 透明边距。
+- 参考节点（仅语义参考，禁止复制像素）：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/skeleton/skeleton.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/bone_block_side.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/bone_block_top.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png(shape)、/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/carrot_on_a_stick.png(shape)
+
+## 原版参考（结构化语法 + 少量片段）
+> 借鉴但不照抄：形状/纹理/配色可按需要修改。
+> 禁止逐像素复制；只学习以下配色家族/材质签名/结构hint/UV 区域等“参考语法”。
+
+### 参考语法：skeleton.png
+- 来源信息：类别=entity；role=shape；尺寸=64x32
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/skeleton/skeleton.png
+- 配色家族：主色=#A5A5A5 (L=0.65)；亮色=#E3E3E3 (L=0.89)；暗色=#494949 (L=0.29)；描边=#494949 (L=0.29)；明度均值=0.63 范围=0.29~0.89；饱和度均值=0.00 范围=0.00~0.02
+- 材质签名：金属、石、发光、软质
+- 结构提示：弧形/曲线；多部件(4)
+- UV 区域：（非实体 UV 形式，无区域）
+
+### 参考语法：bone_block_side.png
+- 来源信息：类别=block；role=shape；尺寸=16x16
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/bone_block_side.png
+- 配色家族：主色=#E6E2D2 (L=0.89)；亮色=#E9E6D4 (L=0.90)；暗色=#DEDAC5 (L=0.85)；描边=#DEDAC5 (L=0.85)；明度均值=0.88 范围=0.85~0.90；饱和度均值=0.29 范围=0.27~0.32
+- 材质签名：发光、软质
+- 结构提示：对称；单件
+- UV 区域：（非实体 UV 形式，无区域）
+
+### 参考语法：bone_block_top.png
+- 来源信息：类别=block；role=shape；尺寸=16x16
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/bone_block_top.png
+- 配色家族：主色=#CECAAD (L=0.79)；亮色=#E8E5D2 (L=0.90)；暗色=#C3BFA1 (L=0.74)；描边=#C3BFA1 (L=0.74)；明度均值=0.82 范围=0.74~0.90；饱和度均值=0.27 范围=0.22~0.32
+- 材质签名：发光、软质
+- 结构提示：对称；单件
+- UV 区域：（非实体 UV 形式，无区域）
+
+### 参考语法：stick.png
+- 来源信息：类别=item；role=shape；尺寸=16x16
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png
+- 配色家族：主色=#493615 (L=0.22)；亮色=#896727 (L=0.41)；暗色=#281E0B (L=0.12)；描边=#281E0B (L=0.12)；明度均值=0.27 范围=0.12~0.41；饱和度均值=0.56 范围=0.55~0.57
+- 材质签名：中性
+- 结构提示：单件
+- UV 区域：（非实体 UV 形式，无区域）
+
+### 参考语法：oak_planks.png
+- 来源信息：类别=block；role=shape；尺寸=16x16
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png
+- 配色家族：主色=#9F844D (L=0.52)；亮色=#C29D62 (L=0.63)；暗色=#67502C (L=0.32)；描边=#67502C (L=0.32)；明度均值=0.50 范围=0.32~0.63；饱和度均值=0.39 范围=0.35~0.44
+- 材质签名：中性
+- 结构提示：对称；单件
+- UV 区域：（非实体 UV 形式，无区域）
+
+### 参考语法：iron_sword.png
+- 来源信息：类别=item；role=shape；尺寸=16x16
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png
+- 配色家族：主色=#896727 (L=0.41)；亮色=#FFFFFF (L=1.00)；暗色=#181818 (L=0.09)；描边=#181818 (L=0.09)；明度均值=0.46 范围=0.09~1.00；饱和度均值=0.20 范围=0.00~0.57
+- 材质签名：金属、石、发光
+- 结构提示：弧形/曲线；单件
+- UV 区域：（非实体 UV 形式，无区域）
+
+### 参考语法：carrot_on_a_stick.png
+- 来源信息：类别=item；role=shape；尺寸=16x16
+- 原版路径：/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/carrot_on_a_stick.png
+- 配色家族：主色=#10800F (L=0.38)；亮色=#B4B3B3 (L=0.70)；暗色=#281E0B (L=0.12)；描边=#281E0B (L=0.12)；明度均值=0.38 范围=0.12~0.70；饱和度均值=0.51 范围=0.00~1.00
+- 材质签名：金属、石
+- 结构提示：弧形/曲线；多部件(2)
+- UV 区域：（非实体 UV 形式，无区域）
+
+# 通用设计原则（每个物体都适用）
+- 整体方向统一：所有部件沿同一主方向/轴线；附属物方向与主体一致或围绕主体自然分叉，禁止主体与附属朝向相反。
+- 连接点自然：部件相接处与主轴/重心对齐，不悬空、不偏心、不错位。
+- 剪影可辨：只看形状也能认出“这是什么”；部件之间用描边/色差/空隙区分，不要糊成实心团块。
+- 纹样贴合形状：纹理/高光/图案沿部件的走向与明暗面流动，不脱离形状。
+- 细长部件：所有细长部件（杆/柄/弦/茎/边框等）宽度控制在 1~2px，不能糊成 3px 以上实心色带。
+- 负空间：部件之间与内部孔洞保留至少 1px 透明负空间（block_multi 整面不透明方块除外），避免实心团块。
+- 禁止实心团块：主体必须有内部明暗/纹理/负空间，不能无细节地满涂成一个大色块。
+- 参考完整资源：不要只看单张示例图；方块类要同时理解顶/侧/底三面、模型与 blockstate 契约，实体要按标准 UV 图集/区域语义理解，多面/实体统一走结构化输出。
+
+# 通用像素细节（每个物体都适用）
+- 边框/描边：外轮廓用 1px 深色描边；部件接缝用暗色分隔；不做均匀黑框。
+- 材质高光：亮部高光沿形状走向，暗部在背光侧；金属/木/石/发光/软质等不同材质按语义推理使用不同高光强度与纹理提示，不给死例子。
+- 纹理：材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。
+- 明暗分层：每个部件至少 base/light/dark 三档色阶；用 1px 明暗过渡表现体积，避免平涂。
+- 方向/连接：整体方向一致，部件连接自然、不悬空。
+- 细长部件：所有细长部件（杆/柄/弦/茎/边框等）宽度控制在 1~2px，必要时保留内部明暗/细节，不能糊成 3px 以上实心色带。
+- 负空间（透明/镂空）：透明间隙和内部镂空是像素资产的一部分；部件之间与内部孔洞保留至少 1px 透明负空间（block_multi 整面不透明方块除外），避免实心团块。
+- 禁止实心团块：主体必须有内部结构（明暗/纹理/负空间），不能无细节地满涂成一个大色块；轮廓/部件间用描边或透明间隙区分。
+- 透明边距（物品/植物/实体图集）：非方块多面纹理（item/cross/entity_uv）与画布四边保留至少 1px 透明边距；block_multi 的 top/side/bottom 例外，必须是 16x16 全不透明且边缘连续。
+
+# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）
+- 先写 2~3 行设计分析（主方向/部件走向/连接点），放在 FORMAT 之前；face 块内禁止解释。
+- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；-1=透明，非负整数引用 PALETTE；非 -1 像素必须 >= 40；禁止全 -1 空图。
+# 文件契约摘要（输出文件 / model / blockstate；不贴大 JSON）
+- face sprite -> assets/mcmod/textures/item/q_9ab79ac56cd56756ff1a9876.png
+- model assets/mcmod/models/item/q_9ab79ac56cd56756ff1a9876.json (parent=item/generated)
+
+FORM=item
+FACES=1
+
+=== face: sprite ===
+FILE: assets/mcmod/textures/item/q_9ab79ac56cd56756ff1a9876.png
+W=16 H=16
+
+PALETTE
+# 占位说明：在此列出 LLM 自己生成的调色板，每行一个索引与 #RRGGBB
+# 例如：0: #AABBCC（仅格式示意，禁止复制参考贴图）
+
+INDEX GRID
+# 共 16 行，每行 16 个整数；-1 表示透明，非负整数引用上面 PALETTE 的索引。
+# 非 -1 像素数量要求：16x16 至少 40 个；禁止输出全 -1 的空图。
+# 以下是 16x16 真实生成样本的 INDEX GRID（蘑菇幼苗），仅用于展示“如何用索引填色/哪些位置用哪个颜色”；禁止复制它的形状与配色：
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1  2  0  0  2 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1  2  0  0  1  0  2 -1 -1 -1 -1 -1
+-1 -1 -1 -1  2  0  0  1  0  0  1  2 -1 -1 -1 -1
+-1 -1 -1 -1  2  0  1  0  0  1  0  2 -1 -1 -1 -1
+-1 -1 -1 -1  2  0  0  1  0  0  1  2 -1 -1 -1 -1
+-1 -1 -1 -1  3  3  4  3  3  3  4  3 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1  7  5  6  7 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1  5  6 -1 -1 -1 -1 -1 -1 -1
+# 注意：该样本的 PALETTE 有 0~7 共 8 个颜色索引；你的输出调色板也必须更丰富（至少 5~8 色：主色/亮部/暗部/强调色/描边色/中间色），并用这些索引填充细节。样本只是格式示范，不代表你只能用这几色。
+
+> 设计分析放在 FORMAT 之前；face 块内只允许 PALETTE + INDEX GRID 数据；ENTITY UV 语义是格式元数据，不写入 face 块。
