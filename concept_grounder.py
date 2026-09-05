@@ -692,14 +692,6 @@ def _generic_card(
     color_hint = " ".join(colors[:5]) if colors else "使用检索调色板"
     shape_hint = "；".join(anchors["shape"]) if anchors["shape"] else form
     pattern_hint = pattern_override or ("；".join(anchors["pattern"]) if anchors["pattern"] else "无明显图案")
-    # 弓类形状规范：用 idle bow（未拉开），不要用 bow_pulling_* 的满弦形态。
-    if "弓" in query or "bow" in query.lower():
-        shape_hint = "未拉开的弓：沿左下→右上的一条细弓弧（弓臂 1-2px），外侧一条 1px 灰色虚线弦；弓臂与弦之间有大量透明负空间；眼球嵌在弓弧中部（1-2px）。参考原版 idle bow.png，不要用 bow_pulling_*。"
-        pat_extra = "弓弦为虚线（1px 灰），弓臂木质/能量材质，中央透明；眼球做小区域视觉焦点。"
-        if pattern_override:
-            pattern_hint = pattern_override + "；" + pat_extra
-        else:
-            pattern_hint = pat_extra
     goals = []
     if form == "block_custom":
         keys = list(face_regions.keys())

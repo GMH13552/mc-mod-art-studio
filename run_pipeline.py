@@ -403,27 +403,6 @@ def _select_references_from_catalog(args, entries, query: str) -> list[str]:
             if n and n in line and n not in found:
                 found.append(n)
     chosen = found[:4]
-    # 弓类：强制用 idle bow 作为形状模板，避免选到 bow_pulling_* 的满弦形态。
-    if "弓" in query or "bow" in query.lower():
-        if "bow" not in chosen and "bow" in names:
-            chosen = ["bow"] + chosen
-        chosen = [n for n in chosen if not n.startswith("bow_pulling")] or ["bow"]
-        # 若替换后不足 4 个，补 top anchors 里未出现的相关项（保留原有选择）
-        if len(chosen) < 4:
-            for n in names:
-                if n in chosen:
-                    continue
-                if any(k in n for k in ("bow", "eye", "ender_eye", "spider_eye")):
-                    chosen.append(n)
-                if len(chosen) >= 4:
-                    break
-    # 眼球/眼睛类：强制至少带一个眼睛参考，作为眼球拓扑模板。
-    if "眼" in query or "eye" in query.lower():
-        eye_priority = ["ender_eye", "spider_eye", "fermented_spider_eye", "phantom_eyes"]
-        for en in eye_priority:
-            if en in names and en not in chosen:
-                chosen.append(en)
-                break
     if not chosen:
         print("[two-stage] no names parsed; fallback to top anchors")
     return chosen
@@ -663,18 +642,6 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     if topo:
         lines.append("# 已选参考拓扑模板（X=不透明 . =透明；按拓扑画，颜色按语义重新配色；不要复制像素）")
         lines.extend(topo)
-        lines.append("")
-    if "眼" in (pack.get("query") or "").lower() or "eye" in (pack.get("query") or "").lower():
-        lines.append("## 微缩眼球模板（可缩放；按此形态画，不要画成大色块）")
-        lines.append("推荐 3~4px：外圈浅色眼白 → 绿色虹膜 → 深色瞳孔 → 右上 1px 白高光。")
-        lines.append("例如 4x4 结构：")
-        lines.append("```")
-        lines.append("WWGG")
-        lines.append("WGGD")
-        lines.append("GWGD")
-        lines.append(".WGG ")
-        lines.append("W=眼白 G=虹膜(绿) D=瞳孔深色 (右上白高光 1px)")
-        lines.append("```")
         lines.append("")
     lines.append("# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）")
     lines.append("- 先写 2~3 行设计分析：总结你要借/组合的关键特征（形状/配色/花纹/明暗），放在 FORMAT 之前。")
