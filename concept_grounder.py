@@ -134,6 +134,10 @@ def slugify(query: str, retrieval: dict | None = None) -> str:
     ascii_part = re.sub(r"[^A-Za-z0-9]+", "_", query.lower()).strip("_")
     if ascii_part:
         return ascii_part
+    # 纯中文：用前 6 个字符的 unicode hex 生成稳定 slug
+    hex_slug = "".join("%x" % ord(ch) for ch in query.strip() if ch.strip())[:24]
+    if hex_slug:
+        return "q_" + hex_slug
     return "concept_card"
 
 

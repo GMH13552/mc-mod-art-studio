@@ -188,15 +188,18 @@ def _parse_index_grid(lines: list[str], start: int, w: int, h: int, palette: lis
             i += 1
             continue
         tokens = s.split()
-        # A leading "Index grid ..." label may appear on the same line as the
-        # first row in sloppy LLM answers; tolerate it only if the line also
-        # has exactly w tokens after removing common words.  Keeping this
-        # conservative avoids silently accepting malformed answers.
-        if len(tokens) != w:
-            raise ValueError(
-                "index row %d has %d columns; expected %d (line: %r)"
-                % (len(rows) + 1, len(tokens), w, s)
-            )
+        if len(tokens) > w:
+            extra = tokens[w:]
+            if all(t in ("-1", ".") for t in extra):
+                tokens = tokens[:w]
+            else:
+                raise ValueError(
+                    "index row %d has %d columns; expected %d (line: %r)"
+                    % (len(rows) + 1, len(tokens), w, s)
+                )
+        if len(tokens) < w:
+            # 容错：模型偶尔少写尾部透明列，自动补 -1 到 W 列
+            tokens = tokens + ["-1"] * (w - len(tokens))
         row: list[tuple[int, int, int, int]] = []
         for tok in tokens:
             if tok in ("-1", "."):
