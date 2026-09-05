@@ -38,3 +38,12 @@ python3 examples/novel-demo/demo_generate.py
 - answer sha256：`dd6328fd8bed4407d4717eebe9d8ee2e132159d42ea9b08914c7357bccb06d7f`
 - png sha256：`dafbdd8306890436544f887c54c3bbacd2c3e801d4a3c612ce62f3da49ab6950`
 
+## 索引相似度检测
+- 阈值：`0.8`
+- 最高相似参考：`skeleton.png`（score `0.710938`）
+- 因高相似度重试次数：`0`
+- 检查记录：`[{"attempt": 1, "similarity": 0.710938, "reference": "skeleton", "note": "recorded from committed sprite (post-hoc re-check)"}]`
+
+## 像素自检（check_pixel_asset.py）
+- 结论：`PASS`
+

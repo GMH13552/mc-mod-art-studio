@@ -38,3 +38,13 @@ python3 examples/novel-demo/demo_generate.py
 - answer sha256：`127c9ccb238bd8ddfa5b9e891999ddc41442405a78f07c8a5fc788028818e14d`
 - png sha256：`d5a07da084a16fe3a2bf47ddfa7445a36fd78eac911c66f2ed2759ceb13456d7`
 
+## 索引相似度检测
+- 阈值：`0.8`
+- 最高相似参考：`villager.png`（score `0.515625`）
+- 因高相似度重试次数：`0`
+- 检查记录：`[{"attempt": 1, "similarity": 0.515625, "reference": "villager", "note": "recorded from committed sprite (post-hoc re-check)"}]`
+
+## 像素自检（check_pixel_asset.py）
+- 结论：`FAIL`
+- 未通过项：`0` 个亮色像素（`bright_count=0` 会判 FAIL），详见 `check_pixel_asset.json`。
+

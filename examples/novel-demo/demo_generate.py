@@ -25,6 +25,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from PIL import Image
+
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -37,25 +39,135 @@ SMALL_INDEX = Path("/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_a
 DEMO_DIR = ROOT / "examples" / "novel-demo"
 LLM_CMD = "python3 llm_client.py --prompt-file {prompt_file}"
 MAX_ATTEMPTS = 3  # first try + up to 2 retries
+SIMILARITY_THRESHOLD = 0.80  # >= means "highly overlapping with an original index grid"
 
 
 def sha256_text(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()
 
 
+_FULL_LIBRARY: dict[str, dict] | None = None
+
+
+def _full_library_entries() -> dict[str, dict]:
+    """Return {asset_name_without_extension: entry} from full-index.json.
+
+    Full-index names are stored without ``.png`` (e.g. ``iron_sword``), while
+    the small library and prompt tables usually use ``iron_sword.png``.
+    """
+    global _FULL_LIBRARY
+    if _FULL_LIBRARY is None:
+        _FULL_LIBRARY = {}
+        if FULL_INDEX.exists():
+            data = json.loads(FULL_INDEX.read_text(encoding="utf-8"))
+            for e in data.get("textures", []):
+                if e.get("name"):
+                    _FULL_LIBRARY[e["name"]] = e
+    return _FULL_LIBRARY
+
+
 def load_md5_map() -> dict[str, str]:
-    """Return {asset_name: md5} from the full 1.18.2 library when available."""
-    md5: dict[str, str] = {}
-    if FULL_INDEX.exists():
-        data = json.loads(FULL_INDEX.read_text(encoding="utf-8"))
-        for e in data.get("textures", []):
-            name = e.get("name", "")
-            if name and e.get("md5"):
-                md5[name] = e["md5"]
-    return md5
+    """Return {asset_name_without_extension: md5} from the full library."""
+    return {
+        name: e["md5"]
+        for name, e in _full_library_entries().items()
+        if e.get("md5")
+    }
+
+
+def full_texture_path(name: str) -> Path | None:
+    """Resolve a prompt-table basename to the full library PNG on disk."""
+    base = name[:-4] if name.endswith(".png") else name
+    entry = _full_library_entries().get(base)
+    if not entry:
+        return None
+    path = FULL_INDEX.parent / entry["path"]
+    if not path.exists():
+        return None
+    return path
 
 
 MD5 = load_md5_map()
+
+
+def rgba_similarity(a: Image.Image, b: Image.Image) -> float:
+    """Exact-cell similarity between two same-size RGBA images.
+
+    Transparent cells must both be transparent; opaque cells must have the same
+    RGB.  This is the lightweight "index grid" check: an exact or near-exact
+    copy of a 16x16 original item texture will score very high, while a new
+    item that merely borrows a palette stays comfortably below the threshold.
+    """
+    if a.size != b.size:
+        raise ValueError("rgba_similarity requires same-size images (%s vs %s)" % (a.size, b.size))
+    total = a.width * a.height
+    if total == 0:
+        return 0.0
+    matches = 0
+    for pa, pb in zip(a.getdata(), b.getdata()):
+        if (pa[3] < 128) == (pb[3] < 128):
+            if pa[3] < 128:
+                matches += 1
+            elif pa[:3] == pb[:3]:
+                matches += 1
+    return matches / total
+
+
+def max_reference_similarity(img: Image.Image, reference_names: list[str]) -> tuple[float, str | None]:
+    """Return (best_score, best_reference) against full-library reference PNGs.
+
+    Same-size textures are compared directly.  For larger atlases/entity
+    textures, slide a same-size window over the reference and also try a
+    nearest-neighbour resize; the highest of these is used.  Missing/unreadable
+    references are skipped rather than failing generation.
+    """
+    best_score = 0.0
+    best_name: str | None = None
+    for name in reference_names:
+        path = full_texture_path(name)
+        if path is None:
+            continue
+        try:
+            with Image.open(path) as raw:
+                ref = raw.convert("RGBA")
+        except Exception:  # noqa: BLE001 - a missing/corrupt reference should not block generation
+            continue
+        score = 0.0
+        if ref.size == img.size:
+            score = rgba_similarity(img, ref)
+        else:
+            if ref.width >= img.width and ref.height >= img.height:
+                for y in range(ref.height - img.height + 1):
+                    for x in range(ref.width - img.width + 1):
+                        crop = ref.crop((x, y, x + img.width, y + img.height))
+                        score = max(score, rgba_similarity(img, crop))
+            scaled = ref.resize(img.size, Image.Resampling.NEAREST)
+            score = max(score, rgba_similarity(img, scaled))
+        if score > best_score:
+            best_score = score
+            best_name = name
+    return best_score, best_name
+
+
+def reference_names(asset: dict) -> list[str]:
+    """Collect unique full-library basenames (without .png) from a source table."""
+    names: list[str] = []
+    for rec in asset["source_table"]:
+        for token in rec["reference"].replace(" + ", " / ").replace("+", " / ").replace("/", " / ").split(" / "):
+            token = token.strip()
+            if not token:
+                continue
+            base = token.rsplit(".", 1)[0].split(" ")[-1].strip("()")
+            if base and base not in names:
+                names.append(base)
+    return names
+
+
+def ref_label(name: str | None) -> str:
+    """Human-readable reference name, adding .png when it was stripped."""
+    if not name:
+        return "无"
+    return name if name.endswith(".png") else name + ".png"
 
 
 def asset_ref(name: str) -> dict:
@@ -453,6 +565,9 @@ def run_asset(asset: dict) -> Path:
     raw_text = ""
     attempts = 0
     last_error = ""
+    refs = reference_names(asset)
+    sim_records: list[dict] = []
+    high_sim_retries = 0
     for attempt in range(1, MAX_ATTEMPTS + 1):
         attempts = attempt
         try:
@@ -466,6 +581,22 @@ def run_asset(asset: dict) -> Path:
             opaque = sum(1 for px in img.getdata() if px[3] >= t2t.ALPHA_THRESHOLD)
             if opaque == 0:
                 raise RuntimeError("parsed image has 0 opaque pixels")
+
+            # Lightweight original-index-grid similarity check.  Compare the
+            # freshly parsed grid (before item-margin postprocessing) against
+            # every full-library reference named in the concept card.
+            sim_score, sim_ref = max_reference_similarity(img, refs)
+            sim_records.append({
+                "attempt": attempt,
+                "similarity": round(sim_score, 4),
+                "reference": sim_ref,
+            })
+            if sim_score >= SIMILARITY_THRESHOLD:
+                high_sim_retries += 1
+                raise RuntimeError(
+                    "index grid similarity too high with `%s` (%.1f%% >= %.0f%%)"
+                    % (sim_ref or "unknown", sim_score * 100, SIMILARITY_THRESHOLD * 100))
+
             # Save raw answer before writing PNG.
             (out / "raw_answer.txt").write_text(raw_text, encoding="utf-8")
             if asset["form"] == "item":
@@ -482,6 +613,13 @@ def run_asset(asset: dict) -> Path:
                 "attempts": attempts,
                 "novelty": 0.75,
                 "postprocess": "item_margin_min_1" if asset["form"] == "item" else "none",
+                "index_similarity": {
+                    "threshold": SIMILARITY_THRESHOLD,
+                    "max_score": round(sim_score, 4),
+                    "max_reference": sim_ref,
+                    "high_similarity_retries": high_sim_retries,
+                    "checks": sim_records,
+                },
             }
             (out / "hashes.json").write_text(json.dumps(hashes, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             write_concept_json(asset, out / "concept.json")
@@ -568,6 +706,22 @@ def write_asset_readme(asset: dict, png_path: Path) -> Path:
     lines.append(f"- answer sha256：`{h['answer_sha256']}`")
     lines.append(f"- png sha256：`{h['png_sha256']}`")
     lines.append("")
+    sim = h.get("index_similarity", {})
+    lines.append("## 索引相似度检测")
+    lines.append(f"- 阈值：`{sim.get('threshold', SIMILARITY_THRESHOLD)}`")
+    lines.append(f"- 最高相似参考：`{ref_label(sim.get('max_reference'))}`（score `{sim.get('max_score', '?')}`）")
+    lines.append(f"- 因高相似度重试次数：`{sim.get('high_similarity_retries', 0)}`")
+    lines.append(f"- 检查记录：`{json.dumps(sim.get('checks', []), ensure_ascii=False)}`")
+    check_path = out / "check_pixel_asset.json"
+    if check_path.exists():
+        check = json.loads(check_path.read_text(encoding="utf-8"))
+        lines.append("")
+        lines.append("## 像素自检（check_pixel_asset.py）")
+        lines.append(f"- 结论：`{check.get('verdict', {}).get('overall', '?')}`")
+        if check.get("verdict", {}).get("overall") == "FAIL":
+            palette = check.get("metrics", {}).get("palette", {})
+            lines.append(f"- 未通过项：`{palette.get('bright_count')}` 个亮色像素（`bright_count=0` 会判 FAIL），详见 `check_pixel_asset.json`。")
+    lines.append("")
     out_readme = out / "README.md"
     out_readme.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return out_readme
@@ -591,12 +745,12 @@ def write_top_readme(results: list[tuple[dict, Path]]) -> Path:
     lines.append("## 防复制说明")
     lines.append("- 生成 prompt 不包含任何原版 compact 索引网格，仅含文字化源表、配色、部件结构和通用像素规则。")
     lines.append("- 每个部件参考卡包含三样：`borrowed_texture` / `borrowed_palette` / `borrowed_structure`；配色严格按部件拆分，不作为整图全局调色板。")
-    lines.append("- novelty 固定 0.75；若模型输出与原版索引网格高度重合，重试并记录（脚本最多重试 2 次）。")
+    lines.append("- novelty 固定 0.75；生成后会做轻量“原版索引网格相似度”检测（同尺寸逐格比对；大图用滑动窗口/最近邻缩放取最高分），超过阈值自动重试并记录在 `hashes.json` 的 `index_similarity`，脚本最多重试 2 次。")
     lines.append("- 原版参考 hash 在每个资产 README.md 中记录（full-index.json md5）。")
     lines.append("")
     lines.append("## 来源说明")
     lines.append("- 参考来源使用本机 `mc_asset_library_full/full-index.json`（1.18.2 Java 完整纹理库）的 md5。")
-    lines.append("- `leather.png`、`soul_fire_0/1.png`、完整 `skeleton.png`/`villager.png` 等不在 115 小库内，已从 full 库检索补充并记录来源。")
+    lines.append("- `skeleton.png`/`villager.png` 在 115 小库内；`leather.png`、`soul_fire_0/1.png`、`bone_block_side.png` 等不在 115 小库内，已从 full 库检索补充并记录来源。")
     lines.append("- 原版 PNG 不复制进本仓库，README/JSON 只记录路径与 md5。")
     lines.append("")
     lines.append("## 复现命令")
@@ -605,10 +759,28 @@ def write_top_readme(results: list[tuple[dict, Path]]) -> Path:
     lines.append("python3 examples/novel-demo/demo_generate.py")
     lines.append("```")
     lines.append("")
+    lines.append("## 像素自检（check_pixel_asset.py）")
+    lines.append("")
+    lines.append("| 资产 | 结论 | 说明 |")
+    lines.append("|---|---|---|")
+    for asset, png in results:
+        check_path = DEMO_DIR / asset["slug"] / "check_pixel_asset.json"
+        if not check_path.exists():
+            lines.append(f"| {asset['name']} | 未生成 | 尚未运行 `check_pixel_asset.py` |")
+            continue
+        check = json.loads(check_path.read_text(encoding="utf-8"))
+        verdict = check.get("verdict", {}).get("overall", "?")
+        palette = check.get("metrics", {}).get("palette", {})
+        note = ""
+        if verdict == "FAIL":
+            note = "调色板缺少亮色档（bright_count=%s）。" % palette.get("bright_count", "?")
+        lines.append(f"| {asset['name']} | `{verdict}` | {note} |")
+    lines.append("")
     lines.append("## 结果")
     for asset, png in results:
         h = json.loads((DEMO_DIR / asset["slug"] / "hashes.json").read_text(encoding="utf-8"))
-        lines.append(f"- {asset['name']}: {png} （prompt {h['prompt_sha256']}，answer {h['answer_sha256']}，attempts {h['attempts']}）")
+        sim = h.get("index_similarity", {})
+        lines.append(f"- {asset['name']}: `{png.relative_to(ROOT)}` （prompt {h['prompt_sha256']}，answer {h['answer_sha256']}，attempts {h['attempts']}，最高索引相似度 {sim.get('max_score', '?')}/{ref_label(sim.get('max_reference'))}）")
     lines.append("")
     top = DEMO_DIR / "README.md"
     top.write_text("\n".join(lines) + "\n", encoding="utf-8")

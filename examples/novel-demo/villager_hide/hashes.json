@@ -4,5 +4,19 @@
   "png_sha256": "d5a07da084a16fe3a2bf47ddfa7445a36fd78eac911c66f2ed2759ceb13456d7",
   "attempts": 1,
   "novelty": 0.75,
-  "postprocess": "item_margin_min_1"
+  "postprocess": "item_margin_min_1",
+  "index_similarity": {
+    "threshold": 0.8,
+    "max_score": 0.515625,
+    "max_reference": "villager",
+    "high_similarity_retries": 0,
+    "checks": [
+      {
+        "attempt": 1,
+        "similarity": 0.515625,
+        "reference": "villager",
+        "note": "recorded from committed sprite (post-hoc re-check)"
+      }
+    ]
+  }
 }

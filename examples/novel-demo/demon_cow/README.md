@@ -38,3 +38,12 @@ python3 examples/novel-demo/demo_generate.py
 - answer sha256：`79bf3f68c81b057ba8748499e4286965a13f2b22c14a7f63030f2dfbd6efc685`
 - png sha256：`cebfc6cdf51e043aba4821cf3f7b9e91097a834785ff327458ea1fc6159d184f`
 
+## 索引相似度检测
+- 阈值：`0.8`
+- 最高相似参考：`soul_fire_0.png`（score `0.382812`）
+- 因高相似度重试次数：`0`
+- 检查记录：`[{"attempt": 2, "similarity": 0.382812, "reference": "soul_fire_0", "note": "recorded from committed sprite (post-hoc re-check)"}]`
+
+## 像素自检（check_pixel_asset.py）
+- 结论：`PASS`
+

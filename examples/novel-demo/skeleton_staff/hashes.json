@@ -4,5 +4,19 @@
   "png_sha256": "dafbdd8306890436544f887c54c3bbacd2c3e801d4a3c612ce62f3da49ab6950",
   "attempts": 1,
   "novelty": 0.75,
-  "postprocess": "item_margin_min_1"
+  "postprocess": "item_margin_min_1",
+  "index_similarity": {
+    "threshold": 0.8,
+    "max_score": 0.710938,
+    "max_reference": "skeleton",
+    "high_similarity_retries": 0,
+    "checks": [
+      {
+        "attempt": 1,
+        "similarity": 0.710938,
+        "reference": "skeleton",
+        "note": "recorded from committed sprite (post-hoc re-check)"
+      }
+    ]
+  }
 }

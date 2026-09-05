@@ -26,7 +26,7 @@ python3 run_pipeline.py \
 | 项 | 默认 `n1_with_ref` | `--no-original-ref` `n1_no_ref` |
 | --- | --- | --- |
 | prompt 字符数 | 8651 | 3848 |
-| prompt 行数 | 274 | 86 |
+| prompt 行数 | 273 | 85 |
 | 原版参考块 | 存在 | **整个块被移除** |
 | 参考语法 | 3 个锚点各一段：iron_sword / stone_sword / wooden_sword | 无 |
 | compact 片段 | 附 2 个最相关片段（iron_sword、stone_sword） | 无 |
@@ -63,7 +63,7 @@ python3 run_pipeline.py \
 
 - `n1_with_ref` palette（7 色）：
   `#444444 #D8D8D8 #181818 #BEBEBE #FFFFFF #6B6B6B #896727`
-  - 与 `iron_sword.png` 调色板重合 6/7，保留了棕色点缀 `#896727`。
+  - 与 `iron_sword.png` 调色板重合 7/7，保留了棕色点缀 `#896727`。
 - `n1_no_ref` palette（7 色）：
   `#444444 #181818 #D8D8D8 #FFFFFF #BEBEBE #2E2E2E #7A7A7A`
   - 与 `iron_sword.png` 调色板重合 5/7，缺少 `#896727`，新增 `#2E2E2E` / `#7A7A7A`。
