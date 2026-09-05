@@ -71,7 +71,7 @@
       "form": "entity_uv",
       "run_exit": 0,
       "check_tool": "check_entity_uv",
-      "check_status": "PASS",
+      "check_status": "FAIL",
       "size": "64x32",
       "opaque_pixels": 920,
       "regions": {
@@ -79,8 +79,10 @@
         "body": 300,
         "legs": 16
       },
-      "failed_checks": [],
-      "note": "初跑 legs 区域为 0；重试循环第 1 次产生 legs 非空并通过。"
+      "failed_checks": [
+        "canvas_margin: left=0 right=0 (margins={'left': 0, 'top': 1, 'right': 0, 'bottom': 1}; atlas 左右至少 1px；顶/底为说明项)"
+      ],
+      "note": "初跑 legs 区域为 0；重试循环第 1 次产生 legs 非空，但 canvas_margin 左右触边 (left=0 right=0) 导致 FAIL。"
     },
     {
       "id": "t03",
