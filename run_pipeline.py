@@ -194,6 +194,50 @@ def _standardize_raw(raw_text: str, pack: dict) -> str:
     return "\n\n".join(out)
 
 
+def _selected_shape_mask(pack: dict):
+    """从选中的参考锚点里（优先 _selected_anchor_objs，否则 pack.anchors）取第一个有剪影的 X/. mask。"""
+    from PIL import Image as _Im
+    anchors = pack.get("_selected_anchor_objs") or pack.get("anchors", [])
+    names = pack.get("selected_refs") or [a.get("name", "") for a in anchors]
+    for name in names:
+        a = next((x for x in anchors if x.get("name") == name), None)
+        if not a:
+            continue
+        sil = _extract_silhouette(a.get("compact_text", ""))
+        if not sil:
+            continue
+        mask = []
+        for line in sil[:16]:
+            row = [1 if c == "X" else 0 for c in line[:16]]
+            while len(row) < 16:
+                row.append(0)
+            mask.append(row)
+        while len(mask) < 16:
+            mask.append([0] * 16)
+        return mask
+    return None
+
+
+def _score_sprite_vs_shape(sprite_path: Path, pack: dict) -> float:
+    """生成 sprite 的不透明 mask 与选中参考剪影 mask 的 IoU。"""
+    from PIL import Image as _Im
+    ref_mask = _selected_shape_mask(pack)
+    if ref_mask is None:
+        return 0.0
+    im = _Im.open(sprite_path).convert("RGBA").resize((16, 16), _Im.NEAREST)
+    px = im.load()
+    inter = union = 0
+    for y in range(16):
+        for x in range(16):
+            gen = 1 if px[x, y][3] >= t2t.ALPHA_THRESHOLD else 0
+            ref = ref_mask[y][x]
+            if gen and ref:
+                inter += 1
+            if gen or ref:
+                union += 1
+    return inter / union if union else 0.0
+
+
 def _render_raw_faces(raw_text: str, out_dir: Path, pack: dict) -> list[Path]:
     """把 raw_answer 转为 PNG。支持单 face 与多 face，返回生成的文件路径列表。"""
     blocks = pa.split_face_blocks(raw_text)
@@ -778,6 +822,7 @@ def run(args: argparse.Namespace) -> int:
             print("      chosen: %s" % "、".join(chosen) if chosen else "      chosen: (none, fallback top)")
             selected_anchors = _select_anchors_by_name(pack, entries, index_base, chosen)
             pack["selected_refs"] = [a.get("name", "?") for a in selected_anchors]
+            pack["_selected_anchor_objs"] = selected_anchors
             _refresh_concept_parts_from_selected(pack, selected_anchors)
             # 生成阶段不再塞全目录，只把选中参考的 compact 细节注入
             pack["catalog"] = None
@@ -808,10 +853,12 @@ def run(args: argparse.Namespace) -> int:
             print("\n" + pack["prompt"] + "\n")
             return 0
 
-        # 5-6. raw generation + text_to_texture，允许自动重试（模型偶发全 -1 / 缺头）
-        max_attempts = max(1, args.retries)
-        raw_text: str | None = None
-        saved: list[Path] = []
+        # 5-6. raw generation + text_to_texture，允许 best-of-N：生成多张，按与选中参考剪影的 IoU 留最像的一张。
+        max_attempts = max(1, args.retries, args.best_of)
+        best_raw: str | None = None
+        best_saved: list[Path] = []
+        best_score: float = -1.0
+        successes = 0
         for attempt in range(1, max_attempts + 1):
             try:
                 raw_text = _generate_raw_text(args, pack["prompt"], auto_images=auto_images)
@@ -822,14 +869,29 @@ def run(args: argparse.Namespace) -> int:
                 if not saved:
                     raise RuntimeError("no PNG generated from raw_answer")
                 _assert_nonempty_pngs(saved, args.query)
-                break
+                successes += 1
+                score = _score_sprite_vs_shape(saved[0], pack) if args.best_of > 1 else 0.0
+                print("      -> shape IoU=%.3f" % score)
+                if score > best_score:
+                    best_score = score
+                    best_raw = raw_text
+                    for p in saved:
+                        shutil.copy2(p, out_dir / ("attempt_%02d.png" % attempt))
+                    best_saved = [out_dir / ("attempt_%02d.png" % attempt)]
+                if args.best_of <= 1 or successes >= args.best_of:
+                    break
             except Exception as _e:
                 if attempt < max_attempts:
                     print("[retry] attempt %d/%d failed: %s" % (attempt, max_attempts, _e))
                     continue
                 raise
-        if raw_text is None or not saved:
+        if best_raw is None or not best_saved:
             raise RuntimeError("failed to generate a non-empty PNG")
+        raw_text = best_raw
+        saved = best_saved
+        # 把最佳尝试的 sprite 拷回 sprite.png（best_of>1 时）。
+        shutil.copy2(best_saved[0], out_dir / "sprite.png")
+        out_dir.joinpath("raw_answer.txt").write_text(raw_text, encoding="utf-8")
 
         # 7. package_asset (optional)
         if args.package:
@@ -879,6 +941,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="候选资源池大小（默认 12）；模型从池中自选 2-4 个参考")
     parser.add_argument("--retries", type=int, default=2,
                         help="生成空图/解析失败时自动重试次数（默认 2）")
+    parser.add_argument("--best-of", type=int, default=1,
+                        help="生成 N 张并按“与选中参考剪影的形状 IoU”选最像的一张（默认 1，即首个成功即停）")
     parser.add_argument("--two-stage", action="store_true", default=True,
                         help="两段式：先从全资源名选参考，再把选中参考的 compact 细节注入生成 prompt（默认开启）")
     parser.add_argument("--no-two-stage", dest="two_stage", action="store_false",
