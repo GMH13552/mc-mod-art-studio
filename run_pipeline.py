@@ -550,6 +550,28 @@ def _eye_silhouette_from_pack(pack: dict) -> list[str]:
     return []
 
 
+def _selected_topology_lines(pack: dict) -> list[str]:
+    """通用：为选中的参考（若无则用 top 锚点前几个）渲染 X/. 拓扑模板。"""
+    names = pack.get("selected_refs") or [a.get("name", "") for a in pack.get("anchors", [])[:2]]
+    lines: list[str] = []
+    for name in names:
+        anchor = None
+        for a in pack.get("anchors", []):
+            if a.get("name") == name:
+                anchor = a
+                break
+        if not anchor:
+            continue
+        sil = _extract_silhouette(anchor.get("compact_text", ""))
+        if not sil:
+            continue
+        lines.append("## %s 拓扑模板（X=不透明 . =透明；按此拓扑画，颜色按语义重新配色，不要复制像素）" % name)
+        lines.append("```")
+        lines.extend(sil)
+        lines.append("```")
+    return lines
+
+
 def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     """生成紧凑 prompt：设计要点 + PALETTE/INDEX GRID（-1 0 1 索引模式）。
 
@@ -637,22 +659,11 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     for rule in getattr(cg, "GENERIC_PIXEL_DETAIL_RULES", []) or []:
         lines.append("- %s" % rule)
     lines.append("")
-    if "弓" in (pack.get("query") or "").lower() or "bow" in (pack.get("query") or "").lower():
-        sil = _bow_silhouette_from_pack(pack)
-        if sil:
-            lines.append("## 弓形拓扑参考（X=不透明 . =透明；按此拓扑画，颜色按上面配色/配饰重上；不要画成直线/方块/满弦）")
-            lines.append("```")
-            lines.extend(sil)
-            lines.append("```")
-            lines.append("")
-    if "眼" in (pack.get("query") or "").lower() or "eye" in (pack.get("query") or "").lower():
-        esil = _eye_silhouette_from_pack(pack)
-        if esil:
-            lines.append("## 眼球拓扑参考（X=不透明 . =透明；这是眼睛的剪影，画出眼白+虹膜+瞳孔+高光；不要画成纯色方块）")
-            lines.append("```")
-            lines.extend(esil)
-            lines.append("```")
-            lines.append("")
+    topo = _selected_topology_lines(pack)
+    if topo:
+        lines.append("# 已选参考拓扑模板（X=不透明 . =透明；按拓扑画，颜色按语义重新配色；不要复制像素）")
+        lines.extend(topo)
+        lines.append("")
     lines.append("# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）")
     lines.append("- 先写 2~3 行设计分析：总结你要借/组合的关键特征（形状/配色/花纹/明暗），放在 FORMAT 之前。")
     lines.append("- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；设计分析中提到的每个关键特征必须在网格中可见（例如“眼球”要有瞳孔/虹膜/高光），非 -1 像素 >= 40；禁止全 -1 空图。")
