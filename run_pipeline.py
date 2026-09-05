@@ -8,9 +8,9 @@ run_pipeline.py — 一键整合 Minecraft 自定义资源生成流水线。
 
 用法示例：
     # 用已有 raw_answer 直接出 PNG（并可选打包）
-    python3 run_pipeline.py --query "异形水晶法杖" --form item \\
-        --raw examples/alien_crystal_wand/raw_answer.txt \\
-        --out examples/alien_crystal_wand
+    python3 run_pipeline.py --query "骷髅法杖" --form item \\
+        --raw examples/skeleton_staff/raw_answer.txt \\
+        --out out/skeleton_staff
 
     # 调用外部 LLM 命令生成 raw_answer
     python3 run_pipeline.py --query "异形水晶法杖" --form item --top 5 \\
@@ -227,7 +227,7 @@ def _write_audit_evidence(pack: dict, raw_text: str, out_dir: Path, subagent_id:
     prompt_hash = _sha256_bytes(prompt_path.read_bytes())
     answer_hash = _sha256_bytes(raw_path.read_bytes())
     (out_dir / "raw_answer.sha256").write_text(
-        "%s  %s\n" % (answer_hash, "examples/alien_crystal_wand/raw_answer.txt"),
+        "%s  %s\n" % (answer_hash, raw_path),
         encoding="utf-8",
     )
     if subagent_id:

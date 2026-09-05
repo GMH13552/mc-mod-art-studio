@@ -1,0 +1,5 @@
+programmatic-fallback
+
+说明：本示例的最终 PNG 采用“原版 cow.png 64x32 实体轮廓/区域 + 恶魔牛新配色”的程序化重着色。
+纯文本 LLM 的像素文本输出不稳定，因此没有可用的最终 raw_answer 像素文本；
+此处保留“programmatic-fallback”作为 hashes.json 中的 answer_sha256 标记。

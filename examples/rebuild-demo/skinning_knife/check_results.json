@@ -1,8 +1,0 @@
-[
-  {
-    "cmd": "/home/gmh/miniconda3/bin/python3 check_pixel_asset.py /tmp/mc-mod-art-studio-core/examples/rebuild-demo/skinning_knife/sprite.png",
-    "returncode": 0,
-    "stdout": "[check_pixel_asset.py] /tmp/mc-mod-art-studio-core/examples/rebuild-demo/skinning_knife/sprite.png (16x16) -> PASS\n  opaque=68/20 bbox=[2, 2, 14, 15] bbox_area=156 opaque_ratio=0.4359 margins={'left': 2, 'top': 2, 'right': 2, 'bottom': 1}\n  border: boundary=32 dark=31 ratio=0.9688 ok=True\n  palette: dark=41 mid=10 bright=17 dominant=[24, 24, 24, 255] ok=True\n  components=1 sizes=[68] separation=False thin=True ratio=0.4359\n  [PASS] non_empty                opaque_pixels=68 threshold=20\n  [PASS] size                     size=16x16\n  [PASS] bbox                     bbox=[2, 2, 14, 15] margins={'left': 2, 'top': 2, 'right': 2, 'bottom': 1}\n  [PASS] border                   boundary_pixels=32 dark_boundary=31 ratio=0.9688\n  [PASS] palette                  dark=41 mid=10 bright=17 dominant=[24, 24, 24, 255] count=29\n  [INFO] thin_part                bbox=[2, 2, 14, 15] opaque_ratio=0.4359 thin=True (min_bbox_px=10)\n  [INFO] part_separation          components=1 sizes=[68]\n",
-    "stderr": ""
-  }
-]

@@ -8,18 +8,18 @@
 
 ```bash
 # 直接查看终端摘要（item 16x16）
-python3 check_pixel_asset.py examples/reset-demo/bow.png
+python3 check_pixel_asset.py examples/skeleton_staff/sprite.png
 
 # 输出 JSON evidence
-python3 check_pixel_asset.py examples/reset-demo/bow.png \
-    --out examples/reset-demo/bow-check.json
+python3 check_pixel_asset.py examples/skeleton_staff/sprite.png \
+    --out examples/skeleton_staff/pixel-check.json
 
 # 检查实体 UV（64x32）
-python3 check_pixel_asset.py examples/reset-demo/pig.png \
-    --expected-size 64x32 --out examples/reset-demo/pig-check.json
+python3 check_entity_uv.py examples/demon_cow/sprite.png --entity cow
 
 # 合成图自测
 python3 check_pixel_asset.py --self-test
+python3 check_entity_uv.py --self-test
 ```
 
 ## 检查项
@@ -52,9 +52,9 @@ python3 check_pixel_asset.py --self-test
 ## 可复现命令
 
 ```bash
-# 冒烟检查 reset-demo 图片
-python3 check_pixel_asset.py examples/reset-demo/bow.png
-python3 check_pixel_asset.py examples/reset-demo/creeper.png --expected-size 64x32
+# 冒烟检查样例图片
+python3 check_pixel_asset.py examples/skeleton_staff/sprite.png
+python3 check_entity_uv.py examples/demon_cow/sprite.png --entity cow
 
 # 单元测试
 python3 -m unittest discover -s tests -v

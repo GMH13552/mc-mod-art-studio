@@ -82,7 +82,7 @@ user intent
 5. **Post-process 最小化**
    允许 seam-stitch / 边距收缩这类结构性小修，但**禁止用写死单个物品的特化补丁**。
 6. **Human check 前置**
-   `examples/rebuild-demo/` 与 `examples/reset-demo/` 直接放 PNG，用户先看图；数字只是辅助。
+   `examples/skeleton_staff/` 与 `examples/demon_cow/` 直接放 PNG，用户先看图；数字只是辅助。
 
 ## 反模式
 

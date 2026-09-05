@@ -1,8 +1,0 @@
-[
-  {
-    "cmd": "/home/gmh/miniconda3/bin/python3 check_pixel_asset.py /tmp/mc-mod-art-studio-core/examples/rebuild-demo/villager_hide/sprite.png",
-    "returncode": 0,
-    "stdout": "[check_pixel_asset.py] /tmp/mc-mod-art-studio-core/examples/rebuild-demo/villager_hide/sprite.png (16x16) -> PASS\n  opaque=107/20 bbox=[3, 1, 13, 15] bbox_area=140 opaque_ratio=0.7643 margins={'left': 3, 'top': 1, 'right': 3, 'bottom': 1}\n  border: boundary=48 dark=35 ratio=0.7292 ok=True\n  palette: dark=70 mid=30 bright=7 dominant=[84, 39, 22, 255] ok=True\n  components=1 sizes=[107] separation=False thin=False ratio=0.7643\n  [PASS] non_empty                opaque_pixels=107 threshold=20\n  [PASS] size                     size=16x16\n  [PASS] bbox                     bbox=[3, 1, 13, 15] margins={'left': 3, 'top': 1, 'right': 3, 'bottom': 1}\n  [PASS] border                   boundary_pixels=48 dark_boundary=35 ratio=0.7292\n  [PASS] palette                  dark=70 mid=30 bright=7 dominant=[84, 39, 22, 255] count=55\n  [INFO] thin_part                bbox=[3, 1, 13, 15] opaque_ratio=0.7643 thin=False (min_bbox_px=10)\n  [INFO] part_separation          components=1 sizes=[107]\n",
-    "stderr": ""
-  }
-]

@@ -23,9 +23,9 @@ check_pixel_asset.py — 通用 16x16 像素资产检查器。
 
 用法
 ----
-    python3 check_pixel_asset.py examples/alien_crystal_wand/sprite.png
-    python3 check_pixel_asset.py examples/alien_crystal_wand/sprite.png --out evidence.json
-    python3 check_pixel_asset.py examples/mushroom_sprout/cross.png --out evidence.md \
+    python3 check_pixel_asset.py examples/skeleton_staff/sprite.png
+    python3 check_pixel_asset.py examples/skeleton_staff/sprite.png --out evidence.json
+    python3 check_pixel_asset.py examples/skeleton_staff/sprite.png --out evidence.md \
         --require-separation
     python3 check_pixel_asset.py --self-test
 

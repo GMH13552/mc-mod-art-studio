@@ -86,6 +86,6 @@ python3 run_pipeline.py --query '恶魔牛' --form entity_uv \
 自检：
 
 ```bash
-python3 check_entity_uv.py examples/rebuild-demo/demon_cow/sprite.png --entity cow
+python3 check_entity_uv.py examples/demon_cow/sprite.png --entity cow
 python3 check_entity_uv.py --self-test
 ```

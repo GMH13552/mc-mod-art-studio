@@ -1,6 +1,6 @@
 [
   {
-    "cmd": "/home/gmh/miniconda3/bin/python3 check_entity_uv.py /tmp/mc-mod-art-studio-core/examples/rebuild-demo/demon_cow/sprite.png --entity cow",
+    "cmd": "python3 check_entity_uv.py examples/demon_cow/sprite.png --entity cow",
     "returncode": 0,
     "stdout": "PASS: 符合标准实体 UV 布局 (entity=cow, size=64x32, opaque=1616, regions=7, margins={'left': 1, 'top': 0, 'right': 1, 'bottom': 0} margins_lt_1=top/bottom)\n  [PASS] 尺寸: cow 原版纹理是 64x32 实际=64x32，期望=64x32\n  [PASS] 非空: opaque_pixels=1616\n  [PASS] 画布边距: margins={'left': 1, 'top': 0, 'right': 1, 'bottom': 0} (atlas 左右至少 1px；顶/底为说明项)；top/bottom 边距不足 1px（说明：atlas 不强制，仅在证据中标注）\n  [PASS] 区域 head: 期望 0,0 -> 32,16，opaque=394\n  [PASS] 区域 horns: 期望 0,0 -> 32,6，opaque=118\n  [PASS] 区域 ears: 期望 0,0 -> 32,4，opaque=78\n  [PASS] 区域 muzzle: 期望 0,8 -> 16,16，opaque=90\n  [PASS] 区域 body: 期望 16,16 -> 64,32，opaque=704\n  [PASS] 区域 legs: 期望 0,16 -> 16,32，opaque=212\n  [PASS] 区域 tail: 期望 48,16 -> 64,32，opaque=224\n  region head: 0,0 -> 32,16 opaque=394\n  region horns: 0,0 -> 32,6 opaque=118\n  region ears: 0,0 -> 32,4 opaque=78\n  region muzzle: 0,8 -> 16,16 opaque=90\n  region body: 16,16 -> 64,32 opaque=704\n  region legs: 0,16 -> 16,32 opaque=212\n  region tail: 48,16 -> 64,32 opaque=224\n  margins: {'left': 1, 'top': 0, 'right': 1, 'bottom': 0}\n",
     "stderr": ""

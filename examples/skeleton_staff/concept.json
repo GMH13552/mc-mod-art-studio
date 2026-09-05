@@ -1,0 +1,297 @@
+{
+  "item_name": "骷髅法杖 (Skeleton Staff)",
+  "description": "一根顶端镶着骷髅头的新法杖/权杖：上方是骨白色、带可辨眼窝与下颌暗示的骷髅头，下方是木质杖身/握柄；杖身可以斜、可以粗一点，但必须保留手柄感（木纹、粗细、握持段）。",
+  "parts": [
+    "骷髅头 skull",
+    "眼窝/裂纹 eye sockets",
+    "连接插座 socket",
+    "杖身/握柄 handle"
+  ],
+  "face_regions": {
+    "sprite": "单张 16x16 透明背景物品贴图；主题：无明显图案；木板条纹"
+  },
+  "visual_goals": [
+    "sprite 使用 #BCBCBC #ADABAD #979797 #A5A5A5 #8E8D8E 配色，绘制无明显图案；木板条纹；轮廓/剪影保持 实体UV/生物剪影；骨形；长条/木棍；方块/满铺；剑。"
+  ],
+  "minecraft_reference": "skeleton.png；bone_block_side.png；bone_block_top.png；stick.png；oak_planks.png；iron_sword.png；carrot_on_a_stick.png",
+  "avoid": [
+    "不要画成完整骷髅或骷髅骑士；不要画成普通木棍：顶部必须有明显可辨骷髅头。",
+    "不要画成光滑细直线：杖身要像有手柄的杖，而不是普通棍子。",
+    "不要复制 skeleton.png / bone_block_side.png / stick.png 的逐像素图案。",
+    "保持 16x16 透明背景、四边至少 1px 透明边距。"
+  ],
+  "palette_scheme": {
+    "base": "#E9E6D4",
+    "light": "#FFFFFD",
+    "dark": "#CBC6A5",
+    "accent": "#896727",
+    "outline": "#2E2E2E",
+    "border_note": "骷髅外轮廓 1px 深灰 #2E2E2E；杖身用深褐描边；头与杖连接处用暗色插座分隔。",
+    "saturation_note": "骨白保持低饱和、偏暖；木柄为暗棕；避免荧光白/荧光青。"
+  },
+  "shape_pattern": {
+    "silhouette": "16x16 透明 item：竖直法杖（可略带 1-2px 斜度），顶部约 5-8px 为骷髅头（有眼窝/下颌暗示），中间为 1-3px 宽木杖，底部为握柄/尾端；整体居中，四边至少 1px 透明。",
+    "parts": [
+      "骷髅头 skull",
+      "眼窝/裂纹 eye sockets",
+      "连接插座 socket",
+      "杖身/握柄 handle"
+    ],
+    "border": "骷髅外轮廓 1px 深灰 #2E2E2E；杖身用深褐描边；头与杖连接处用暗色插座分隔。",
+    "shading": "左上偏亮、右下偏暗；内部用 1px 色阶表现体积；实体 UV 按各区域明暗独立处理。",
+    "detail_pattern": "沿部件贴合的材质纹理（皮革/金属/骨/木纹/魂火）；禁止脱离形状独立存在。",
+    "shape_lock_optional": true,
+    "part_pattern_flow": [
+      {
+        "part": "骷髅头 skull",
+        "shape": "圆/方头骨，眼窝大而深、下颌骨可辨",
+        "pattern": "骨白底 + 深色眼窝 + 鼻洞/裂纹",
+        "flow": "眼窝位于头骨中上部，左右对称但允许 1px 不对称；裂纹沿骨面走，不画成全身骨架。"
+      },
+      {
+        "part": "眼窝/裂纹 eye sockets",
+        "shape": "两个深色窝 + 1px 裂纹",
+        "pattern": "深灰/黑灰",
+        "flow": "眼窝用深灰黑填充，裂纹从眼窝/颧骨向外发散。"
+      },
+      {
+        "part": "连接插座 socket",
+        "shape": "骷髅头下的 1-3px 暗色小口/环",
+        "pattern": "深灰/深褐",
+        "flow": "插座包住杖顶端，与头骨底边对齐。"
+      },
+      {
+        "part": "杖身/握柄 handle",
+        "shape": "2-3px 宽木杖，底部可加粗手柄段；允许直线/微弯",
+        "pattern": "木纹纵向 + 少量磨损；手柄段可用横向缠绕/加粗",
+        "flow": "木纹沿杖身纵向；底端为握柄加粗段，与主轴对齐；有手柄味。"
+      }
+    ],
+    "integration_note": "先用形状确定结构，再让纹样贴合每个部件的走向/边缘/明暗面；纹样不得脱离形状独立存在。",
+    "silhouette_candidates": [
+      {
+        "part": "骷髅头 skull",
+        "candidates": [
+          {
+            "token": "skeleton-skull",
+            "source": "skeleton.png",
+            "kind": "shape_token",
+            "note": "来源：skeleton.png 头部区域骨白头骨轮廓"
+          },
+          {
+            "token": "bone-block-side-skull",
+            "source": "bone_block_side.png",
+            "kind": "shape_token",
+            "note": "来源：bone_block_side.png 头部区域骨白头骨轮廓"
+          },
+          {
+            "token": "bone-block-top-skull",
+            "source": "bone_block_top.png",
+            "kind": "shape_token",
+            "note": "来源：bone_block_top.png 头部区域骨白头骨轮廓"
+          },
+          {
+            "token": "compact:skeleton.png",
+            "source": "skeleton.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXXXXXXXXXXXX..............\nXXXXXXX......X..............\nXXXXXXX......X..............\nXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXX......\n..................X..XX..X..\n......XXXXXX....XXXXXXXXXXXX\n...........XXXXXX........XX.\n...........X.XX.X........XX.\n.........................XX.\n......XXXXXXXXXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；skeleton.png 区域/整体轮廓",
+            "region": null
+          }
+        ]
+      },
+      {
+        "part": "眼窝/裂纹 eye sockets",
+        "candidates": [
+          {
+            "token": "skeleton-shape",
+            "source": "skeleton.png",
+            "kind": "shape_token",
+            "note": "来源：skeleton.png 整体/部件轮廓"
+          },
+          {
+            "token": "bone-block-side-shape",
+            "source": "bone_block_side.png",
+            "kind": "shape_token",
+            "note": "来源：bone_block_side.png 整体/部件轮廓"
+          },
+          {
+            "token": "bone-block-top-shape",
+            "source": "bone_block_top.png",
+            "kind": "shape_token",
+            "note": "来源：bone_block_top.png 整体/部件轮廓"
+          },
+          {
+            "token": "compact:skeleton.png",
+            "source": "skeleton.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXXXXXXXXXXXX..............\nXXXXXXX......X..............\nXXXXXXX......X..............\nXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXX......\n..................X..XX..X..\n......XXXXXX....XXXXXXXXXXXX\n...........XXXXXX........XX.\n...........X.XX.X........XX.\n.........................XX.\n......XXXXXXXXXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；skeleton.png 区域/整体轮廓",
+            "region": null
+          }
+        ]
+      },
+      {
+        "part": "连接插座 socket",
+        "candidates": [
+          {
+            "token": "skeleton-shape",
+            "source": "skeleton.png",
+            "kind": "shape_token",
+            "note": "来源：skeleton.png 整体/部件轮廓"
+          },
+          {
+            "token": "bone-block-side-shape",
+            "source": "bone_block_side.png",
+            "kind": "shape_token",
+            "note": "来源：bone_block_side.png 整体/部件轮廓"
+          },
+          {
+            "token": "bone-block-top-shape",
+            "source": "bone_block_top.png",
+            "kind": "shape_token",
+            "note": "来源：bone_block_top.png 整体/部件轮廓"
+          },
+          {
+            "token": "compact:skeleton.png",
+            "source": "skeleton.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXXXXXXXXXXXX..............\nXXXXXXX......X..............\nXXXXXXX......X..............\nXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXXXX......\n..................X..XX..X..\n......XXXXXX....XXXXXXXXXXXX\n...........XXXXXX........XX.\n...........X.XX.X........XX.\n.........................XX.\n......XXXXXXXXXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；skeleton.png 区域/整体轮廓",
+            "region": null
+          }
+        ]
+      },
+      {
+        "part": "杖身/握柄 handle",
+        "candidates": [
+          {
+            "token": "stick-body",
+            "source": "stick.png",
+            "kind": "shape_token",
+            "note": "来源：stick.png 身体/躯干区域轮廓"
+          },
+          {
+            "token": "carrot-on-a-stick-body",
+            "source": "carrot_on_a_stick.png",
+            "kind": "shape_token",
+            "note": "来源：carrot_on_a_stick.png 身体/躯干区域轮廓"
+          },
+          {
+            "token": "iron-sword-body",
+            "source": "iron_sword.png",
+            "kind": "shape_token",
+            "note": "来源：iron_sword.png 身体/躯干区域轮廓"
+          },
+          {
+            "token": "compact:stick.png",
+            "source": "stick.png",
+            "kind": "compact_fragment",
+            "fragment": "...........XX\n..........XXX\n.........XXX.\n........XXX..\n.......XXX...\n......XXX....\n....XXX......\n...XXX.......\n..XXX........\n.XXX.........\nXXX..........\nXX...........",
+            "note": "只含 X/. 剪影；stick.png 区域/整体轮廓",
+            "region": null
+          }
+        ]
+      }
+    ]
+  },
+  "reference_nodes": [
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/skeleton/skeleton.png",
+      "role": "shape",
+      "reason": "形状参考：实体UV/生物剪影；图案参考：无明显图案；配色参考：#BCBCBC #ADABAD #979797"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/bone_block_side.png",
+      "role": "shape",
+      "reason": "形状参考：骨形；图案参考：无明显图案；配色参考：#E9E6D4 #E6E2D2 #DEDAC5"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/bone_block_top.png",
+      "role": "shape",
+      "reason": "形状参考：骨形；图案参考：无明显图案；配色参考：#C3BFA1 #C9C5A7 #E3E0CA"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/stick.png",
+      "role": "shape",
+      "reason": "形状参考：长条/木棍；图案参考：无明显图案；配色参考：#281E0B #493615 #896727"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/oak_planks.png",
+      "role": "shape",
+      "reason": "形状参考：方块/满铺；图案参考：木板条纹；配色参考：#B8945F #AF8F55 #9F844D"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/iron_sword.png",
+      "role": "shape",
+      "reason": "形状参考：剑；图案参考：无明显图案；配色参考：#444444 #181818 #D8D8D8"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/item/carrot_on_a_stick.png",
+      "role": "shape",
+      "reason": "形状参考：长条/木棍；图案参考：无明显图案；配色参考：#493615 #281E0B #444444"
+    }
+  ],
+  "form": "item",
+  "query": "骷髅法杖：顶端骷髅头要可辨眼窝/颌，杖柄要有手柄味（允许斜/粗/可大改）",
+  "source": "concept_grounder:offline_rule",
+  "method": "rule",
+  "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+  "retrieval_anchor_count": 7,
+  "design_checklist": [
+    {
+      "id": "orientation",
+      "item": "方位/构图一致性",
+      "must": "所有部件沿同一条构图轴/方向，主体朝向一致；禁止出现‘手柄斜、头部正’、部件各朝各的现象。",
+      "self_check": "画之前先用一句话描述整体轴线（如左下→右上），再检查每个部件是否落在这条轴上。"
+    },
+    {
+      "id": "connection",
+      "item": "连接点对齐",
+      "must": "部件之间的连接点与主轴/中心对齐，不偏心、不悬空、不错位。",
+      "self_check": "检查杖头/部件是否锚定在手柄/主体的顶端端点，连接处是否位于轴线上。"
+    },
+    {
+      "id": "semantic",
+      "item": "语义可辨",
+      "must": "16x16 剪影一眼能看出‘这是什么’；主体清晰，不依赖文字说明。",
+      "self_check": "遮住颜色只看 alpha 剪影，仍能认出物品/方块/十字植物语义。"
+    },
+    {
+      "id": "segment_border",
+      "item": "外轮廓描边与部件接缝",
+      "must": "外轮廓用 1px 深色描边，部件接缝用暗色分隔；不做均匀黑框。",
+      "self_check": "检查外轮廓像素是否为 1px 深色/暗色，部件交界处是否有暗色缝。"
+    },
+    {
+      "id": "material_highlight",
+      "item": "材质高光方向",
+      "must": "亮部高光沿形状走向，暗部在背光侧；不同材质（金属/木/石/发光/软质）用不同高光强度与纹理提示，由模型根据语义推理，不给死例子。",
+      "self_check": "每个部件先标出受光面/背光面，再检查高光与暗部是否沿形状方向流动。"
+    },
+    {
+      "id": "material_texture",
+      "item": "材质纹理贴合",
+      "must": "材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。",
+      "self_check": "纹理是否沿部件边缘/走向/明暗面分布，不横跨形状乱画。"
+    },
+    {
+      "id": "palette",
+      "item": "配色层次",
+      "must": "包含 base/light/dark/outline；每个部件至少 base/light/dark 三档色阶；有明暗体积和自然描边，避免荧光平涂。",
+      "self_check": "每个部件至少有亮部/暗部/描边三档色阶；饱和度不过高。"
+    },
+    {
+      "id": "pattern_flow",
+      "item": "纹样与形状一体",
+      "must": "纹样沿形状的走向/边缘/明暗面流动，不脱离形状独立存在。",
+      "self_check": "逐部件核对 part_pattern_flow：纹样方向是否与部件形状一致。"
+    },
+    {
+      "id": "frame",
+      "item": "边框/背景",
+      "must": "透明背景、主体不贴边、不留明显空洞；16x16 尺寸内主体占位合理（约 8~14px）。",
+      "self_check": "检查 bbox 是否居中、四周是否留至少 1px 透明边。"
+    }
+  ]
+}

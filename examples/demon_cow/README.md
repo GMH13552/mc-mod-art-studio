@@ -3,7 +3,7 @@
 - 形式：`entity_uv`
 - 尺寸：`64x32`
 - 输出：`sprite.png`
-- novelty：`0.9`（s2 silhouette bank；可大改）
+- novelty：`0.9`（silhouette bank；可大改）
 - 生成方式：`programmatic template recolor (vanilla cow.png silhouette + demon palette)`
 - 原版模板：`cow.png (64x32 entity atlas)`（仅作轮廓/区域基础；原版 PNG 未复制进本仓库）
 
@@ -164,19 +164,15 @@ XXXXXXXXXXXXXX
   ```
 
 ## Why programmatic fallback
-- The s2 prompt + silhouette bank were generated and stored; however the text LLM
+- The prompt + silhouette bank were generated and stored; however the text LLM
   output for this form was not stable enough to produce a readable result.
 - This demo therefore uses the vanilla asset **only as a silhouette/template base** and
   remaps every opaque texel to a new palette (plus explicit accents), which is the
-  'cow/red_mooshroom 64x32 模板改' / 'rabbit_hide 轮廓' approach requested by the brief.
+  'cow/red_mooshroom 64x32 模板改' approach requested by the brief.
 
-## 生成命令
-```bash
-set -a; source /tmp/mc_llm.env; set +a
-python3 examples/rebuild-demo/rebuild_generate.py --only demon_cow
-python3 examples/rebuild-demo/build_programmatic_demos.py
-python3 examples/rebuild-demo/update_programmatic_meta.py
-```
+## 生成/复现
+- 本示例的最终 PNG 是已提交产物；重新生成需要本机 `cow.png`（64x32 entity atlas）作为轮廓/区域基础，并按恶魔牛配色重着色。
+- `raw_answer.txt` 是 `programmatic-fallback` 标记，不能直接作为 `run_pipeline --raw` 的像素文本输入。
 
 ## Hash
 - prompt sha256：`9a4c8e158f599e98bbe8de8c415483a01347193226ca6e04f48fc444d5207477`
@@ -187,6 +183,6 @@ python3 examples/rebuild-demo/update_programmatic_meta.py
   - `LLM text-model output for this asset was unstable (all-one-color / empty / oval); final PNG uses vanilla template silhouette + new palette recoloring.`
 
 ## 像素/UV 自检
-- cmd：`/home/gmh/miniconda3/bin/python3 check_entity_uv.py /tmp/mc-mod-art-studio-core/examples/rebuild-demo/demon_cow/sprite.png --entity cow`
+- cmd：`python3 check_entity_uv.py examples/demon_cow/sprite.png --entity cow`
 - 结论：`PASS`
 - 摘要：`PASS: 符合标准实体 UV 布局 (entity=cow, size=64x32, opaque=1616, regions=7, margins={'left': 1, 'top': 0, 'right': 1, 'bottom': 0} margins_lt_1=top/bottom)`

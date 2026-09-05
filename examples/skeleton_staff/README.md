@@ -3,7 +3,7 @@
 - 形式：`item`
 - 尺寸：`16x16`
 - 输出：`sprite.png`
-- novelty：`0.9`（s2 silhouette bank；可大改）
+- novelty：`0.9`（silhouette bank；可大改）
 
 ## 说明
 一根顶端镶着骷髅头的新法杖/权杖：上方是骨白色、带可辨眼窝与下颌暗示的骷髅头，下方是木质杖身/握柄；杖身可以斜、可以粗一点，但必须保留手柄感（木纹、粗细、握持段）。
@@ -101,10 +101,12 @@ XXX..........
 XX...........
   ```
 
-## 生成命令
+## 生成/复现
 ```bash
-set -a; source /tmp/mc_llm.env; set +a
-python3 examples/rebuild-demo/rebuild_generate.py
+# 使用已保存的 raw_answer 离线复现 PNG（不调用 LLM）
+python3 run_pipeline.py --query "骷髅法杖" --form item \
+    --raw examples/skeleton_staff/raw_answer.txt \
+    --out out/skeleton_staff --package
 ```
 
 ## Hash
@@ -114,6 +116,6 @@ python3 examples/rebuild-demo/rebuild_generate.py
 - attempts：`1`（首次 + 最多 2 次重试）
 
 ## 像素/UV 自检
-- cmd：`/home/gmh/miniconda3/bin/python3 check_pixel_asset.py /tmp/mc-mod-art-studio-core/examples/rebuild-demo/skeleton_staff/sprite.png`
+- cmd：`python3 check_pixel_asset.py examples/skeleton_staff/sprite.png`
 - 结论：`PASS`
-- 摘要：`[check_pixel_asset.py] /tmp/mc-mod-art-studio-core/examples/rebuild-demo/skeleton_staff/sprite.png (16x16) -> PASS`
+- 摘要：`[check_pixel_asset.py] examples/skeleton_staff/sprite.png (16x16) -> PASS`

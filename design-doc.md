@@ -99,9 +99,8 @@ Java 原版实体模型是硬编码的；资源包只能替换原版实体贴图
 
 ## 9. 示例
 
-- `examples/alien_crystal_wand/`：离线可复现的 item 示例，含 `raw_answer.txt` 与 `sprite.png`。
-- `examples/mushroom_sprout/`：cross 形式示例，含 `cross.png`。
-- `examples/reset-demo/`：4 张效果图（bow/bricks/creeper/pig），由 `run_pipeline.py --novelty 0.5` 生成。
+- `examples/skeleton_staff/`：`item` 16x16 离线示例，含 `sprite.png`、`raw_answer.txt`、`prompt.txt`、`concept.json`、`hashes.json` 与 `check_results.json`。
+- `examples/demon_cow/`：`entity_uv` 64x32 实体示例，含 `sprite.png`、`concept.json`、`hashes.json`、`check_results.json`；最终 PNG 使用原版 cow.png 轮廓/区域 + 恶魔牛配色程序化重着色。
 
 ## 10. 仓库边界
 

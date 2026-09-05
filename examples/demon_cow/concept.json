@@ -1,0 +1,451 @@
+{
+  "item_name": "恶魔牛 (Demon Cow entity_uv)",
+  "description": "一个恶魔化的牛实体纹理，替换原版 cow/red_mooshroom 的 64x32 atlas；保留牛的头/角/耳朵/鼻口/身体/腿的实体结构，配色改为暗红恶魔皮，角与眼窝用黑红，眼睛和角尖带青色魂火。整体是实体 UV 图集，不是 16x16 牛头图标。硬性：64x32 至少使用 4 种以上调色板索引；0 号只做描边/暗部；head/body/legs/角/眼都要有可见色阶与轮廓细节。",
+  "parts": [
+    "头 head",
+    "角 horns",
+    "耳朵 ears",
+    "鼻口 muzzle",
+    "眼睛/魂火 eyes",
+    "身体 body",
+    "腿 legs",
+    "尾巴 tail"
+  ],
+  "face_regions": {
+    "head": "head（0,0 -> 32,16）：按该 UV 区域语义绘制，保留原版实体模板采样坐标",
+    "horns": "horns（0,0 -> 32,6）：按该 UV 区域语义绘制，保留原版实体模板采样坐标",
+    "ears": "ears（0,0 -> 32,4）：按该 UV 区域语义绘制，保留原版实体模板采样坐标",
+    "muzzle": "muzzle（0,8 -> 16,16）：按该 UV 区域语义绘制，保留原版实体模板采样坐标",
+    "body": "body（16,16 -> 64,32）：按该 UV 区域语义绘制，保留原版实体模板采样坐标",
+    "legs": "legs（0,16 -> 16,32）：按该 UV 区域语义绘制，保留原版实体模板采样坐标",
+    "tail": "tail（48,16 -> 64,32）：按该 UV 区域语义绘制，保留原版实体模板采样坐标"
+  },
+  "visual_goals": [
+    "uv 使用 #3F3024 #443626 #352A1F #B3B3B3 #A1A1A1 配色，绘制无明显图案；轮廓/剪影保持 实体UV/生物剪影；方块/带透明。"
+  ],
+  "minecraft_reference": "cow.png；red_mooshroom.png；brown_mooshroom.png；soul_fire_0.png；soul_fire_1.png",
+  "avoid": [
+    "不要画成 16x16 居中牛头图标；这是 64x32 实体 atlas，必须按原版 cow/red_mooshroom 的 UV 区域展开。",
+    "不要复制 cow.png / red_mooshroom.png 的逐像素图案。",
+    "不要画成普通红牛；必须有黑角/黑眼窝与青色魂火点缀。",
+    "禁止整张 64x32 只用一种索引/一种颜色；若全图同色或同索引即为失败。",
+    "0 号索引只能用于描边和最深暗部，不能作为大面积底色；主色用 1/2/3 等索引。",
+    "head/body/legs/角/眼等区域必须画出至少 2 个不同色阶，禁止区域留空成单色。"
+  ],
+  "palette_scheme": {
+    "base": "#A00F10",
+    "light": "#E04A45",
+    "dark": "#3A0708",
+    "accent": "#01A7AC",
+    "outline": "#171414",
+    "border_note": "外轮廓 1px 深黑红 #171414；角/眼窝用更深 #2B0505；魂火用青色高光与白色核心。",
+    "saturation_note": "红色保持暗红色相，不荧光；青色只作局部魂火，占比小。"
+  },
+  "shape_pattern": {
+    "silhouette": "64x32 标准牛/红魔菌牛实体 atlas：头在左侧 32x16，身体在右 32x16，腿在左下半/身体下缘；必须参考 compact:cow.png/red_mooshroom.png 的 64x32 区域轮廓作为底，颜色/角/耳/眼/纹理重新画；每个 UV 区域都要有可见内容，不能只填一个颜色。",
+    "parts": [
+      "头 head",
+      "角 horns",
+      "耳朵 ears",
+      "鼻口 muzzle",
+      "眼睛/魂火 eyes",
+      "身体 body",
+      "腿 legs",
+      "尾巴 tail"
+    ],
+    "border": "外轮廓 1px 深黑红 #171414；角/眼窝用更深 #2B0505；魂火用青色高光与白色核心。",
+    "shading": "左上偏亮、右下偏暗；内部用 1px 色阶表现体积；实体 UV 按各区域明暗独立处理。",
+    "detail_pattern": "沿部件贴合的材质纹理（皮革/金属/骨/木纹/魂火）；禁止脱离形状独立存在。",
+    "shape_lock_optional": true,
+    "part_pattern_flow": [
+      {
+        "part": "头 head",
+        "shape": "牛头（正面/侧面 UV 区域）",
+        "pattern": "暗红皮 + 鼻梁高光 + 脸颊暗部；1px 深红描边",
+        "flow": "沿头 UV 区域走；高光沿鼻梁纵向，暗部在脸颊两侧。"
+      },
+      {
+        "part": "角 horns",
+        "shape": "顶部双角",
+        "pattern": "黑红角 + 角尖青色魂火",
+        "flow": "角根与头连接，角尖朝上/两侧；魂火只点角尖。"
+      },
+      {
+        "part": "耳朵 ears",
+        "shape": "两侧耳朵",
+        "pattern": "深红皮 + 内耳暗部",
+        "flow": "耳根与头连接，不悬空。"
+      },
+      {
+        "part": "鼻口 muzzle",
+        "shape": "牛鼻口/嘴部区域",
+        "pattern": "暗红皮 + 深色鼻孔",
+        "flow": "位于 head 下方/muzzle 区域，轮廓圆钝。"
+      },
+      {
+        "part": "眼睛/魂火 eyes",
+        "shape": "两个发光眼",
+        "pattern": "黑眼窝 + 青色魂火 + 白色核心",
+        "flow": "左右对称；青色只作点缀，不大面积铺。"
+      },
+      {
+        "part": "身体 body",
+        "shape": "牛躯干 UV 区域",
+        "pattern": "暗红皮 + 肌肉/鳞片/火焰纹理",
+        "flow": "纹理沿身体走向，不覆盖原版 UV 区域边界。"
+      },
+      {
+        "part": "腿 legs",
+        "shape": "四条腿（原版左/右腿区域）",
+        "pattern": "暗红皮 + 蹄部强化",
+        "flow": "腿在 legs 区域，上下方向明确。"
+      },
+      {
+        "part": "尾巴 tail",
+        "shape": "牛尾",
+        "pattern": "暗红皮 + 尾尖魂火",
+        "flow": "尾在 tail 区域，从身体后部延伸。"
+      }
+    ],
+    "integration_note": "先用形状确定结构，再让纹样贴合每个部件的走向/边缘/明暗面；纹样不得脱离形状独立存在。",
+    "silhouette_candidates": [
+      {
+        "part": "头 head",
+        "candidates": [
+          {
+            "token": "cow-head",
+            "source": "cow.png",
+            "kind": "shape_token",
+            "note": "来源：cow.png 头部区域轮廓"
+          },
+          {
+            "token": "red-mooshroom-head",
+            "source": "red_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：red_mooshroom.png 头部区域轮廓"
+          },
+          {
+            "token": "brown-mooshroom-head",
+            "source": "brown_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：brown_mooshroom.png 头部区域轮廓"
+          },
+          {
+            "token": "compact:cow.png",
+            "source": "cow.png",
+            "kind": "compact_fragment",
+            "fragment": "....XXXXXXXXXXXXXXXX.XX.....\n....XXXXXXXXXXXXXXXXXXXX....\n....XXXXXXXXXXXXXXXXXXXX....\n....XXXXXXXXXXXXXXXX......XX\n....XXXXXXXXXXXXXXXX......XX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n................XXXXXXXXXXXX\n................XXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；head 区域/整体轮廓",
+            "region": "head"
+          }
+        ]
+      },
+      {
+        "part": "角 horns",
+        "candidates": [
+          {
+            "token": "cow-horn",
+            "source": "cow.png",
+            "kind": "shape_token",
+            "note": "来源：cow.png 角/耳区域轮廓"
+          },
+          {
+            "token": "red-mooshroom-horn",
+            "source": "red_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：red_mooshroom.png 角/耳区域轮廓"
+          },
+          {
+            "token": "brown-mooshroom-horn",
+            "source": "brown_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：brown_mooshroom.png 角/耳区域轮廓"
+          },
+          {
+            "token": "compact:cow.png",
+            "source": "cow.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXXXXXXXXXXXXXX.XX.......\nXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXXXXXX......\nXXXXXXXXXXXXXXXX......XXXX\nXXXXXXXXXXXXXXXX......XXXX",
+            "note": "只含 X/. 剪影；horns 区域/整体轮廓",
+            "region": "horns"
+          }
+        ]
+      },
+      {
+        "part": "耳朵 ears",
+        "candidates": [
+          {
+            "token": "cow-ear",
+            "source": "cow.png",
+            "kind": "shape_token",
+            "note": "来源：cow.png 耳朵区域轮廓"
+          },
+          {
+            "token": "red-mooshroom-ear",
+            "source": "red_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：red_mooshroom.png 耳朵区域轮廓"
+          },
+          {
+            "token": "brown-mooshroom-ear",
+            "source": "brown_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：brown_mooshroom.png 耳朵区域轮廓"
+          },
+          {
+            "token": "compact:cow.png",
+            "source": "cow.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXXXXXXXXXXXXXX.XX.\nXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；ears 区域/整体轮廓",
+            "region": "ears"
+          }
+        ]
+      },
+      {
+        "part": "鼻口 muzzle",
+        "candidates": [
+          {
+            "token": "cow-muzzle",
+            "source": "cow.png",
+            "kind": "shape_token",
+            "note": "来源：cow.png 鼻口区域轮廓"
+          },
+          {
+            "token": "red-mooshroom-muzzle",
+            "source": "red_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：red_mooshroom.png 鼻口区域轮廓"
+          },
+          {
+            "token": "brown-mooshroom-muzzle",
+            "source": "brown_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：brown_mooshroom.png 鼻口区域轮廓"
+          },
+          {
+            "token": "compact:cow.png",
+            "source": "cow.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；muzzle 区域/整体轮廓",
+            "region": "muzzle"
+          }
+        ]
+      },
+      {
+        "part": "眼睛/魂火 eyes",
+        "candidates": [
+          {
+            "token": "cow-shape",
+            "source": "cow.png",
+            "kind": "shape_token",
+            "note": "来源：cow.png 整体/部件轮廓"
+          },
+          {
+            "token": "red-mooshroom-shape",
+            "source": "red_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：red_mooshroom.png 整体/部件轮廓"
+          },
+          {
+            "token": "brown-mooshroom-shape",
+            "source": "brown_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：brown_mooshroom.png 整体/部件轮廓"
+          },
+          {
+            "token": "compact:cow.png",
+            "source": "cow.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXX.XX.....................\nXXXXXXXX....................\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；cow.png 区域/整体轮廓",
+            "region": null
+          }
+        ]
+      },
+      {
+        "part": "身体 body",
+        "candidates": [
+          {
+            "token": "cow-body",
+            "source": "cow.png",
+            "kind": "shape_token",
+            "note": "来源：cow.png 身体/躯干区域轮廓"
+          },
+          {
+            "token": "red-mooshroom-body",
+            "source": "red_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：red_mooshroom.png 身体/躯干区域轮廓"
+          },
+          {
+            "token": "brown-mooshroom-body",
+            "source": "brown_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：brown_mooshroom.png 身体/躯干区域轮廓"
+          },
+          {
+            "token": "compact:cow.png",
+            "source": "cow.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；body 区域/整体轮廓",
+            "region": "body"
+          }
+        ]
+      },
+      {
+        "part": "腿 legs",
+        "candidates": [
+          {
+            "token": "cow-leg",
+            "source": "cow.png",
+            "kind": "shape_token",
+            "note": "来源：cow.png 腿部区域轮廓"
+          },
+          {
+            "token": "red-mooshroom-leg",
+            "source": "red_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：red_mooshroom.png 腿部区域轮廓"
+          },
+          {
+            "token": "brown-mooshroom-leg",
+            "source": "brown_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：brown_mooshroom.png 腿部区域轮廓"
+          },
+          {
+            "token": "compact:cow.png",
+            "source": "cow.png",
+            "kind": "compact_fragment",
+            "fragment": "....XXXXXXXX....\n....XXXXXXXX....\n....XXXXXXXX....\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；legs 区域/整体轮廓",
+            "region": "legs"
+          }
+        ]
+      },
+      {
+        "part": "尾巴 tail",
+        "candidates": [
+          {
+            "token": "cow-tail",
+            "source": "cow.png",
+            "kind": "shape_token",
+            "note": "来源：cow.png 尾部区域轮廓"
+          },
+          {
+            "token": "red-mooshroom-tail",
+            "source": "red_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：red_mooshroom.png 尾部区域轮廓"
+          },
+          {
+            "token": "brown-mooshroom-tail",
+            "source": "brown_mooshroom.png",
+            "kind": "shape_token",
+            "note": "来源：brown_mooshroom.png 尾部区域轮廓"
+          },
+          {
+            "token": "compact:cow.png",
+            "source": "cow.png",
+            "kind": "compact_fragment",
+            "fragment": "XXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX\nXXXXXXXXXXXXXX",
+            "note": "只含 X/. 剪影；tail 区域/整体轮廓",
+            "region": "tail"
+          }
+        ]
+      }
+    ]
+  },
+  "reference_nodes": [
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/cow.png",
+      "role": "shape",
+      "reason": "形状参考：实体UV/生物剪影；图案参考：无明显图案；配色参考：#3F3024 #443626 #352A1F"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/red_mooshroom.png",
+      "role": "shape",
+      "reason": "形状参考：实体UV/生物剪影；图案参考：无明显图案；配色参考：#A00F10 #A81012 #940E0F"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/entity/cow/brown_mooshroom.png",
+      "role": "shape",
+      "reason": "形状参考：实体UV/生物剪影；图案参考：无明显图案；配色参考：#977251 #8F664A #835E46"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/soul_fire_0.png",
+      "role": "shape",
+      "reason": "形状参考：方块/带透明；图案参考：无明显图案；配色参考：#FFFFFF #018488 #01999E"
+    },
+    {
+      "asset": "/mnt/c/Users/GMH13/Documents/deepseek_harness_workspace/mc_asset_library_full/textures/block/soul_fire_1.png",
+      "role": "shape",
+      "reason": "形状参考：方块/带透明；图案参考：无明显图案；配色参考：#FFFFFF #018488 #01A7AC"
+    }
+  ],
+  "form": "entity_uv",
+  "query": "恶魔牛实体：恶魔化牛实体，红色恶魔牛纹理，黑角黑眼窝，青色魂火点缀，按牛/红魔菌牛 64x32 实体模板改",
+  "source": "concept_grounder:offline_rule",
+  "method": "rule",
+  "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+  "retrieval_anchor_count": 5,
+  "design_checklist": [
+    {
+      "id": "orientation",
+      "item": "方位/构图一致性",
+      "must": "所有部件沿同一条构图轴/方向，主体朝向一致；禁止出现‘手柄斜、头部正’、部件各朝各的现象。",
+      "self_check": "画之前先用一句话描述整体轴线（如左下→右上），再检查每个部件是否落在这条轴上。"
+    },
+    {
+      "id": "connection",
+      "item": "连接点对齐",
+      "must": "部件之间的连接点与主轴/中心对齐，不偏心、不悬空、不错位。",
+      "self_check": "检查杖头/部件是否锚定在手柄/主体的顶端端点，连接处是否位于轴线上。"
+    },
+    {
+      "id": "semantic",
+      "item": "语义可辨",
+      "must": "16x16 剪影一眼能看出‘这是什么’；主体清晰，不依赖文字说明。",
+      "self_check": "遮住颜色只看 alpha 剪影，仍能认出物品/方块/十字植物语义。"
+    },
+    {
+      "id": "segment_border",
+      "item": "外轮廓描边与部件接缝",
+      "must": "外轮廓用 1px 深色描边，部件接缝用暗色分隔；不做均匀黑框。",
+      "self_check": "检查外轮廓像素是否为 1px 深色/暗色，部件交界处是否有暗色缝。"
+    },
+    {
+      "id": "material_highlight",
+      "item": "材质高光方向",
+      "must": "亮部高光沿形状走向，暗部在背光侧；不同材质（金属/木/石/发光/软质）用不同高光强度与纹理提示，由模型根据语义推理，不给死例子。",
+      "self_check": "每个部件先标出受光面/背光面，再检查高光与暗部是否沿形状方向流动。"
+    },
+    {
+      "id": "material_texture",
+      "item": "材质纹理贴合",
+      "must": "材质纹理（木纹/石裂纹/金属划痕/发光颗粒等）贴合形状；若原版有参考就参考其质感，没有就自行推理合理材质。",
+      "self_check": "纹理是否沿部件边缘/走向/明暗面分布，不横跨形状乱画。"
+    },
+    {
+      "id": "palette",
+      "item": "配色层次",
+      "must": "包含 base/light/dark/outline；每个部件至少 base/light/dark 三档色阶；有明暗体积和自然描边，避免荧光平涂。",
+      "self_check": "每个部件至少有亮部/暗部/描边三档色阶；饱和度不过高。"
+    },
+    {
+      "id": "pattern_flow",
+      "item": "纹样与形状一体",
+      "must": "纹样沿形状的走向/边缘/明暗面流动，不脱离形状独立存在。",
+      "self_check": "逐部件核对 part_pattern_flow：纹样方向是否与部件形状一致。"
+    },
+    {
+      "id": "frame",
+      "item": "边框/背景",
+      "must": "透明背景、主体不贴边、不留明显空洞；64x32 尺寸内主体占位合理（约 8~14px）。",
+      "self_check": "检查 bbox 是否居中、四周是否留至少 1px 透明边。"
+    }
+  ]
+}

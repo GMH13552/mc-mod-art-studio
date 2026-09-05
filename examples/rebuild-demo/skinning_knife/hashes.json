@@ -1,9 +1,0 @@
-{
-  "prompt_sha256": "4c613fbd51e5578fb42b282de3c0a0519647a40616b99815b0621388192b7fc1",
-  "answer_sha256": "fa00dc3e00f9ef612b27aebd64a43463301a76d4c769a9c0d17ba0be36e92d24",
-  "png_sha256": "11605849ba33a332af601694e60f5e687cb79fdce8b355b63ac325638b51919c",
-  "attempts": 1,
-  "novelty": 0.9,
-  "silhouette_bank_parts": 3,
-  "errors": []
-}
