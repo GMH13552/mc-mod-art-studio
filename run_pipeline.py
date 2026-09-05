@@ -381,6 +381,9 @@ def _build_selection_prompt(query: str, form: str, catalog_text: str) -> str:
         "- <资源名>: 借什么（如：bow: 弓形/弦；ender_eye: 绿色瞳孔/高光）\n"
         "只要名字与借法，**不要输出像素网格**。\n"
     ) % (query, form, catalog_text)
+    if "弓" in query or "bow" in query.lower():
+        sel_prompt += "\n> 注意：目标是弓时，优先用 `bow`（未拉开）作形状参考，**不要用 `bow_pulling_*`（拉满）**。\n"
+    return sel_prompt
 
 
 def _select_references_from_catalog(args, entries, query: str) -> list[str]:
