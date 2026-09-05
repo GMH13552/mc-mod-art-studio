@@ -37,6 +37,8 @@ _THIS_DIR = Path(__file__).resolve().parent
 if str(_THIS_DIR) not in sys.path:
     sys.path.insert(0, str(_THIS_DIR))
 
+import re  # noqa: E402
+
 import scan_mc_assets as sc  # noqa: E402
 import retrieve_assets as ra  # noqa: E402
 import concept_grounder as cg  # noqa: E402
@@ -164,6 +166,34 @@ def _prompt_file_placeholder(prompt_text: str) -> str:
     return str(tmp)
 
 
+def _standardize_face_block(block: str, face_meta: dict | None) -> str:
+    """标准化单个 face 输出：
+    1) 裁掉 PALETTE/HEX 之前的“设计分析”等文字；
+    2) 若缺 W/H 头，按 output_contract 补上（避免把好图当失败丢掉）。
+    """
+    m = re.search(r"^\s*(PALETTE|HEX GRID)\b", block, re.M | re.I)
+    if m:
+        block = block[m.start():]
+    if not re.search(r"^\s*W\s*=", block, re.M):
+        w = int((face_meta or {}).get("width", 16))
+        h = int((face_meta or {}).get("height", 16))
+        block = "W=%d H=%d\n%s" % (w, h, block)
+    return block
+
+
+def _standardize_raw(raw_text: str, pack: dict) -> str:
+    """把整个 raw_answer 标准化：每个 face 裁掉前置文字、补 W/H 头。"""
+    blocks = pa.split_face_blocks(raw_text)
+    if not blocks:
+        return raw_text
+    faces_meta = {f["face"]: f for f in pack["output_contract"]["faces"]}
+    out: list[str] = []
+    for fid, blk in blocks:
+        blk = _standardize_face_block(blk, faces_meta.get(fid or ""))
+        out.append("=== face: %s ===\n%s" % (fid or "sprite", blk))
+    return "\n\n".join(out)
+
+
 def _render_raw_faces(raw_text: str, out_dir: Path, pack: dict) -> list[Path]:
     """把 raw_answer 转为 PNG。支持单 face 与多 face，返回生成的文件路径列表。"""
     blocks = pa.split_face_blocks(raw_text)
@@ -173,6 +203,7 @@ def _render_raw_faces(raw_text: str, out_dir: Path, pack: dict) -> list[Path]:
     saved: list[Path] = []
     if len(blocks) == 1:
         fid, block = blocks[0]
+        block = _standardize_face_block(block, faces_meta.get(fid or ""))
         cleaned = pa._clean_face_text(block)
         img = t2t.text_to_image(cleaned)
         sprite = out_dir / "sprite.png"
@@ -182,14 +213,10 @@ def _render_raw_faces(raw_text: str, out_dir: Path, pack: dict) -> list[Path]:
         return saved
 
     for fid, block in blocks:
+        face_meta = faces_meta.get(fid or "")
+        block = _standardize_face_block(block, face_meta)
         cleaned = pa._clean_face_text(block)
         img = t2t.text_to_image(cleaned)
-        face_meta = faces_meta.get(fid or "")
-        if face_meta:
-            # file 形如 assets/mcmod/textures/... ; 放入 out_dir 下保留资源包相对路径。
-            dest = out_dir / face_meta["file"]
-        else:
-            dest = out_dir / ("%s.png" % (fid or "face"))
         dest.parent.mkdir(parents=True, exist_ok=True)
         img.save(dest, "PNG")
         saved.append(dest)
@@ -332,6 +359,129 @@ def _build_catalog_text(entries: list[dict]) -> str:
     return "\n".join(lines)
 
 
+def _catalog_names(entries: list[dict]) -> set[str]:
+    names = set()
+    for e in entries:
+        if isinstance(e, dict):
+            n = str(e.get("name", ""))
+            if n:
+                names.add(n)
+    return names
+
+
+def _build_selection_prompt(query: str, form: str, catalog_text: str) -> str:
+    """两段式第一段：只给名字清单，让模型选 2-4 个参考并说明借什么。"""
+    return (
+        "# 选择参考（第一段：只输出选中的名字，不要画图）\n"
+        "目标：%s（form=%s）\n"
+        "下面是全部可用的资源名（只有名字）。请从中**选择 2-4 个**你最想参考的资产，\n"
+        "并各用一行说明借什么（结构/配色/纹理/明暗）。\n\n"
+        "%s\n\n"
+        "输出格式：\n"
+        "- <资源名>: 借什么（如：bow: 弓形/弦；ender_eye: 绿色瞳孔/高光）\n"
+        "只要名字与借法，**不要输出像素网格**。\n"
+    ) % (query, form, catalog_text)
+
+
+def _select_references_from_catalog(args, entries, query: str) -> list[str]:
+    """执行第一段选择调用，返回选中的资源名列表。"""
+    catalog_text = _build_catalog_text(entries)
+    sel_prompt = _build_selection_prompt(query, args.form or "item", catalog_text)
+    sel_args = argparse.Namespace(**vars(args))
+    sel_args.llm_image = []
+    sel_args.auto_visual_ref = False
+    print("[two-stage] selecting references from catalog ...")
+    resp = _generate_raw_text(sel_args, sel_prompt, auto_images=[])
+    print("[two-stage] selection response: %s" % resp.strip()[:300])
+    names = _catalog_names(entries)
+    found: list[str] = []
+    for line in resp.splitlines():
+        for n in names:
+            if n and n in line and n not in found:
+                found.append(n)
+    chosen = found[:4]
+    if not chosen:
+        print("[two-stage] no names parsed; fallback to top anchors")
+    return chosen
+
+
+def _entry_by_name(entries: list[dict], name: str) -> dict | None:
+    for e in entries:
+        if isinstance(e, dict) and e.get("name") == name:
+            return e
+    return None
+
+
+def _build_anchor_from_entry(entry: dict, index_base) -> dict:
+    """把一个索引条目变成 build_style_prompt 能吃的 anchor（带绝对 path 与 compact_text）。"""
+    raw_path = entry.get("path", "")
+    try:
+        abs_path = str(ra.resolve_entry_path({"path": raw_path}, index_base))
+    except Exception:  # noqa: BLE001
+        abs_path = raw_path
+    anchor = {
+        "name": entry.get("name", Path(abs_path).stem),
+        "path": abs_path,
+        "category": entry.get("category", "item"),
+        "role": entry.get("role", "shape"),
+        "features": dict(entry.get("features", {})),
+        "score": entry.get("score"),
+        "matched_terms": entry.get("matched_terms", []),
+        "palette_count": entry.get("palette_count"),
+        "size": entry.get("size"),
+    }
+    try:
+        anchor.update(bsp._extract_feature_per_anchor(anchor))
+    except Exception as _e:  # noqa: BLE001
+        print("      [warn] extract compact for %s failed: %s" % (anchor.get("name"), _e))
+    return anchor
+
+
+def _select_anchors_by_name(pack: dict, entries: list[dict], index_base, names: list[str]) -> list[dict]:
+    """按选中的名字返回 anchor 列表；不在 top 锚点里的条目动态构建 compact anchor。"""
+    selected: list[dict] = []
+    seen = set()
+    for name in names:
+        # 先看 pack 里已有 anchor（带 compact_text）
+        for a in pack.get("anchors", []):
+            if a.get("name") == name and name not in seen:
+                selected.append(a)
+                seen.add(name)
+                break
+        if name in seen:
+            continue
+        entry = _entry_by_name(entries, name)
+        if entry is None:
+            continue
+        a = _build_anchor_from_entry(entry, index_base)
+        if a.get("compact_text"):
+            selected.append(a)
+            seen.add(name)
+    # 补齐到至少 2 个：从 top anchors 拿未选中的
+    if len(selected) < 2:
+        for a in pack.get("anchors", []):
+            if a.get("name") in seen:
+                continue
+            selected.append(a)
+            seen.add(a.get("name"))
+            if len(selected) >= 4:
+                break
+    return selected[:4]
+
+
+def _build_selected_reference_block(pack: dict, selected: list[dict], novelty: float, no_original_ref: bool) -> str:
+    form = pack.get("form", "item")
+    faces = pack.get("output_contract", {}).get("faces") or [{"width": 16, "height": 16}]
+    f0 = faces[0] if faces else {}
+    w = int(f0.get("width", 16))
+    h = int(f0.get("height", 16))
+    entity = eu.detect_entity(pack.get("query") or pack.get("name") or "")
+    block, _inc, _lim = bsp._reference_block_for_anchors(
+        selected, form, w, h, entity, novelty, no_original_ref
+    )
+    return block or ""
+
+
 def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     """生成紧凑 prompt：设计要点 + PALETTE/INDEX GRID（-1 0 1 索引模式）。
 
@@ -404,13 +554,12 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
             "%s(%s)" % (r.get("asset", "?"), r.get("role", "?")) for r in refs))
     lines.append("")
 
-    # 当使用“全资源目录”（catalog）时，不再预塞 top 锚点的 compact/分析文本；
-    # 只给名字让模型自己挑，挑完再取细节（避免把整段 texture 文本全塞进 prompt）。
-    if not pack.get("catalog"):
-        reference_block = pack.get("reference_block", "") or ""
-        if reference_block:
-            lines.append(reference_block)
-            lines.append("")
+    # catalog 模式下仍保留“全目录名字清单”，同时注入 top 锚点的 compact/silhouette 参考；
+    # 让模型既能从全目录挑，也有真实像素结构可依。
+    reference_block = pack.get("reference_block", "") or ""
+    if reference_block:
+        lines.append(reference_block)
+        lines.append("")
 
     lines.append("# 通用设计原则（每个物体都适用）")
     for rule in getattr(cg, "GENERIC_DESIGN_PRINCIPLES", []) or []:
@@ -524,9 +673,23 @@ def run(args: argparse.Namespace) -> int:
         )
         pack = bsp.build_prompt_pack_v2(ns)
         pack["catalog"] = _build_catalog_text(entries)
+        selected_anchors: list[dict] = []
+        if args.two_stage and args.raw is None and not args.prompt_only:
+            print("[two-stage] 1/2: pick references from full resource name catalog")
+            chosen = _select_references_from_catalog(args, entries, args.query)
+            print("      chosen: %s" % "、".join(chosen) if chosen else "      chosen: (none, fallback top)")
+            selected_anchors = _select_anchors_by_name(pack, entries, index_base, chosen)
+            pack["selected_refs"] = [a.get("name", "?") for a in selected_anchors]
+            # 生成阶段不再塞全目录，只把选中参考的 compact 细节注入
+            pack["catalog"] = None
+            pack["reference_block"] = _build_selected_reference_block(
+                pack, selected_anchors, args.novelty, args.no_original_ref
+            )
+            print("[two-stage] 2/2: generation prompt uses %d selected refs (compact/silhouette)" % len(selected_anchors))
         auto_images: list[str] = []
+        ref_source = selected_anchors if selected_anchors else pack.get("anchors", [])
         if args.auto_visual_ref:
-            for a in pack.get("anchors", []):
+            for a in ref_source:
                 p = a.get("path") or ""
                 if p and Path(p).exists():
                     auto_images.append(str(Path(p).resolve()))
@@ -534,10 +697,11 @@ def run(args: argparse.Namespace) -> int:
         pack.setdefault("output_contract", {})["text"] = _palette_index_contract_text(pack)
         pack["prompt"] = _build_compact_prompt(pack, vision=bool(args.llm_image) or bool(auto_images))  # 用紧凑 HEX prompt；vision 模式更短（图作引导）
         bsp.write_v2_prompt_pack(pack, out_dir / "prompt_pack.json")
-        print("      -> prompt_pack.json (%d anchors, concept=%s%s)" % (
+        print("      -> prompt_pack.json (%d anchors, concept=%s%s%s)" % (
             len(pack.get("anchors", [])),
             "ok" if pack.get("concept_card") else "MISSING",
             " auto_refs=%d" % len(auto_images) if auto_images else "",
+            " selected=%d" % len(selected_anchors) if selected_anchors else "",
         ))
 
         if args.prompt_only:
@@ -552,6 +716,7 @@ def run(args: argparse.Namespace) -> int:
         for attempt in range(1, max_attempts + 1):
             try:
                 raw_text = _generate_raw_text(args, pack["prompt"], auto_images=auto_images)
+                raw_text = _standardize_raw(raw_text, pack)
                 out_dir.joinpath("raw_answer.txt").write_text(raw_text, encoding="utf-8")
                 print("[6/7] text_to_texture: raw -> PNG (attempt %d/%d)" % (attempt, max_attempts))
                 saved = _render_raw_faces(raw_text, out_dir, pack)
@@ -615,6 +780,10 @@ def main(argv: list[str] | None = None) -> int:
                         help="候选资源池大小（默认 12）；模型从池中自选 2-4 个参考")
     parser.add_argument("--retries", type=int, default=2,
                         help="生成空图/解析失败时自动重试次数（默认 2）")
+    parser.add_argument("--two-stage", action="store_true", default=True,
+                        help="两段式：先从全资源名选参考，再把选中参考的 compact 细节注入生成 prompt（默认开启）")
+    parser.add_argument("--no-two-stage", dest="two_stage", action="store_false",
+                        help="关闭两段式，直接单段生成")
     parser.add_argument("--novelty", type=float, default=0.5,
                         help="参考自由度 0..1；默认 0.5。越高越少附原版 compact 片段，越低越贴原版。")
     parser.add_argument("--no-original-ref", action="store_true",
