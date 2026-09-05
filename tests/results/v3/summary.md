@@ -16,7 +16,7 @@
 | t05 | bricks | 红砖 | block_multi | 0 | check_tiling | FAIL | top/side/bottom opaque=256；side_wrap PASS；top_side 4 条边 max_diff=116/32 |
 | t06 | lapis_block | 青金石块 | block_multi | 0（初跑解析失败，用现有 raw + parser 容错重跑） | check_tiling | FAIL | top/side/bottom opaque=256；side_wrap max_diff=64/32；bottom_side.right max_diff=64/32 |
 | t09 | pig | 猪 | entity_uv | 0（第 3 次 LLM 尝试） | check_entity_uv | **PASS** | 64x32 opaque=858；head=336 body=310 legs=48；margins l/r=4/15 top=4 bottom=0（bottom 为说明项） |
-| t10 | creeper | 苦力怕 | entity_uv | 0（初跑 legs=0，重试循环第 1 次即 PASS） | check_entity_uv | **FAIL**（新增 canvas_margin：左右触边） | 64x32 opaque=920；head=132 body=300 legs=16；margins left=0 right=0 top=1 bottom=1 |
+| t10 | creeper | 苦力怕 | entity_uv | 0（初跑 legs=0；重试循环第 1 次产生 legs 非空，pipeline PASS；check_entity_uv 为 FAIL） | check_entity_uv | **FAIL**（新增 canvas_margin：左右触边） | 64x32 opaque=920；head=132 body=300 legs=16；margins left=0 right=0 top=1 bottom=1 |
 | t03 | bow | 弓 | item | 0（第 2 次非空尝试） | check_pixel_asset | FAIL（目检：弓形可辨度有限） | opaque=74/20 bbox=[1,2,13,16] opaque_ratio=0.4405（<=0.8，满足负空间抽查）；bbox FAIL（bottom margin=0） |
 
 ## 命令摘要

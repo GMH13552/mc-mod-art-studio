@@ -19,6 +19,8 @@
 | 打包 | `package_asset.py` | 资源包目录 + manifest |
 | 校验 | `audit_generation.py` / `validate_raw_answers_v3.py` | 哈希/格式审计 |
 | 像素校验 | `check_pixel_asset.py` | 非空/bbox/描边/色阶/部件分离 evidence |
+| 方块拼贴校验 | `check_tiling.py` | side_wrap / top_side / bottom_side 边缘连续性 evidence |
+| 实体 UV 校验 | `check_entity_uv.py` | 尺寸/非空/画布边距/标准 UV 区域 evidence |
 | 一键整合 | `run_pipeline.py` | 串起 scan → retrieve → concept → prompt → raw → PNG → package，并执行非空门禁 |
 
 ## 3. 概念卡 schema（v5 设计升级）
@@ -80,6 +82,80 @@ reference_nodes: [
   - INDEX/HEX GRID 多余透明尾列可裁剪、缺少尾部透明列自动补 `-1` / `----`；
   - entity_uv 多出的尾行按容错处理，不因整段多余数据整体 FAIL。
 - 对应 v2 广谱测试结果见 `tests/results/v2/summary.md`。
+
+### 3.3 方块可拼贴（block_multi）
+
+`block_multi` 的可用性由“三张 16x16 面”和“它们能否拼成一个无接缝立方体”决定：
+
+- 模型父类：`minecraft:block/cube_bottom_top`，纹理变量 `#top / #bottom / #side`；
+  四个侧面共用同一张 `side`，因此 `side` 左右两列必须一致。
+- 贴图契约：
+  1. 三张面都是 16x16 全不透明方块图（`opaque_pixels=256`，边缘 alpha>=128）。
+  2. `side_wrap`：`side(0,y)` 与 `side(w-1,y)` 每行 RGB 最大通道差 <= threshold。
+  3. `top_side`：`side` 顶行与 `top` 四条边颜色连续。
+  4. `bottom_side`：`side` 底行与 `bottom` 四条边颜色连续。
+
+校验器：
+
+```bash
+python3 check_tiling.py \
+  --top <top.png> --side <side.png> --bottom <bottom.png> \
+  --name <asset> --out-dir tests/results/v3
+python3 check_tiling.py --self-test
+```
+
+输出 `status`、`checks.side_wrap/top_side/bottom_side`、`failed_checks`；`--allow-transparent`
+可关闭不透明边缘门禁（仅作颜色对照）。详见 `docs/tiling-design.md`。
+
+v3 实测：glowstone PASS；bricks 与 lapis_block 因跨面边缘/侧边不一致 FAIL（但三面已非透明）。
+
+### 3.4 实体 UV 标准（entity_uv）
+
+Java 原版实体模型是硬编码的；纯资源包只能替换原版实体贴图路径。因此 entity_uv 必须
+满足“尺寸 + atlas 区域语义”，而不是把 64x32 画成一张居中侧视图。
+
+当前内置标准（半开区间 `[x1,x2) × [y1,y2)`）：
+
+| 实体 | 尺寸 | head | body | legs |
+|---|---|---|---|---|
+| pig | 64x32 | `0,0 -> 32,16` | `28,8 -> 64,32` | `0,16 -> 16,26` |
+| creeper | 64x32 | `0,0 -> 32,16` | `16,16 -> 40,32` | `0,16 -> 16,26` |
+
+玩家皮肤另有 64x64 / 64x32 标准布局（见 `entity_uv_spec.py` 与 `docs/entity-uv-design.md`）。
+
+校验器：
+
+```bash
+python3 check_entity_uv.py tests/runs/v3/pig/sprite.png --entity pig \
+  --json tests/results/v3/pig_entity_uv.json --md tests/results/v3/pig_entity_uv.md
+python3 check_entity_uv.py --self-test
+```
+
+检查项：`dimension`、`nonempty`、`canvas_margin`（atlas 左右至少 1px，顶/底为说明项）、
+`region_head/body/legs`。只有当尺寸正确、各标准区域非空且画布边距达标时判定 PASS。
+实现细节见 `docs/entity-uv-design.md` 与 `entity_uv_spec.py`。
+
+v3 实测：pig PASS；creeper 因左右触边（left=0,right=0）FAIL，但 head/body/legs 区域已非空。
+
+### 3.5 完整资产参考与坐标系
+
+本仓库刻意不内置原版素材；可复现的参考来自三类：
+
+1. **仓库内模板/文档**
+   - `builtin_models_fallback/`：chest、stairs、door、fence、wall 等 blockstate/model 占位模板。
+   - `docs/method-survey.md`：原版 blockstate/model/实体 UV 的调研结论与外部来源。
+   - `docs/tiling-design.md`、`docs/entity-uv-design.md`、`docs/prompt-design.md`：实现规范。
+   - `evidence/`：v1–v3 独立复核记录、tiling baseline、entity_uv 检查证据。
+2. **外部原版参考（不入库）**
+   - Minecraft Wiki：模型/资源包/皮肤坐标。
+   - 公开 vanilla assets 镜像（如 `InventivetalentDev/minecraft-assets`）。
+   - `vanilla_entity_ref/` 本地纸质 UV 模板，已被 `.gitignore` 排除。
+3. **坐标/atlas 约定**
+   - 方块：16x16 PNG，`cube_bottom_top` 用 `#top/#bottom/#side`；model `uv` 坐标为 0–16 的百分比。
+   - 实体：原点是左上，`x1,y1 -> x2,y2` 为半开区间；Java 实体模型按原版 atlas 直接采样。
+   - 资源包路径：方块 `assets/<ns>/textures/block/*.png`；实体替换原版 `assets/minecraft/textures/entity/<path>.png`。
+
+这样“完整参考”不是依赖某个私有素材库，而是把原版规则、本地模板、外部可获取来源与检查器绑定在一起。
 
 ## 4. 示例
 

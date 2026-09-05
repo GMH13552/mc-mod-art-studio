@@ -62,6 +62,77 @@ export LLM_MODEL=deepseek-v4-flash
 | `--package` | 同时打包资源包 |
 | `--out` | 输出目录 |
 
+## 方块可拼贴：block_multi
+
+`block_multi` 不是“一张透明剪影”，而是三张 **16x16 全不透明方块面**：
+
+| 文件 | 用途 | 模型变量 |
+|---|---|---|
+| `<name>_top.png` | 方块顶面 | `#top` |
+| `<name>_side.png` | 四个侧面共用 | `#side` |
+| `<name>_bottom.png` | 方块底面 | `#bottom` |
+
+`package_asset.py` 对 `block_multi` 使用 `minecraft:block/cube_bottom_top` 父模型；
+因此三张贴图必须满足：
+
+1. 边缘完全不透明（alpha >= 128，默认 checker 强制）。
+2. `side` 左右两列一致，四个侧面绕一圈才能无缝平铺。
+3. `side` 顶行与 `top` 四边、`side` 底行与 `bottom` 四边颜色连续（阈值内）。
+
+用 `check_tiling.py` 自动验证：
+
+```bash
+python3 check_tiling.py \
+  --top tests/runs/v3/glowstone/assets/mcmod/textures/block/q_836777f3_top.png \
+  --side tests/runs/v3/glowstone/assets/mcmod/textures/block/q_836777f3_side.png \
+  --bottom tests/runs/v3/glowstone/assets/mcmod/textures/block/q_836777f3_bottom.png \
+  --name glowstone --out-dir tests/results/v3
+```
+
+常用参数：`--threshold <RGB最大通道差>`（默认 32）、`--allow-transparent`（仅比较 RGB，不要求不透明）、`--out-json` / `--out-md` / `--out-dir`。内置自测：`python3 check_tiling.py --self-test`。设计细节见 `docs/tiling-design.md`。
+
+## 实体 UV 标准：entity_uv
+
+Java 原版实体模型是**硬编码**的；资源包只能替换
+`assets/minecraft/textures/entity/<path>.png`，不能靠普通模型 JSON 直接换实体模型。
+因此“可用的实体 UV”至少要求尺寸与 atlas 区域语义正确。
+
+当前 `check_entity_uv.py` 内置猪 / 苦力怕的标准 64x32 atlas 占位区域：
+
+| 实体 | 尺寸 | head | body | legs |
+|---|---|---|---|---|
+| pig | 64x32 | `0,0 -> 32,16` | `28,8 -> 64,32` | `0,16 -> 16,26` |
+| creeper | 64x32 | `0,0 -> 32,16` | `16,16 -> 40,32` | `0,16 -> 16,26` |
+
+（玩家皮肤另有 64x64 / 64x32 标准布局，见 `docs/entity-uv-design.md` 与 `entity_uv_spec.py`。）
+
+用 `check_entity_uv.py` 验证：
+
+```bash
+python3 check_entity_uv.py tests/runs/v3/pig/sprite.png --entity pig \
+  --json tests/results/v3/pig_entity_uv.json --md tests/results/v3/pig_entity_uv.md
+python3 check_entity_uv.py --self-test
+```
+
+检查项包括：尺寸、非空、画布边距（atlas 左右至少 1px；顶/底为说明项）、以及每个标准区域非空。设计细节见 `docs/entity-uv-design.md`。
+
+## 完整资产参考
+
+本仓库**不内置原版素材**，但保留可复现的参考来源与模板：
+
+- **仓库内可复用参考**
+  - `builtin_models_fallback/`：blockstate / model 几何占位模板（chest、stairs、door、fence 等）。
+  - `docs/`：`method-survey.md`（原版模型/实体 UV/资产来源调研）、`tiling-design.md`、`entity-uv-design.md`、`prompt-design.md`、`check_pixel_asset.md`。
+  - `examples/` 与 `tests/test_set.md`：项目自证示例与非自证测试集，后者不把前者当“正确答案”。
+  - `evidence/`：`review-1.md`（v2 复核）、`review-2.md`（v3 复核）、`review-template.md`（可复用清单）、`entity-uv-*` 与 `tiling-baseline*` 证据。
+- **原版素材来源（外部，不入库）**
+  - Minecraft Wiki：方块模型 Tutorial:Models、实体资源包、Skin 坐标。
+  - 公开 vanilla assets 镜像（如 `InventivetalentDev/minecraft-assets`）可补原版模型/blockstate/实体 UV 参考。
+  - `vanilla_entity_ref/` 仅本地保留纸质 UV 模板，已被 `.gitignore` 排除；克隆仓库不会得到原版 PNG。
+- **坐标系说明**
+  - 方块贴图：16x16，`cube_bottom_top` 的变量为 `#top/#bottom/#side`；`uv` 使用 0–16 的百分比坐标。
+  - 实体贴图：坐标原点为左上，`x1,y1 -> x2,y2` 表示半开区间 `[x1,x2) × [y1,y2)`；Java 实体直接按原版 atlas 布局采样。
+
 ## 设计流程
 
 `run_pipeline.py` 自动完成：
@@ -99,7 +170,9 @@ export LLM_MODEL=deepseek-v4-flash
 - `tests/README.md` 记录运行协议、`block_custom` 缺口与通过标准。
 - v2 结果：`tests/results/v2/summary.md` / `summary.json` / `tests/evidence/v2/*.md`；
   t01–t10 全部 `PIPELINE PASS`，所有 16 张 checker 报告均非空。
-- 可复用审核：`evidence/review-template.md` 是独立复核清单，`evidence/review-1.md` 是 v2 广谱测试的可复用审核记录。
+- v3 结果：`tests/results/v3/summary.md` / `summary.json` / `tests/results/v3/*_tiling.json|.md` / `*_entity_uv.json|.md` / `bow_pixel.json`；
+  覆盖 block_multi 非空方块面、实体 UV 标准区域、bow 负空间。
+- 可复用审核：`evidence/review-template.md` 是独立复核清单；`evidence/review-1.md` 是 v2 广谱测试的可复用审核记录，`evidence/review-2.md` 是 v3 可拼贴/实体 UV/bow 的独立复核记录。
 
 `tests/runs/` 是本地生成的大产物（PNG/raw/resourcepack），**不入库**（见 `.gitignore`）；
 `tests/reports/`（每张 PNG 的 JSON 像素证据）、`tests/evidence/` 与 `tests/results/summary*`
@@ -157,5 +230,7 @@ python3 build_style_prompt.py --self-test
 python3 compose_asset.py --self-test
 python3 package_asset.py --self-test
 python3 check_pixel_asset.py --self-test
+python3 check_tiling.py --self-test
+python3 check_entity_uv.py --self-test
 python3 -m unittest discover -s tests -v
 ```
