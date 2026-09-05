@@ -432,7 +432,9 @@ def _build_design_prompt(query: str, selected_anchors: list[dict]) -> str:
         lines.append(compact[:1600])
         lines.append("")
     lines.append("要求：")
-    lines.append("- 中心词（后面的名词，如 稿/斧/剑）决定主体形状；尽量少改，保留原版工具的对角构图；")
+    lines.append("- 中心词（后面的名词，如 稿/斧/剑/刀/皮）决定主体形状；材质/颜色由前面的修饰词参考，交给生成阶段。")
+    lines.append("- **若原版没有该物品的完整剪影**（如小刀、村民皮、自定义工具），允许从所选参考里**组合/缩短/变形**出更符合中心词的新剪影；判断标准是‘语义可辨’，而不是照搬最接近的整件（如长剑、柱子）。")
+    lines.append("- 尽量少改；但如果中心词需要新形状，改动幅度由你判断，目标是可辨认。")
     lines.append("- 输出 16 行、每行 16 个字符，`X`=不透明，`.`=透明；")
     lines.append("- 不要输出 PALETTE/INDEX GRID/颜色，只输出剪影计划。")
     lines.append("")
@@ -465,25 +467,29 @@ def _catalog_names(entries: list[dict]) -> set[str]:
     return names
 
 
-def _build_selection_prompt(query: str, form: str, catalog_text: str) -> str:
+def _build_selection_prompt(query: str, form: str, catalog_text: str, recommended: list[str]) -> str:
     """两段式第一段：只给名字清单，让模型选 2-4 个参考并说明借什么。"""
+    rec = "、".join(recommended[:12]) if recommended else "（无）"
     sel_prompt = (
         "# 选择参考（第一段：只输出选中的名字，不要画图）\n"
         "目标：%s（form=%s）\n"
-        "下面是全部可用的资源名（只有名字）。请从中**选择 2-4 个**你最想参考的资产，\n"
-        "并各用一行说明借什么（结构/配色/纹理/明暗）。\n\n"
+        "下面是**检索到的优先候选**（最相关，建议优先考虑）：\n%s\n\n"
+        "再下面是**全库资源名**（你也可以从这里面选）。\n"
+        "请从中**选择 2-4 个**你最想参考的资产，并各用一行说明借什么。\n\n"
         "%s\n\n"
         "输出格式：\n"
-        "- <资源名>: 借什么（如：bow: 弓形/弦；ender_eye: 绿色瞳孔/高光）\n"
+        "- <资源名>: 借什么（如：rabbit_hide: 皮张轮廓/毛边；leather: 皮革纹理）\n"
         "只要名字与借法，**不要输出像素网格**。\n"
-    ) % (query, form, catalog_text)
+        "> 偏正短语解析：查询里的**中心词（后面名词）**决定主体形状/类别参考；**修饰词（前面，如 红铜/村民）**决定材质/颜色参考。\n"
+    ) % (query, form, rec, catalog_text)
     return sel_prompt
 
 
-def _select_references_from_catalog(args, entries, query: str) -> list[str]:
+def _select_references_from_catalog(args, entries, query: str, retrieval: dict | None = None) -> list[str]:
     """执行第一段选择调用，返回选中的资源名列表。"""
     catalog_text = _build_catalog_text(entries)
-    sel_prompt = _build_selection_prompt(query, args.form or "item", catalog_text)
+    recommended = [a.get("name", "") for a in (retrieval or {}).get("anchors", []) if a.get("name")]
+    sel_prompt = _build_selection_prompt(query, args.form or "item", catalog_text, recommended)
     sel_args = argparse.Namespace(**vars(args))
     sel_args.llm_image = []
     sel_args.auto_visual_ref = False
@@ -875,7 +881,7 @@ def run(args: argparse.Namespace) -> int:
         selected_anchors: list[dict] = []
         if args.two_stage and args.raw is None and not args.prompt_only:
             print("[two-stage] 1/2: pick references from full resource name catalog")
-            chosen = _select_references_from_catalog(args, entries, args.query)
+            chosen = _select_references_from_catalog(args, entries, args.query, retrieval)
             print("      chosen: %s" % "、".join(chosen) if chosen else "      chosen: (none, fallback top)")
             selected_anchors = _select_anchors_by_name(pack, entries, index_base, chosen)
             pack["selected_refs"] = [a.get("name", "?") for a in selected_anchors]
