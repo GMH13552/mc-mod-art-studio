@@ -286,12 +286,10 @@ def _skeleton_ascii(sk: dict) -> list[str]:
 
 
 def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
-    """生成面向纯文本 LLM 的紧凑 prompt：设计分析 + 直接输出 HEX GRID。
+    """生成紧凑 prompt：设计要点 + PALETTE/INDEX GRID（-1 0 1 索引模式）。
 
-    经验：
-    - 全量 prompt（检索特征/风格规则/few-shot）会让模型写一堆理解然后输出全 -1；
-    - INDEX GRID 数字索引容易让模型画空；改用直接 #RRGGBB/---- 的 HEX GRID 更直观；
-    - 必须让模型先做“走向/轴线分析”，否则会出现手柄斜、水晶正的朝向问题。
+    通用设计原则（不针对某个具体物品）：方向统一、连接自然、剪影可辨、
+    纹样贴合形状；输出固定格式，不写解释。
     """
     cc = pack.get("concept_card") or {}
     lines = []
@@ -305,7 +303,7 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
         lines.append("- 语义：%s" % cc["description"])
     ps = cc.get("palette_scheme") or {}
     if ps:
-        lines.append("- 调色板（直接使用 #RRGGBB，至少 5~8 色）：base=%s light=%s dark=%s accent=%s outline=%s" % (
+        lines.append("- 调色板（5~8 色）：base=%s light=%s dark=%s accent=%s outline=%s" % (
             ps.get("base", "?"), ps.get("light", "?"), ps.get("dark", "?"),
             ps.get("accent", "?"), ps.get("outline", "?")))
         if ps.get("border_note"):
@@ -317,18 +315,8 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
         lines.append("- 形状：%s" % sp["silhouette"])
     ori = sp.get("orientation") or {}
     if ori:
-        lines.append("- 方位/构图：%s" % ori.get("composition_axis", "统一轴线"))
-        lines.append("- 连接：%s" % ori.get("connection_rule", "连接点对齐主轴"))
-        lines.append("- 轴线检查：%s" % ori.get("axis_check", "检查部件是否偏离轴线"))
-    sk = sp.get("structure_skeleton") or {}
-    if sk:
-        import json as _json
-        lines.append("- 结构骨架（几何引导，不是锁死颜色/纹理）：%s" % _json.dumps(sk, ensure_ascii=False))
-        ascii_map = _skeleton_ascii(sk)
-        if ascii_map:
-            lines.append("  结构布局图（H=棕色手柄占位，C=青绿水晶占位，.=透明；只表示大致布局，颜色/纹理/明暗由你设计）：")
-            for row in ascii_map:
-                lines.append("  " + row)
+        lines.append("- 方位/构图：%s" % ori.get("composition_axis", "统一方向"))
+        lines.append("- 连接：%s" % ori.get("connection_rule", "连接点自然对齐"))
     ppf = sp.get("part_pattern_flow") or []
     if ppf:
         lines.append("- 形状-纹样一体：")
@@ -345,51 +333,27 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
         lines.append("- 参考节点（仅语义参考，禁止复制像素）：%s" % "、".join(
             "%s(%s)" % (r.get("asset", "?"), r.get("role", "?")) for r in refs))
     lines.append("")
-    lines.append("# 走向/轴线设计（必须先想清楚，这是最重要的）")
-    lines.append("- 整根法杖只有一条主轴线（左下→右上）；杖身、握柄、水晶簇必须沿同一条斜线方向。")
-    lines.append("- 水晶簇不能“正着”竖在斜杖上：每根尖柱的方向都要与杖身轴线一致或围绕该轴线轻微分叉。")
-    lines.append("- 连接点：水晶簇底端锚定在杖身右上端端点，连接在轴线上，不悬空、不偏侧。")
-    lines.append("- 剪影可辨：去掉颜色只看形状，要能认出“斜杖 + 顶部水晶簇”。")
-    lines.append("- 部件必须分离：杖身/握柄是 2~3px 宽的细长棕色斜条；水晶簇只占顶部 4~7px 区域，和杖身有明显分界。")
-    lines.append("- 水晶簇必须是 3 根互相独立的尖柱，尖柱之间有透明空隙；禁止把水晶连成实心扇形/三角形。")
-    lines.append("- 杖身自下到上宽度基本一致（2~3px），禁止越接近水晶越宽、变成三角/雪糕筒。")
-    lines.append("- 水晶与杖身连接处只占 1~2 个像素，底部不要连成一片。")
-    lines.append("- 禁止把整个物体画成连续实心三角形/楔形/雪糕筒/一条粗斜块。")
-    lines.append("- 不同部件用不同色系 + 描边分隔（例如：棕色木柄 + 青绿色水晶 + 深色描边），不要全图一个色系糊在一起。")
+    lines.append("# 通用设计原则（每个物体都适用）")
+    lines.append("- 整体方向统一：所有部件沿同一主方向/轴线；附属物方向与主体一致或围绕主体自然分叉，禁止主体与附属朝向相反。")
+    lines.append("- 连接点自然：部件相接处与主轴/重心对齐，不悬空、不偏心、不错位。")
+    lines.append("- 剪影可辨：只看形状也能认出“这是什么”；部件之间用描边/色差/空隙区分，不要糊成实心团块。")
+    lines.append("- 纹样贴合形状：纹理/高光/图案沿部件的走向与明暗面流动，不脱离形状。")
     lines.append("")
-    lines.append("# 输出格式（HEX GRID，直接给颜色，不要再输出 PALETTE/INDEX GRID）")
+    lines.append("# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）")
+    lines.append("- 先写 2~3 行设计分析（主方向/部件走向/连接点），放在 FORMAT 之前；face 块内禁止解释。")
+    lines.append("- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；-1=透明，非负整数引用 PALETTE；非 -1 像素必须 >= 40；禁止全 -1 空图。")
     oc = pack.get("output_contract") or {}
-    _faces = oc.get("faces") or [{"face": "sprite", "file": "assets/mcmod/textures/item/sprite.png", "width": 16, "height": 16}]
-    _f0 = _faces[0]
-    lines.append("- 先写 2~3 行设计分析（主轴线/部件走向/连接点），放在 FORMAT 之前；face 块内禁止任何解释文字。")
-    lines.append("- 然后输出下面的固定头，并紧跟 %d 行 × %d 列的 HEX GRID：" % (_f0.get("height", 16), _f0.get("width", 16)))
-    lines.append("FORM=%s" % pack.get("form", "item"))
-    lines.append("=== face: %s ===" % _f0.get("face", "sprite"))
-    lines.append("FILE: %s" % _f0.get("file", "assets/mcmod/textures/item/sprite.png"))
-    lines.append("W=%d H=%d" % (_f0.get("width", 16), _f0.get("height", 16)))
-    lines.append("")
-    lines.append("HEX GRID")
-    lines.append("# 每行 16 个 token：#RRGGBB=不透明像素，----=透明；非 ---- 像素必须 >= 40；禁止输出全 ---- 空图。")
+    lines.append(oc.get("text", ""))
     if vision:
-        lines.append("# 已附带参考图（reference.png）作为结构引导：细柄 + 3 根独立水晶。")
-        lines.append("- 参考图的颜色分区必须保留：下方棕色斜条=木柄（#7A4A1E/#5A3413/#3E2613 系），上方青绿=水晶；禁止把整根法杖都涂成青绿。")
-        lines.append("- 三根水晶尖柱之间必须有 1 列透明空隙，不要连成一整块；不透明像素至少 40 个。")
-        lines.append("- 纹理要丰富：每根水晶加亮部 #8FCEC4 与暗部 #16403C 的棱面；手柄加 2~3 档棕色明暗颗粒；不要只画 1px 细线。")
-    sample_sections = [] if vision else _hex_sample_sections()
-    if sample_sections:
-        for title, rows in sample_sections:
-            lines.append("# 真实样本（%s）的 HEX GRID 格式示例——仅用于理解怎么填颜色/结构分层；禁止复制它的形状/配色：" % title)
-            lines.extend(rows)
-    else:
-        lines.append("# 示例：---- ---- ---- ----  /  ---- #ff0000 #ff4444 ----  /  ...（16 列）")
+        lines.append("# 已附带参考图（仅视觉引导；不要照搬像素，只参考结构/配色方向）")
     lines.append("")
-    lines.append("> 设计分析放在 FORMAT 之前；FORMAT 之后只允许 HEX GRID 数据行。")
+    lines.append("> 设计分析放在 FORMAT 之前；FORMAT 之后只允许 PALETTE + INDEX GRID 数据。")
     lines.append("")
     return "\n".join(lines)
 
 
 def _hex_contract_text(pack: dict) -> str:
-    """生成与 HEX GRID 匹配的 output_contract.text（只含格式骨架，不含完整示例）。"""
+    """生成 PALETTE + INDEX GRID 格式骨架（--1 0 1 索引模式）。"""
     form = pack.get("form", "item")
     faces = pack.get("output_contract", {}).get("faces") or [
         {"face": "sprite", "file": "assets/mcmod/textures/item/sprite.png", "width": 16, "height": 16}
@@ -400,8 +364,11 @@ def _hex_contract_text(pack: dict) -> str:
         lines.append("FILE: %s" % f.get("file", "assets/mcmod/textures/item/sprite.png"))
         lines.append("W=%d H=%d" % (f.get("width", 16), f.get("height", 16)))
         lines.append("")
-        lines.append("HEX GRID")
-        lines.append("# %d 行 x %d 列；---- 透明，#RRGGBB 不透明；非 ---- 像素必须 >= 40" % (
+        lines.append("PALETTE")
+        lines.append("# 在此列出 5~8 个颜色，每行：索引 十六进制，例如 0: #10282A")
+        lines.append("")
+        lines.append("INDEX GRID")
+        lines.append("# 共 %d 行，每行 %d 个整数；-1=透明，非负整数引用上面 PALETTE 索引；非 -1 像素必须 >= 40；禁止全 -1 空图。" % (
             f.get("height", 16), f.get("width", 16)))
         lines.append("")
     return "\n".join(lines).strip()

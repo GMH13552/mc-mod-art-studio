@@ -74,17 +74,17 @@
   },
   "reference_nodes": [
     {
-      "asset": "/tmp/glow_pack/retrieval_assets/brown_mushroom.png",
+      "asset": "/tmp/pack_mushroom_glowstone/retrieval_assets/brown_mushroom.png",
       "role": "color",
       "reason": "形状参考：蘑菇伞；图案参考：褐色伞盖；配色参考：#AA6E46"
     },
     {
-      "asset": "/tmp/glow_pack/retrieval_assets/brown_mushroom_block.png",
+      "asset": "/tmp/pack_mushroom_glowstone/retrieval_assets/brown_mushroom_block.png",
       "role": "pattern",
       "reason": "形状参考：蘑菇方块；图案参考：菌盖斑点/菌褶；配色参考：#96643C"
     },
     {
-      "asset": "/tmp/glow_pack/retrieval_assets/stone_axe.png",
+      "asset": "/tmp/pack_mushroom_glowstone/retrieval_assets/stone_axe.png",
       "role": "shape",
       "reason": "形状参考：斧头；图案参考：纹理/斑点；配色参考：#787878"
     }

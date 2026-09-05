@@ -72,59 +72,6 @@
       "head_anchor": "水晶簇锚定在杖身右上端（顶端），不是悬在画布垂直中心",
       "connection_rule": "连接处位于杖身顶端端点，且与杖身轴线重合；严禁‘手柄斜、杖头正’或连接点偏到侧面",
       "axis_check": "从杖尾到杖头用一条假想对角线贯穿，任何部件（握柄、杖身、中央主水晶）都不得偏离该轴线"
-    },
-    "structure_skeleton": {
-      "canvas": "16x16",
-      "handle": {
-        "waypoints": [
-          [
-            4,
-            14
-          ],
-          [
-            5,
-            13
-          ],
-          [
-            6,
-            12
-          ],
-          [
-            7,
-            11
-          ],
-          [
-            8,
-            10
-          ],
-          [
-            9,
-            9
-          ],
-          [
-            10,
-            8
-          ]
-        ],
-        "width_px": 2,
-        "color_hint": "棕色木柄"
-      },
-      "crystal_cluster": {
-        "spike_columns": [
-          8,
-          10,
-          12
-        ],
-        "transparent_columns": [
-          9,
-          11
-        ],
-        "base_y": 6,
-        "height_px": 3,
-        "width_px": 1,
-        "color_hint": "低饱和青绿水晶"
-      },
-      "rule": "这是几何结构骨架（位置/粗细/分离度），不是锁死的颜色模板；纹理、明暗、描边、细节完全由你设计。水晶必须按 spike_columns 画 3 根独立竖列，transparent_columns 必须保持透明；手柄沿 waypoints 走，总宽不超过 3px；下部（y>=9）必须用棕色系，禁止出现青绿；下部每行不透明像素 <= 4。"
     }
   },
   "reference_nodes": [
@@ -159,7 +106,7 @@
   "source": "concept_grounder:offline_rule",
   "method": "rule",
   "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
-  "retrieval_anchor_count": 4,
+  "retrieval_anchor_count": 3,
   "design_checklist": [
     {
       "id": "orientation",

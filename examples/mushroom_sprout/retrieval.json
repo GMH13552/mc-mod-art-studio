@@ -8,7 +8,7 @@
   "top": 3,
   "anchors": [
     {
-      "path": "/tmp/sprout_pack2/retrieval_assets/brown_mushroom.png",
+      "path": "/tmp/pack_mushroom_sprout/retrieval_assets/brown_mushroom.png",
       "name": "brown_mushroom",
       "category": "block",
       "role": "color",
@@ -33,7 +33,7 @@
       "palette_count": 1
     },
     {
-      "path": "/tmp/sprout_pack2/retrieval_assets/brown_mushroom_block.png",
+      "path": "/tmp/pack_mushroom_sprout/retrieval_assets/brown_mushroom_block.png",
       "name": "brown_mushroom_block",
       "category": "block",
       "role": "pattern",

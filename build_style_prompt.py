@@ -1602,6 +1602,14 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
             "参考节点（仅语义参考，禁止复制像素）",
             "非 ---- 像素必须 >= 40",
         )
+    elif "INDEX GRID" in prompt_text:
+        markers = (
+            "设计要点（先理解，再直接输出）",
+            "通用设计原则",
+            "INDEX GRID",
+            "参考节点（仅语义参考，禁止复制像素）",
+            "非 -1 像素必须 >= 40",
+        )
     else:
         markers = (
             "设计方案（先理解 → 配色 → 形状）",
@@ -1674,6 +1682,10 @@ def _validate_v2_prompt_pack(path: Path) -> list[str]:
         if "输出格式（HEX GRID" not in data["prompt"] or "参考节点" not in data["prompt"]:
             raise ValueError("v2 prompt missing features/output contract sections (compact HEX mode)")
         ok.append("v2 prompt embeds reference nodes and HEX output contract")
+    elif "INDEX GRID" in data["prompt"]:
+        if "通用设计原则" not in data["prompt"] or "INDEX GRID" not in data["prompt"]:
+            raise ValueError("v2 prompt missing features/output contract sections (compact INDEX mode)")
+        ok.append("v2 prompt embeds reference nodes and INDEX output contract")
     else:
         if "检索特征摘要" not in data["prompt"] or "输出契约" not in data["prompt"]:
             raise ValueError("v2 prompt missing features/output contract sections")

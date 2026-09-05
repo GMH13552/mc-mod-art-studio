@@ -1,1 +1,1 @@
-opencode-go:deepseek-v4-flash-vision-exp (reference.png + reasoning_effort=none)
+subagent (index grid, restored high-completeness generation)

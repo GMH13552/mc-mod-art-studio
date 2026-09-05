@@ -8,7 +8,7 @@
   "top": 3,
   "anchors": [
     {
-      "path": "/tmp/pipeline_vision4_ds/retrieval_assets/blaze_rod.png",
+      "path": "/tmp/pack_alien_crystal_wand/retrieval_assets/blaze_rod.png",
       "name": "blaze_rod",
       "category": "item",
       "role": "shape",
@@ -32,7 +32,7 @@
       "palette_count": 1
     },
     {
-      "path": "/tmp/pipeline_vision4_ds/retrieval_assets/diamond.png",
+      "path": "/tmp/pack_alien_crystal_wand/retrieval_assets/diamond.png",
       "name": "diamond",
       "category": "item",
       "role": "color",
@@ -56,7 +56,7 @@
       "palette_count": 1
     },
     {
-      "path": "/tmp/pipeline_vision4_ds/retrieval_assets/blue_crystal.png",
+      "path": "/tmp/pack_alien_crystal_wand/retrieval_assets/blue_crystal.png",
       "name": "blue_crystal",
       "category": "item",
       "role": "shape",
