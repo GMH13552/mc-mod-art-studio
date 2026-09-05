@@ -2,7 +2,7 @@
 
 - 日期：2026-09-05 (UTC+8)
 - Reviewer：engineer 产线复核（可复现命令；与 v3 证据一致）
-- 仓库 commit（被审）：`4899ede`（e4-close）
+- 仓库 commit（被审）：`e4-close` 提交（最终 hash 以 `git log -1 --format=%H` 为准）
 - 工作目录：`/tmp/mc-mod-art-studio-core`
 - 复核模板：`evidence/review-template.md` 的独立复核原则；本次为 v4 关闭复核，含 v3→v4 前后对照。
 

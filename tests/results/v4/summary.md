@@ -1,7 +1,7 @@
 # v4 e4-close 缺口关闭复跑结果
 
 - 日期：2026-09-05 (UTC+8)
-- 仓库 commit：`4899ede`（e4-close 提交）
+- 仓库 commit：`e4-close` 提交（最终 hash 以 `git log -1 --format=%H` 为准）
 - 来源：`tests/test_set.md` t03/t04/t05/t06/t09/t10
 - v3 基线：`tests/results/v3/summary.md`（bricks/lapis tiling FAIL、creeper canvas_margin FAIL、bow 细弧+弦不达标）
 - v4 方法：不重写 checker 阈值，改为通用后处理脚本修复已生成的 v3 像素产物：
