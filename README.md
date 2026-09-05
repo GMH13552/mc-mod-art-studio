@@ -191,7 +191,7 @@ python3 fix_entity_margin.py <orig-sprite.png> --out <fixed-sprite.png> --margin
   覆盖 block_multi 非空方块面、实体 UV 标准区域、bow 负空间。
 - v4 结果：`tests/results/v4/summary.md` / `summary.json` / `tests/results/v4/*_tiling.json|.md` / `*_entity_uv.json|.md` / `bow_pixel.json|.md`；
   关闭 v3 剩余缺口（bricks/lapis tiling、creeper canvas_margin、bow 细弧+弦）。
-- 可复用审核：`evidence/review-template.md` 是独立复核清单；`evidence/review-1.md` 是 v2 广谱测试的可复用审核记录，`evidence/review-2.md` 是 v3 可拼贴/实体 UV/bow 的独立复核记录。
+- 可复用审核：`evidence/review-template.md` 是独立复核清单；`evidence/review-1.md` 是 v2 广谱测试的可复用审核记录，`evidence/review-2.md` 是 v3 可拼贴/实体 UV/bow 的独立复核记录，`evidence/review-3.md` 是 v4 关闭剩余缺口的独立复核记录。
 
 `tests/runs/` 是本地生成的大产物（PNG/raw/resourcepack），**不入库**（见 `.gitignore`）；
 `tests/reports/`（每张 PNG 的 JSON 像素证据）、`tests/evidence/` 与 `tests/results/summary*`
@@ -243,7 +243,24 @@ python3 check_pixel_asset.py tests/runs/v4/bow/sprite.png --expected-size 16x16 
 这两项改进在 v2 广谱测试中体现为：t01–t10 全部非空、pipeline 全部 PASS；详见
 `tests/results/v2/summary.md`。
 
-## 示例
+## 效果图
+
+### 总览（examples + 广谱测试产物）
+
+![showcase_all](showcase_all.png)
+
+`showcase_all.png`：左侧为项目 examples（水晶法杖、蘑菇幼苗），右侧为 v2/v4 广谱测试产物（弓、花、树苗、猪、苦力怕、方块面等）。
+
+### v4 可用性验证图
+
+![showcase_v4](docs/screenshots/showcase_v4.png)
+
+`showcase_v4.png`：v4 关闭缺口后的 12 格验证图：
+- **bow**（细弧 + 弦，`opaque_ratio=0.37`）；
+- **bricks / lapis_block / glowstone** 的 top/side/bottom 三面（`check_tiling` PASS）；
+- **pig / creeper** 64x32 标准实体 atlas（`check_entity_uv` PASS）。
+
+### 示例
 
 ![showcase](showcase.png)
 
