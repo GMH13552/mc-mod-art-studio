@@ -696,15 +696,7 @@ def _generic_card(
 ) -> dict:
     anchors = _anchor_summary(retrieval)
     parts = list(anchors["parts"]) or ["主体"]
-    extra_parts, pattern_override = _pattern_intent(query)
-    if extra_parts and len(extra_parts) >= 2:
-        # 类别有明确部件（工具/眼睛等）时，用它们替换掉聚合出来的“船体/矿石”等杂质
-        parts = list(extra_parts)
-    else:
-        for p in extra_parts:
-            if p not in parts:
-                parts.append(p)
-    # 去重/去掉 “主体” 这种占位重复
+    # 去重/去掉 “主体” 这种占位重复（不写死任何类别部件）
     seen = set()
     clean_parts = []
     for p in parts:
@@ -731,11 +723,7 @@ def _generic_card(
     colors = anchors["colors"] or []
     color_hint = " ".join(colors[:5]) if colors else "使用检索调色板"
     shape_hint = "；".join(anchors["shape"]) if anchors["shape"] else form
-    pattern_hint = pattern_override or ("；".join(anchors["pattern"]) if anchors["pattern"] else "无明显图案")
-    for _t in sorted(_TOOL_SHAPE_OVERRIDES, key=len, reverse=True):
-        if _t in query:
-            shape_hint = _TOOL_SHAPE_OVERRIDES[_t]
-            break
+    pattern_hint = "；".join(anchors["pattern"]) if anchors["pattern"] else "无明显图案"
     goals = []
     if form == "block_custom":
         keys = list(face_regions.keys())
@@ -767,13 +755,6 @@ def _generic_card(
     dark_color = colors[2] if len(colors) >= 3 else "#3A3A3A"
     accent_color = colors[3] if len(colors) >= 4 else "#B8942B"
     outline_color = colors[4] if len(colors) >= 5 else "#222222"
-    mat = _material_intent(query)
-    if mat:
-        base_color, light_color, dark_color, accent_color, outline_color, material_hint = mat
-        if pattern_hint:
-            pattern_hint = pattern_hint + "；" + material_hint
-        else:
-            pattern_hint = material_hint
 
     return {
         "item_name": "%s (%s)" % (
@@ -847,6 +828,7 @@ GENERIC_DESIGN_PRINCIPLES = [
     "负空间：部件之间与内部孔洞保留至少 1px 透明负空间（block_multi 整面不透明方块除外），避免实心团块。",
     "禁止实心团块：主体必须有内部明暗/纹理/负空间，不能无细节地满涂成一个大色块。",
     "参考完整资源：不要只看单张示例图；方块类要同时理解顶/侧/底三面、模型与 blockstate 契约，实体要按标准 UV 图集/区域语义理解，多面/实体统一走结构化输出。",
+    "偏正短语解析：查询若是“修饰词+中心词”（如 红铜稿、钻石剑、木斧），**后面的中心词决定主体形状/类别参考**，前面的修饰词（材质/颜色）决定**配色/材质参考**；二者可分别参考不同原版资产，不要用同一个词源。",
 ]
 
 # 通用像素细节规则：不绑定任何具体物品/材质/形状，只描述 Minecraft 像素资产的

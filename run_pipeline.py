@@ -551,6 +551,30 @@ def _selected_topology_lines(pack: dict) -> list[str]:
     return lines
 
 
+def _refresh_concept_parts_from_selected(pack: dict, selected_anchors: list[dict]) -> None:
+    """两段式选完后，用“选中参考”的 parts 刷新概念卡，避免 top12 里的杂质部件混入。"""
+    if not selected_anchors:
+        return
+    s = cg._anchor_summary({"anchors": selected_anchors})
+    parts = [p for p in (s.get("parts") or []) if p and p.strip()]
+    seen = set()
+    clean = []
+    for p in parts:
+        base = p.replace(" 主体", "").strip()
+        if base and base not in seen and base not in ("贴图主体", "主体"):
+            seen.add(base)
+            clean.append(base)
+    if clean:
+        cc = pack.get("concept_card") or {}
+        cc["parts"] = clean
+        # 顺带把形状/图案也换成选中参考聚出的结果
+        if s.get("shape"):
+            cc.setdefault("shape_pattern", {})["silhouette"] = "；".join(s["shape"])
+        if s.get("pattern"):
+            cc.setdefault("shape_pattern", {})["detail_pattern"] = "；".join(s["pattern"])
+        pack["concept_card"] = cc
+
+
 def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     """生成紧凑 prompt：设计要点 + PALETTE/INDEX GRID（-1 0 1 索引模式）。
 
@@ -754,6 +778,7 @@ def run(args: argparse.Namespace) -> int:
             print("      chosen: %s" % "、".join(chosen) if chosen else "      chosen: (none, fallback top)")
             selected_anchors = _select_anchors_by_name(pack, entries, index_base, chosen)
             pack["selected_refs"] = [a.get("name", "?") for a in selected_anchors]
+            _refresh_concept_parts_from_selected(pack, selected_anchors)
             # 生成阶段不再塞全目录，只把选中参考的 compact 细节注入
             pack["catalog"] = None
             pack["reference_block"] = _build_selected_reference_block(
