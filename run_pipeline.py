@@ -261,6 +261,10 @@ def _render_raw_faces(raw_text: str, out_dir: Path, pack: dict) -> list[Path]:
         block = _standardize_face_block(block, face_meta)
         cleaned = pa._clean_face_text(block)
         img = t2t.text_to_image(cleaned)
+        if face_meta:
+            dest = out_dir / face_meta["file"]
+        else:
+            dest = out_dir / ("%s.png" % (fid or "face"))
         dest.parent.mkdir(parents=True, exist_ok=True)
         img.save(dest, "PNG")
         saved.append(dest)
