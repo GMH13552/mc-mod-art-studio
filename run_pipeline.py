@@ -434,6 +434,7 @@ def _build_design_prompt(query: str, selected_anchors: list[dict]) -> str:
     lines.append("要求：")
     lines.append("- 中心词（后面的名词，如 稿/斧/剑/刀/皮）决定主体形状；材质/颜色由前面的修饰词参考，交给生成阶段。")
     lines.append("- **若原版没有该物品的完整剪影**（如小刀、村民皮、自定义工具），允许从所选参考里**组合/缩短/变形**出更符合中心词的新剪影；判断标准是‘语义可辨’，而不是照搬最接近的整件（如长剑、柱子）。")
+    lines.append("- **修饰词要体现在材质/颜色/图案上**：如‘村民皮’要比普通皮革有村民特征（肤色/服饰色/职业细节），‘红铜稿’要明显铜色；但**形状仍按中心词**。")
     lines.append("- 尽量少改；但如果中心词需要新形状，改动幅度由你判断，目标是可辨认。")
     lines.append("- 输出 16 行、每行 16 个字符，`X`=不透明，`.`=透明；")
     lines.append("- 不要输出 PALETTE/INDEX GRID/颜色，只输出剪影计划。")
@@ -449,9 +450,15 @@ def _design_shape_plan(args, query: str, selected_anchors: list[dict]) -> list[s
     prompt = _build_design_prompt(query, selected_anchors)
     dargs = argparse.Namespace(**vars(args))
     dargs.llm_image = []
-    dargs.auto_visual_ref = False
-    print("[two-stage] design shape plan from real references ...")
-    resp = _generate_raw_text(dargs, prompt, auto_images=[])
+    # 视觉模型时，把选中参考的真实 PNG 也传给设计形状计划，让 design 看到真图。
+    auto_img: list[str] = []
+    if getattr(args, "auto_visual_ref", False):
+        for a in selected_anchors:
+            p = a.get("path") or ""
+            if p and Path(p).exists():
+                auto_img.append(str(Path(p).resolve()))
+    print("[two-stage] design shape plan from real references ... %d images" % len(auto_img))
+    resp = _generate_raw_text(dargs, prompt, auto_images=auto_img)
     plan = _parse_shape_plan(resp)
     print("[two-stage] shape plan rows: %d" % len(plan))
     return plan
@@ -482,6 +489,7 @@ def _build_selection_prompt(query: str, form: str, catalog_text: str, recommende
         "只要名字与借法，**不要输出像素网格**。\n"
         "> 偏正短语解析：查询里的**中心词（后面名词）**决定主体形状/类别参考；**修饰词（前面，如 红铜/村民）**决定材质/颜色参考。\n"
         "> **不要被上面简单匹配候选限制**；如果它们不合适，请从全库选更贴合的资源。\n"
+        "> **若中心词没有对应完整资源**（如 小刀、自定义工具），选择时要考虑**功能/形态相近的组合**（如短刃+柄、剪刀+柄），不要只选最像的整件长剑。\n"
     ) % (query, form, rec, catalog_text)
     return sel_prompt
 
