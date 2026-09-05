@@ -417,6 +417,13 @@ def _select_references_from_catalog(args, entries, query: str) -> list[str]:
                     chosen.append(n)
                 if len(chosen) >= 4:
                     break
+    # 眼球/眼睛类：强制至少带一个眼睛参考，作为眼球拓扑模板。
+    if "眼" in query or "eye" in query.lower():
+        eye_priority = ["ender_eye", "spider_eye", "fermented_spider_eye", "phantom_eyes"]
+        for en in eye_priority:
+            if en in names and en not in chosen:
+                chosen.append(en)
+                break
     if not chosen:
         print("[two-stage] no names parsed; fallback to top anchors")
     return chosen
@@ -532,6 +539,17 @@ def _bow_silhouette_from_pack(pack: dict) -> list[str]:
     return []
 
 
+def _eye_silhouette_from_pack(pack: dict) -> list[str]:
+    """从 anchor 里找一个眼睛（ender_eye/spider_eye/eye）的剪影。"""
+    for a in pack.get("anchors", []):
+        name = str(a.get("name", ""))
+        if any(k in name.lower() for k in ("ender_eye", "spider_eye", "eye")):
+            sil = _extract_silhouette(a.get("compact_text", ""))
+            if sil:
+                return sil
+    return []
+
+
 def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     """生成紧凑 prompt：设计要点 + PALETTE/INDEX GRID（-1 0 1 索引模式）。
 
@@ -625,6 +643,14 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
             lines.append("## 弓形拓扑参考（X=不透明 . =透明；按此拓扑画，颜色按上面配色/配饰重上；不要画成直线/方块/满弦）")
             lines.append("```")
             lines.extend(sil)
+            lines.append("```")
+            lines.append("")
+    if "眼" in (pack.get("query") or "").lower() or "eye" in (pack.get("query") or "").lower():
+        esil = _eye_silhouette_from_pack(pack)
+        if esil:
+            lines.append("## 眼球拓扑参考（X=不透明 . =透明；这是眼睛的剪影，画出眼白+虹膜+瞳孔+高光；不要画成纯色方块）")
+            lines.append("```")
+            lines.extend(esil)
             lines.append("```")
             lines.append("")
     lines.append("# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）")
