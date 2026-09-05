@@ -1,0 +1,470 @@
+{
+  "name": "concept_card",
+  "query": "蘑菇萤石",
+  "form": "block_multi",
+  "form_note": "block_multi：顶/侧/底三面 + model + blockstate",
+  "form_source": "forced",
+  "type": "block",
+  "size": "16x16",
+  "width": 16,
+  "height": 16,
+  "fusion": "retrieval features fusion",
+  "retrieval_method": "rule",
+  "retrieval_method_note": "内置中文别名+关键词规则，未调用外部 LLM 子代理；离线可复现。",
+  "anchors": [
+    {
+      "path": "/tmp/glow_pack/retrieval_assets/brown_mushroom.png",
+      "name": "brown_mushroom",
+      "category": "block",
+      "role": "color",
+      "features": {
+        "shape": "蘑菇伞",
+        "pattern": "褐色伞盖",
+        "colors": [
+          "#AA6E46"
+        ],
+        "parts": [
+          "菌盖",
+          "菌柄"
+        ],
+        "attraction": [
+          "大地色"
+        ]
+      },
+      "score": 3,
+      "matched_terms": [
+        "mushroom"
+      ],
+      "palette_count": 1,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n```\n\n## Palette (hex)\n```\n 0: #aa6e46\n```\n\n## Index grid (-1 = transparent)\n```\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n```",
+      "seed_palette": [
+        " 0: #aa6e46"
+      ],
+      "seed_index": [
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0"
+      ]
+    },
+    {
+      "path": "/tmp/glow_pack/retrieval_assets/brown_mushroom_block.png",
+      "name": "brown_mushroom_block",
+      "category": "block",
+      "role": "pattern",
+      "features": {
+        "shape": "蘑菇方块",
+        "pattern": "菌盖斑点/菌褶",
+        "colors": [
+          "#96643C"
+        ],
+        "parts": [
+          "菌盖",
+          "菌柄"
+        ],
+        "attraction": [
+          "大地色"
+        ]
+      },
+      "score": 3,
+      "matched_terms": [
+        "mushroom"
+      ],
+      "palette_count": 1,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n.O.O.O.O.O.O.O.O\nOOOOOOOOOOOOOOOO\n```\n\n## Palette (hex)\n```\n 0: #96643c\n```\n\n## Index grid (-1 = transparent)\n```\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n```",
+      "seed_palette": [
+        " 0: #96643c"
+      ],
+      "seed_index": [
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0"
+      ]
+    },
+    {
+      "path": "/tmp/glow_pack/retrieval_assets/stone_axe.png",
+      "name": "stone_axe",
+      "category": "block",
+      "role": "shape",
+      "features": {
+        "shape": "斧头",
+        "pattern": "纹理/斑点",
+        "colors": [
+          "#787878"
+        ],
+        "parts": [
+          "斧刃/头",
+          "柄"
+        ],
+        "attraction": []
+      },
+      "score": 3,
+      "matched_terms": [
+        "stone"
+      ],
+      "palette_count": 1,
+      "size": "16x16",
+      "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n.X.X.X.X.X.X.X.X\nXXXXXXXXXXXXXXXX\n```\n\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange/brown | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n.=.=.=.=.=.=.=.=\n================\n.=.=.=.=.=.=.=.=\n================\n.=.=.=.=.=.=.=.=\n================\n.=.=.=.=.=.=.=.=\n================\n.=.=.=.=.=.=.=.=\n================\n.=.=.=.=.=.=.=.=\n================\n.=.=.=.=.=.=.=.=\n================\n.=.=.=.=.=.=.=.=\n================\n```\n\n## Palette (hex)\n```\n 0: #787878\n```\n\n## Index grid (-1 = transparent)\n```\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0\n 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n```",
+      "seed_palette": [
+        " 0: #787878"
+      ],
+      "seed_index": [
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0",
+        "-1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0 -1  0",
+        " 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0"
+      ]
+    }
+  ],
+  "features": {
+    "summary": "形状：蘑菇伞；蘑菇方块；斧头\n图案：褐色伞盖；菌盖斑点/菌褶；纹理/斑点\n颜色：#AA6E46 #96643C #787878\n部位：菌盖；菌柄；斧刃/头；柄\n吸引点：大地色",
+    "shape": [
+      "蘑菇伞",
+      "蘑菇方块",
+      "斧头"
+    ],
+    "pattern": [
+      "褐色伞盖",
+      "菌盖斑点/菌褶",
+      "纹理/斑点"
+    ],
+    "colors": [
+      "#AA6E46",
+      "#96643C",
+      "#787878"
+    ],
+    "parts": [
+      "菌盖",
+      "菌柄",
+      "斧刃/头",
+      "柄"
+    ],
+    "attraction": [
+      "大地色"
+    ],
+    "sources": {
+      "shape": [
+        "brown_mushroom",
+        "brown_mushroom_block",
+        "stone_axe"
+      ],
+      "pattern": [
+        "brown_mushroom",
+        "brown_mushroom_block",
+        "stone_axe"
+      ],
+      "colors": [
+        "brown_mushroom",
+        "brown_mushroom_block",
+        "stone_axe"
+      ],
+      "parts": [
+        "brown_mushroom",
+        "brown_mushroom",
+        "stone_axe",
+        "stone_axe"
+      ],
+      "attraction": [
+        "brown_mushroom"
+      ]
+    },
+    "anchor_count": 3
+  },
+  "style_rules": {
+    "palette": [
+      "- 调色板数量 6-11；避免高饱和荧光色，保留少量亮/暗阶。"
+    ],
+    "light_dark": [
+      "- 左上偏亮、右下偏暗；局部使用 1px 色阶表现体积。"
+    ],
+    "outline": [
+      "- 外轮廓使用 1px 深色/暗色自然描边，不做均匀黑框。"
+    ],
+    "noise": [
+      "- 使用少量 1px 噪点/抖动，避免大面积平涂和模糊渐变。"
+    ]
+  },
+  "few_shot": {
+    "asset": "red_mushroom_block.png",
+    "type": "block",
+    "form": "block_multi",
+    "path": "builtin_fallback",
+    "compact_text": "## Silhouette (X=opaque, .=transparent)\n```\n................\n.......X........\n.......X........\n.......X........\n```\n## ASCII color map\nLegend: . transparent | # near-black | + dark-gray | = light-gray | @ white | R red | O orange | Y yellow | G green | C cyan | B blue | M magenta | P pink\n```\n................\n.......O........\n.......O........\n.......O........\n```\n## Palette (hex)\n```\n 0: #888888\n```\n## Index grid (-1 = transparent)\n```\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1  0 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1\n```\n\n> 内置极简 few-shot：仅示意格式，不包含任何原版贴图；实际生成必须使用新形状/图案。\n",
+    "fallback_note": "style_cards/snippets 不存在，使用内置极简 few-shot（非原版素材）。"
+  },
+  "file_contract": {
+    "form": "block_multi",
+    "modid": "mcmod",
+    "files": [
+      {
+        "path": "assets/mcmod/textures/block/concept_card_top.png",
+        "kind": "texture",
+        "width": 16,
+        "height": 16,
+        "alpha": false,
+        "face": "top"
+      },
+      {
+        "path": "assets/mcmod/textures/block/concept_card_side.png",
+        "kind": "texture",
+        "width": 16,
+        "height": 16,
+        "alpha": false,
+        "face": "side"
+      },
+      {
+        "path": "assets/mcmod/textures/block/concept_card_bottom.png",
+        "kind": "texture",
+        "width": 16,
+        "height": 16,
+        "alpha": false,
+        "face": "bottom"
+      },
+      {
+        "path": "assets/mcmod/models/block/concept_card.json",
+        "kind": "model",
+        "format": "block/cube",
+        "face": null
+      },
+      {
+        "path": "assets/mcmod/blockstates/concept_card.json",
+        "kind": "blockstate",
+        "format": "variants",
+        "face": null
+      }
+    ],
+    "templates": {
+      "assets/mcmod/models/block/concept_card.json": {
+        "parent": "minecraft:block/cube",
+        "textures": {
+          "particle": "mcmod:block/concept_card_side",
+          "top": "mcmod:block/concept_card_top",
+          "bottom": "mcmod:block/concept_card_bottom",
+          "side": "mcmod:block/concept_card_side"
+        }
+      },
+      "assets/mcmod/blockstates/concept_card.json": {
+        "variants": {
+          "": {
+            "model": "mcmod:block/concept_card"
+          }
+        }
+      }
+    },
+    "note": "文件路径按 Minecraft 资源包约定；templates 为空白/示例 JSON。"
+  },
+  "output_contract": {
+    "form": "block_multi",
+    "faces": [
+      {
+        "face": "top",
+        "file": "assets/mcmod/textures/block/concept_card_top.png",
+        "width": 16,
+        "height": 16,
+        "palette_placeholder": "#RRGGBB",
+        "grid_format": "共 16 行，每行 16 个整数；-1 表示透明，非负整数引用 PALETTE 索引。",
+        "seed_contract": null,
+        "seed_note": "格式骨架：不嵌入完整锚点 grid；输出必须由 LLM 新生成，不得复制参考贴图。"
+      },
+      {
+        "face": "side",
+        "file": "assets/mcmod/textures/block/concept_card_side.png",
+        "width": 16,
+        "height": 16,
+        "palette_placeholder": "#RRGGBB",
+        "grid_format": "共 16 行，每行 16 个整数；-1 表示透明，非负整数引用 PALETTE 索引。",
+        "seed_contract": null,
+        "seed_note": "格式骨架：不嵌入完整锚点 grid；输出必须由 LLM 新生成，不得复制参考贴图。"
+      },
+      {
+        "face": "bottom",
+        "file": "assets/mcmod/textures/block/concept_card_bottom.png",
+        "width": 16,
+        "height": 16,
+        "palette_placeholder": "#RRGGBB",
+        "grid_format": "共 16 行，每行 16 个整数；-1 表示透明，非负整数引用 PALETTE 索引。",
+        "seed_contract": null,
+        "seed_note": "格式骨架：不嵌入完整锚点 grid；输出必须由 LLM 新生成，不得复制参考贴图。"
+      }
+    ],
+    "text": "FORM=block_multi\nFACES=3\n\n=== face: top ===\nFILE: assets/mcmod/textures/block/concept_card_top.png\nW=16 H=16\n\nHEX GRID\n# 16 行 x 16 列；---- 透明，#RRGGBB 不透明；非 ---- 像素必须 >= 40\n\n=== face: side ===\nFILE: assets/mcmod/textures/block/concept_card_side.png\nW=16 H=16\n\nHEX GRID\n# 16 行 x 16 列；---- 透明，#RRGGBB 不透明；非 ---- 像素必须 >= 40\n\n=== face: bottom ===\nFILE: assets/mcmod/textures/block/concept_card_bottom.png\nW=16 H=16\n\nHEX GRID\n# 16 行 x 16 列；---- 透明，#RRGGBB 不透明；非 ---- 像素必须 >= 40",
+    "note": "声明每个 face 需要输出的像素块文本的格式骨架（W/H 模板 + PALETTE 占位 + index grid 行列规则）；不提供任何完整锚点 grid，实际像素内容必须由 LLM 新生成。"
+  },
+  "output_contract_note": "按 form 声明的像素块输出清单；实际 LLM 应逐 face 输出可被 text_to_texture.py 解析的文本块。",
+  "concept_card": {
+    "item_name": "蘑菇萤石 (cobblestone end_stone mooshroom)",
+    "description": "一个基于检索特征生成的 Minecraft block_multi；它是蘑菇伞；蘑菇方块；斧头，包含菌盖、菌柄、斧刃/头、柄。",
+    "parts": [
+      "菌盖 主体",
+      "菌柄 主体",
+      "斧刃/头 主体",
+      "柄 主体"
+    ],
+    "face_regions": {
+      "top": "方块顶面（16x16）；主题：褐色伞盖；菌盖斑点/菌褶；纹理/斑点",
+      "side": "方块侧面（16x16）；主题：褐色伞盖；菌盖斑点/菌褶；纹理/斑点",
+      "bottom": "方块底面（16x16）；主题：褐色伞盖；菌盖斑点/菌褶；纹理/斑点"
+    },
+    "visual_goals": [
+      "top 使用 #AA6E46 #96643C #787878 配色，绘制褐色伞盖；菌盖斑点/菌褶；纹理/斑点；轮廓/剪影保持 蘑菇伞；蘑菇方块；斧头。",
+      "side 使用 #AA6E46 #96643C #787878 配色，绘制褐色伞盖；菌盖斑点/菌褶；纹理/斑点；轮廓/剪影保持 蘑菇伞；蘑菇方块；斧头。",
+      "bottom 使用 #AA6E46 #96643C #787878 配色，绘制褐色伞盖；菌盖斑点/菌褶；纹理/斑点；轮廓/剪影保持 蘑菇伞；蘑菇方块；斧头。"
+    ],
+    "minecraft_reference": "brown_mushroom；brown_mushroom_block；stone_axe",
+    "avoid": [
+      "不要复制任何参考贴图的逐像素图案；",
+      "不要画成与检索主题无关的物体；",
+      "不要丢失 block_multi 的几何/形式特征。"
+    ],
+    "palette_scheme": {
+      "base": "#AA6E46",
+      "light": "#96643C",
+      "dark": "#787878",
+      "accent": "#B8942B",
+      "outline": "#222222",
+      "border_note": "外轮廓 1px 深色；不同部件之间用暗色/色差自然分隔。",
+      "saturation_note": "整图保持中等以下饱和度，局部亮面只作 1px 提示，避免荧光刺眼。"
+    },
+    "shape_pattern": {
+      "silhouette": "蘑菇伞；蘑菇方块；斧头",
+      "parts": [
+        "菌盖",
+        "菌柄",
+        "斧刃/头",
+        "柄"
+      ],
+      "border": "沿外轮廓 1px 深色描边；部件接缝用暗色分隔。",
+      "shading": "左上偏亮、右下偏暗；内部用 1px 色阶表现体积。",
+      "detail_pattern": "褐色伞盖；菌盖斑点/菌褶；纹理/斑点",
+      "shape_lock_optional": true,
+      "part_pattern_flow": [
+        {
+          "part": "菌盖",
+          "shape": "部件轮廓/结构",
+          "pattern": "褐色伞盖；菌盖斑点/菌褶；纹理/斑点",
+          "flow": "纹样沿该部件轮廓/明暗面走向贴合，不脱离形状独立存在。"
+        },
+        {
+          "part": "菌柄",
+          "shape": "部件轮廓/结构",
+          "pattern": "褐色伞盖；菌盖斑点/菌褶；纹理/斑点",
+          "flow": "纹样沿该部件轮廓/明暗面走向贴合，不脱离形状独立存在。"
+        },
+        {
+          "part": "斧刃/头",
+          "shape": "部件轮廓/结构",
+          "pattern": "褐色伞盖；菌盖斑点/菌褶；纹理/斑点",
+          "flow": "纹样沿该部件轮廓/明暗面走向贴合，不脱离形状独立存在。"
+        },
+        {
+          "part": "柄",
+          "shape": "部件轮廓/结构",
+          "pattern": "褐色伞盖；菌盖斑点/菌褶；纹理/斑点",
+          "flow": "纹样沿该部件轮廓/明暗面走向贴合，不脱离形状独立存在。"
+        }
+      ],
+      "integration_note": "先用形状确定结构，再让纹样贴合每个部件的走向/边缘/明暗面；纹样不得脱离形状独立存在。"
+    },
+    "reference_nodes": [
+      {
+        "asset": "/tmp/glow_pack/retrieval_assets/brown_mushroom.png",
+        "role": "color",
+        "reason": "形状参考：蘑菇伞；图案参考：褐色伞盖；配色参考：#AA6E46"
+      },
+      {
+        "asset": "/tmp/glow_pack/retrieval_assets/brown_mushroom_block.png",
+        "role": "pattern",
+        "reason": "形状参考：蘑菇方块；图案参考：菌盖斑点/菌褶；配色参考：#96643C"
+      },
+      {
+        "asset": "/tmp/glow_pack/retrieval_assets/stone_axe.png",
+        "role": "shape",
+        "reason": "形状参考：斧头；图案参考：纹理/斑点；配色参考：#787878"
+      }
+    ],
+    "form": "block_multi",
+    "query": "蘑菇萤石",
+    "source": "concept_grounder:offline_rule",
+    "method": "rule",
+    "method_note": "内置中文关键词+原版模板特征，未调用外部 LLM 子代理；离线可复现。",
+    "retrieval_anchor_count": 3,
+    "design_checklist": [
+      {
+        "id": "orientation",
+        "item": "方位/构图一致性",
+        "must": "所有部件沿同一条构图轴/方向，主体朝向一致；禁止出现‘手柄斜、头部正’、部件各朝各的现象。",
+        "self_check": "画之前先用一句话描述整体轴线（如左下→右上），再检查每个部件是否落在这条轴上。"
+      },
+      {
+        "id": "connection",
+        "item": "连接点对齐",
+        "must": "部件之间的连接点与主轴/中心对齐，不偏心、不悬空、不错位。",
+        "self_check": "检查杖头/部件是否锚定在手柄/主体的顶端端点，连接处是否位于轴线上。"
+      },
+      {
+        "id": "semantic",
+        "item": "语义可辨",
+        "must": "16x16 剪影一眼能看出‘这是什么’；主体清晰，不依赖文字说明。",
+        "self_check": "遮住颜色只看 alpha 剪影，仍能认出物品/方块/十字植物语义。"
+      },
+      {
+        "id": "palette",
+        "item": "配色层次",
+        "must": "包含 base/light/dark/outline；有明暗体积和自然描边，避免荧光平涂。",
+        "self_check": "每个部件至少有亮部/暗部/描边三档色阶；饱和度不过高。"
+      },
+      {
+        "id": "pattern_flow",
+        "item": "纹样与形状一体",
+        "must": "纹样沿形状的走向/边缘/明暗面流动，不脱离形状独立存在。",
+        "self_check": "逐部件核对 part_pattern_flow：纹样方向是否与部件形状一致。"
+      },
+      {
+        "id": "frame",
+        "item": "边框/背景",
+        "must": "透明背景、主体不贴边、不留明显空洞；16x16 尺寸内主体占位合理（约 8~14px）。",
+        "self_check": "检查 bbox 是否居中、四周是否留至少 1px 透明边。"
+      }
+    ]
+  },
+  "prompt": "# 任务\n生成一个 block_multi 的 Minecraft 资源：蘑菇萤石 (cobblestone end_stone mooshroom)\n\n# 设计要点（先理解，再直接输出）\n- 语义：一个基于检索特征生成的 Minecraft block_multi；它是蘑菇伞；蘑菇方块；斧头，包含菌盖、菌柄、斧刃/头、柄。\n- 调色板（直接使用 #RRGGBB，至少 5~8 色）：base=#AA6E46 light=#96643C dark=#787878 accent=#B8942B outline=#222222\n  描边：外轮廓 1px 深色；不同部件之间用暗色/色差自然分隔。\n  饱和度：整图保持中等以下饱和度，局部亮面只作 1px 提示，避免荧光刺眼。\n- 形状：蘑菇伞；蘑菇方块；斧头\n- 形状-纹样一体：\n  · 菌盖：形状=部件轮廓/结构 纹样=褐色伞盖；菌盖斑点/菌褶；纹理/斑点 走向=纹样沿该部件轮廓/明暗面走向贴合，不脱离形状独立存在。\n  · 菌柄：形状=部件轮廓/结构 纹样=褐色伞盖；菌盖斑点/菌褶；纹理/斑点 走向=纹样沿该部件轮廓/明暗面走向贴合，不脱离形状独立存在。\n  · 斧刃/头：形状=部件轮廓/结构 纹样=褐色伞盖；菌盖斑点/菌褶；纹理/斑点 走向=纹样沿该部件轮廓/明暗面走向贴合，不脱离形状独立存在。\n  · 柄：形状=部件轮廓/结构 纹样=褐色伞盖；菌盖斑点/菌褶；纹理/斑点 走向=纹样沿该部件轮廓/明暗面走向贴合，不脱离形状独立存在。\n- 设计自检（输出前逐项自查）：方位/构图一致性；连接点对齐；语义可辨；配色层次；纹样与形状一体；边框/背景\n- 参考节点（仅语义参考，禁止复制像素）：/tmp/glow_pack/retrieval_assets/brown_mushroom.png(color)、/tmp/glow_pack/retrieval_assets/brown_mushroom_block.png(pattern)、/tmp/glow_pack/retrieval_assets/stone_axe.png(shape)\n\n# 走向/轴线设计（必须先想清楚，这是最重要的）\n- 整根法杖只有一条主轴线（左下→右上）；杖身、握柄、水晶簇必须沿同一条斜线方向。\n- 水晶簇不能“正着”竖在斜杖上：每根尖柱的方向都要与杖身轴线一致或围绕该轴线轻微分叉。\n- 连接点：水晶簇底端锚定在杖身右上端端点，连接在轴线上，不悬空、不偏侧。\n- 剪影可辨：去掉颜色只看形状，要能认出“斜杖 + 顶部水晶簇”。\n- 部件必须分离：杖身/握柄是 2~3px 宽的细长棕色斜条；水晶簇只占顶部 4~7px 区域，和杖身有明显分界。\n- 水晶簇必须是 3 根互相独立的尖柱，尖柱之间有透明空隙；禁止把水晶连成实心扇形/三角形。\n- 杖身自下到上宽度基本一致（2~3px），禁止越接近水晶越宽、变成三角/雪糕筒。\n- 水晶与杖身连接处只占 1~2 个像素，底部不要连成一片。\n- 禁止把整个物体画成连续实心三角形/楔形/雪糕筒/一条粗斜块。\n- 不同部件用不同色系 + 描边分隔（例如：棕色木柄 + 青绿色水晶 + 深色描边），不要全图一个色系糊在一起。\n\n# 输出格式（HEX GRID，直接给颜色，不要再输出 PALETTE/INDEX GRID）\n- 先写 2~3 行设计分析（主轴线/部件走向/连接点），放在 FORMAT 之前；face 块内禁止任何解释文字。\n- 然后输出下面的固定头，并紧跟 16 行 × 16 列的 HEX GRID：\nFORM=block_multi\n=== face: top ===\nFILE: assets/mcmod/textures/block/concept_card_top.png\nW=16 H=16\n\nHEX GRID\n# 每行 16 个 token：#RRGGBB=不透明像素，----=透明；非 ---- 像素必须 >= 40；禁止输出全 ---- 空图。\n# 真实样本（蘑菇幼苗）的 HEX GRID 格式示例——仅用于理解怎么填颜色/结构分层；禁止复制它的形状/配色：\n---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- #A9121A #E21212 #E21212 #A9121A ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- #A9121A #E21212 #E21212 #C41D26 #E21212 #A9121A ---- ---- ---- ---- ----\n---- ---- ---- ---- #A9121A #E21212 #E21212 #C41D26 #E21212 #E21212 #C41D26 #A9121A ---- ---- ---- ----\n---- ---- ---- ---- #A9121A #E21212 #C41D26 #E21212 #E21212 #C41D26 #E21212 #A9121A ---- ---- ---- ----\n---- ---- ---- ---- #A9121A #E21212 #E21212 #C41D26 #E21212 #E21212 #C41D26 #A9121A ---- ---- ---- ----\n---- ---- ---- ---- #E3DDBA #E3DDBA #CFC47F #E3DDBA #E3DDBA #E3DDBA #CFC47F #E3DDBA ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- ---- #CC9978 #916D55 ---- ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- ---- #CC9978 #916D55 ---- ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- #725643 #CC9978 #916D55 #725643 ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- ---- #CC9978 #916D55 ---- ---- ---- ---- ---- ---- ----\n---- ---- ---- ---- ---- ---- ---- #CC9978 #916D55 ---- ---- ---- ---- ---- ---- ----\n# 真实样本（蘑菇萤石）的 HEX GRID 格式示例——仅用于理解怎么填颜色/结构分层；禁止复制它的形状/配色：\n#946D52 #977251 #8D6850 #946D52 #977251 #977251 #946D52 #977251 #946D52 #977251 #946D52 #977251 #946D52 #977251 #977251 #977251\n#946D52 #8D6850 #946D52 #946D52 #977251 #946D52 #946D52 #977251 #977251 #977251 #8D6850 #977251 #977251 #977251 #9C795A #977251\n#946D52 #977251 #977251 #977251 #977251 #8D6850 #946D52 #977251 #977251 #946D52 #946D52 #8D6850 #977251 #946D52 #977251 #977251\n#946D52 #946D52 #977251 #977251 #977251 #946D52 #977251 #977251 #977251 #977251 #946D52 #946D52 #977251 #977251 #977251 #977251\n#946D52 #977251 #977251 #977251 #9C795A #977251 #977251 #977251 #977251 #977251 #977251 #946D52 #946D52 #977251 #977251 #8D6850\n#946D52 #8D6850 #946D52 #977251 #977251 #977251 #977251 #977251 #977251 #977251 #946D52 #9C795A #946D52 #977251 #977251 #946D52\n#946D52 #946D52 #977251 #977251 #977251 #977251 #977251 #977251 #946D52 #977251 #977251 #977251 #977251 #8D6850 #977251 #977251\n#977251 #946D52 #977251 #977251 #977251 #9C795A #977251 #946D52 #8D6850 #977251 #946D52 #977251 #977251 #946D52 #8D6850 #977251\n#977251 #946D52 #977251 #977251 #977251 #977251 #977251 #8D6850 #946D52 #977251 #946D52 #977251 #977251 #977251 #946D52 #977251\n#977251 #977251 #977251 #977251 #977251 #946D52 #977251 #8D6850 #977251 #977251 #946D52 #946D52 #977251 #946D52 #977251 #977251\n#946D52 #977251 #977251 #977251 #946D52 #8D6850 #977251 #946D52 #977251 #946D52 #977251 #946D52 #8D6850 #977251 #977251 #977251\n#946D52 #977251 #946D52 #9C795A #977251 #946D52 #946D52 #946D52 #946D52 #946D52 #8D6850 #946D52 #977251 #946D52 #977251 #977251\n#8D6850 #977251 #977251 #977251 #946D52 #946D52 #977251 #977251 #946D52 #977251 #8D6850 #8D6850 #977251 #977251 #946D52 #977251\n#8D6850 #946D52 #977251 #946D52 #946D52 #946D52 #977251 #977251 #977251 #977251 #977251 #8D6850 #977251 #977251 #946D52 #977251\n#977251 #946D52 #946D52 #8D6850 #946D52 #977251 #977251 #977251 #9C795A #977251 #946D52 #8D6850 #977251 #946D52 #946D52 #977251\n#977251 #977251 #946D52 #8D6850 #977251 #977251 #9C795A #946D52 #977251 #977251 #977251 #977251 #977251 #977251 #946D52 #946D52\n\n> 设计分析放在 FORMAT 之前；FORMAT 之后只允许 HEX GRID 数据行。\n"
+}

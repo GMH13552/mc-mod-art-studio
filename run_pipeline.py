@@ -109,6 +109,13 @@ def _generate_raw_text(args: argparse.Namespace, prompt_text: str) -> str:
     if args.llm_cmd:
         cmd = args.llm_cmd.replace("{prompt}", prompt_text)
         cmd = cmd.replace("{prompt_file}", _prompt_file_placeholder(prompt_text))
+        if args.llm_image:
+            img = str(Path(args.llm_image).resolve())
+            if not Path(img).exists():
+                raise FileNotFoundError("--llm-image not found: %s" % img)
+            cmd = cmd.replace("{image}", img)
+            if "{image}" not in args.llm_cmd:
+                cmd += " --image %s" % img
         print("[5/7] llm-cmd: %s" % cmd)
         proc = subprocess.run(
             cmd, shell=True,
@@ -194,17 +201,18 @@ def _write_audit_evidence(pack: dict, raw_text: str, out_dir: Path, subagent_id:
     print("      -> prompt.sha256=%s" % prompt_hash)
 
 
-def _hex_sample_lines() -> list[str]:
-    """读取真实生成样本 mushroom_sprout，转成 HEX GRID 行（---- 透明）。"""
+def _raw_to_hex_rows(raw_text: str) -> list[str]:
+    """把 palette+index 的 raw 文本（取第一个 face）转成 HEX GRID 行（---- 透明）。"""
     import re
-    sample = Path(__file__).resolve().parent / "examples" / "mushroom_sprout" / "raw_answer.txt"
     try:
-        raw = sample.read_text(encoding="utf-8")
-    except FileNotFoundError:
-        return []
+        blocks = pa.split_face_blocks(raw_text)
+    except Exception:
+        blocks = []
+    block = blocks[0][1] if blocks else raw_text
     pal: dict[int, str] = {}
     in_pal = False
-    for line in raw.splitlines():
+    idx_lines: list[str] = []
+    for line in block.splitlines():
         ls = line.strip()
         if ls.upper().startswith("PALETTE"):
             in_pal = True
@@ -214,27 +222,70 @@ def _hex_sample_lines() -> list[str]:
             if m:
                 pal[int(m.group(1))] = m.group(2).upper()
             elif ls.upper().startswith("INDEX GRID"):
-                break
-    m = re.search(r"INDEX GRID\s*\n(.*)", raw, re.S)
-    rows: list[str] = []
-    if m:
-        for ln in m.group(1).splitlines():
-            toks = ln.split()
-            if len(toks) != 16:
+                in_pal = False
                 continue
-            cells = []
-            for t in toks:
-                try:
-                    idx = int(t)
-                except ValueError:
-                    cells.append("----")
-                    continue
-                cells.append(pal.get(idx, "----") if idx >= 0 else "----")
-            rows.append(" ".join(cells))
+        if ls.upper().startswith("INDEX GRID"):
+            idx_started = True
+            continue
+        if ls and not ls.startswith(("FILE", "W=", "FORM", "===")) and re.match(r"^-?[0-9#]", ls):
+            idx_lines.append(ls)
+    rows: list[str] = []
+    for ln in idx_lines:
+        toks = ln.split()
+        if len(toks) < 16:
+            continue
+        cells = []
+        for t in toks[:16]:
+            try:
+                idx = int(t)
+            except ValueError:
+                cells.append("----")
+                continue
+            cells.append(pal.get(idx, "----") if idx >= 0 else "----")
+        rows.append(" ".join(cells))
+        if len(rows) == 16:
+            break
     return rows
 
 
-def _build_compact_prompt(pack: dict) -> str:
+def _hex_sample_sections() -> list[tuple[str, list[str]]]:
+    """返回真实生成样本的 HEX GRID 段：蘑菇幼苗 + 蘑菇萤石。"""
+    base = Path(__file__).resolve().parent / "examples"
+    out: list[tuple[str, list[str]]] = []
+    for title, rel in (
+        ("蘑菇幼苗", "mushroom_sprout/raw_answer.txt"),
+        ("蘑菇萤石", "mushroom_glowstone/raw_answer.txt"),
+    ):
+        p = base / rel
+        if not p.exists():
+            continue
+        rows = _raw_to_hex_rows(p.read_text(encoding="utf-8"))
+        if rows:
+            out.append((title, rows))
+    return out
+
+
+def _skeleton_ascii(sk: dict) -> list[str]:
+    """把 structure_skeleton 转成 16x16 ASCII 布局图（H=手柄占位，C=水晶占位，.=透明）。"""
+    grid: list[list[str]] = [["." for _ in range(16)] for _ in range(16)]
+    handle = sk.get("handle") or {}
+    for w in handle.get("waypoints", []):
+        if len(w) == 2:
+            x, y = int(w[0]), int(w[1])
+            if 0 <= x < 16 and 0 <= y < 16:
+                grid[y][x] = "H"
+                if x + 1 < 16:
+                    grid[y][x + 1] = "H"
+    cc = sk.get("crystal_cluster") or {}
+    for x in cc.get("spike_columns", []):
+        for dy in range(int(cc.get("height_px", 3))):
+            y = int(cc.get("base_y", 6)) - dy
+            if 0 <= x < 16 and 0 <= y < 16:
+                grid[y][x] = "C"
+    return ["".join(row) for row in grid]
+
+
+def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     """生成面向纯文本 LLM 的紧凑 prompt：设计分析 + 直接输出 HEX GRID。
 
     经验：
@@ -269,6 +320,15 @@ def _build_compact_prompt(pack: dict) -> str:
         lines.append("- 方位/构图：%s" % ori.get("composition_axis", "统一轴线"))
         lines.append("- 连接：%s" % ori.get("connection_rule", "连接点对齐主轴"))
         lines.append("- 轴线检查：%s" % ori.get("axis_check", "检查部件是否偏离轴线"))
+    sk = sp.get("structure_skeleton") or {}
+    if sk:
+        import json as _json
+        lines.append("- 结构骨架（几何引导，不是锁死颜色/纹理）：%s" % _json.dumps(sk, ensure_ascii=False))
+        ascii_map = _skeleton_ascii(sk)
+        if ascii_map:
+            lines.append("  结构布局图（H=棕色手柄占位，C=青绿水晶占位，.=透明；只表示大致布局，颜色/纹理/明暗由你设计）：")
+            for row in ascii_map:
+                lines.append("  " + row)
     ppf = sp.get("part_pattern_flow") or []
     if ppf:
         lines.append("- 形状-纹样一体：")
@@ -290,21 +350,36 @@ def _build_compact_prompt(pack: dict) -> str:
     lines.append("- 水晶簇不能“正着”竖在斜杖上：每根尖柱的方向都要与杖身轴线一致或围绕该轴线轻微分叉。")
     lines.append("- 连接点：水晶簇底端锚定在杖身右上端端点，连接在轴线上，不悬空、不偏侧。")
     lines.append("- 剪影可辨：去掉颜色只看形状，要能认出“斜杖 + 顶部水晶簇”。")
+    lines.append("- 部件必须分离：杖身/握柄是 2~3px 宽的细长棕色斜条；水晶簇只占顶部 4~7px 区域，和杖身有明显分界。")
+    lines.append("- 水晶簇必须是 3 根互相独立的尖柱，尖柱之间有透明空隙；禁止把水晶连成实心扇形/三角形。")
+    lines.append("- 杖身自下到上宽度基本一致（2~3px），禁止越接近水晶越宽、变成三角/雪糕筒。")
+    lines.append("- 水晶与杖身连接处只占 1~2 个像素，底部不要连成一片。")
+    lines.append("- 禁止把整个物体画成连续实心三角形/楔形/雪糕筒/一条粗斜块。")
+    lines.append("- 不同部件用不同色系 + 描边分隔（例如：棕色木柄 + 青绿色水晶 + 深色描边），不要全图一个色系糊在一起。")
     lines.append("")
     lines.append("# 输出格式（HEX GRID，直接给颜色，不要再输出 PALETTE/INDEX GRID）")
+    oc = pack.get("output_contract") or {}
+    _faces = oc.get("faces") or [{"face": "sprite", "file": "assets/mcmod/textures/item/sprite.png", "width": 16, "height": 16}]
+    _f0 = _faces[0]
     lines.append("- 先写 2~3 行设计分析（主轴线/部件走向/连接点），放在 FORMAT 之前；face 块内禁止任何解释文字。")
-    lines.append("- 然后输出下面的固定头，并紧跟 16 行 × 16 列的 HEX GRID：")
-    lines.append("FORM=item")
-    lines.append("=== face: sprite ===")
-    lines.append("FILE: assets/mcmod/textures/item/alien_crystal_wand.png")
-    lines.append("W=16 H=16")
+    lines.append("- 然后输出下面的固定头，并紧跟 %d 行 × %d 列的 HEX GRID：" % (_f0.get("height", 16), _f0.get("width", 16)))
+    lines.append("FORM=%s" % pack.get("form", "item"))
+    lines.append("=== face: %s ===" % _f0.get("face", "sprite"))
+    lines.append("FILE: %s" % _f0.get("file", "assets/mcmod/textures/item/sprite.png"))
+    lines.append("W=%d H=%d" % (_f0.get("width", 16), _f0.get("height", 16)))
     lines.append("")
     lines.append("HEX GRID")
     lines.append("# 每行 16 个 token：#RRGGBB=不透明像素，----=透明；非 ---- 像素必须 >= 40；禁止输出全 ---- 空图。")
-    sample_rows = _hex_sample_lines()
-    if sample_rows:
-        lines.append("# 真实样本（蘑菇幼苗）的 HEX GRID 格式示例——仅用于理解怎么填颜色；禁止复制它的形状/配色：")
-        lines.extend(sample_rows)
+    if vision:
+        lines.append("# 已附带参考图（reference.png）作为结构引导：细柄 + 3 根独立水晶。")
+        lines.append("- 参考图的颜色分区必须保留：下方棕色斜条=木柄（#7A4A1E/#5A3413/#3E2613 系），上方青绿=水晶；禁止把整根法杖都涂成青绿。")
+        lines.append("- 三根水晶尖柱之间必须有 1 列透明空隙，不要连成一整块；不透明像素至少 40 个。")
+        lines.append("- 纹理要丰富：每根水晶加亮部 #8FCEC4 与暗部 #16403C 的棱面；手柄加 2~3 档棕色明暗颗粒；不要只画 1px 细线。")
+    sample_sections = [] if vision else _hex_sample_sections()
+    if sample_sections:
+        for title, rows in sample_sections:
+            lines.append("# 真实样本（%s）的 HEX GRID 格式示例——仅用于理解怎么填颜色/结构分层；禁止复制它的形状/配色：" % title)
+            lines.extend(rows)
     else:
         lines.append("# 示例：---- ---- ---- ----  /  ---- #ff0000 #ff4444 ----  /  ...（16 列）")
     lines.append("")
@@ -380,7 +455,7 @@ def run(args: argparse.Namespace) -> int:
             top=args.top,
         )
         pack = bsp.build_prompt_pack_v2(ns)
-        pack["prompt"] = _build_compact_prompt(pack)  # 用紧凑 HEX prompt，避免全量 prompt 带偏模型
+        pack["prompt"] = _build_compact_prompt(pack, vision=bool(args.llm_image))  # 用紧凑 HEX prompt；vision 模式更短（图作引导）
         pack.setdefault("output_contract", {})["text"] = _hex_contract_text(pack)
         bsp.write_v2_prompt_pack(pack, out_dir / "prompt_pack.json")
         print("      -> prompt_pack.json (%d anchors, concept=%s)" % (
@@ -450,7 +525,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", default=None, help="输出目录")
     parser.add_argument("--raw", default=None, help="现成 LLM raw_answer 文件路径")
     parser.add_argument("--llm-cmd", default=None,
-                        help="外部 LLM 命令；支持 {prompt} 与 {prompt_file} 替换")
+                        help="外部 LLM 命令；支持 {prompt} / {prompt_file} / {image} 替换")
+    parser.add_argument("--llm-image", default=None,
+                        help="参考 PNG 路径；传给支持视觉的模型（如 deepseek-v4-flash-vision-exp）")
     parser.add_argument("--prompt-only", action="store_true",
                         help="只生成并打印 prompt 文本，不生成 raw/PNG")
     parser.add_argument("--package", action="store_true", help="同时打包成资源包")

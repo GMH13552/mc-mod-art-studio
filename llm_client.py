@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import base64
 import os
 import sys
 import urllib.request
@@ -39,6 +40,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--base-url", default=os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1"))
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--max-tokens", type=int, default=int(os.environ.get("LLM_MAX_TOKENS", "4096")))
+    parser.add_argument("--image", help="参考 PNG 路径；传给支持视觉的模型（如 deepseek-v4-flash-vision-exp）")
+    parser.add_argument("--reasoning-effort", default=os.environ.get("LLM_REASONING_EFFORT"),
+                        help="可选：none/low/medium/high（对思考型模型用 none 可避免把输出 token 全烧在推理上）")
     args = parser.parse_args(argv)
 
     api_key = os.environ.get("LLM_API_KEY")
@@ -52,12 +56,25 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     prompt = _read_prompt(args)
+    if args.image:
+        import mimetypes
+        mime = mimetypes.guess_type(args.image)[0] or "image/png"
+        with open(args.image, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("ascii")
+        user_content = [
+            {"type": "text", "text": prompt},
+            {"type": "image_url", "image_url": {"url": "data:%s;base64,%s" % (mime, b64)}},
+        ]
+    else:
+        user_content = prompt
     body = {
         "model": args.model,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": [{"role": "user", "content": user_content}],
         "temperature": args.temperature,
         "max_tokens": args.max_tokens,
     }
+    if args.reasoning_effort:
+        body["reasoning_effort"] = args.reasoning_effort
     url = args.base_url.rstrip("/") + "/chat/completions"
     req = urllib.request.Request(
         url,

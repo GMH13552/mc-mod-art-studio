@@ -1,1 +1,1 @@
-DeepSeek API:deepseek-chat (hex grid)
+opencode-go:deepseek-v4-flash-vision-exp (reference.png + reasoning_effort=none)

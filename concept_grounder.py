@@ -418,6 +418,23 @@ def _card_alien_crystal_wand(retrieval: dict | None) -> dict:
         "connection_rule": "连接处位于杖身顶端端点，且与杖身轴线重合；严禁‘手柄斜、杖头正’或连接点偏到侧面",
         "axis_check": "从杖尾到杖头用一条假想对角线贯穿，任何部件（握柄、杖身、中央主水晶）都不得偏离该轴线",
     }
+    sp["structure_skeleton"] = {
+        "canvas": "16x16",
+        "handle": {
+            "waypoints": [[4, 14], [5, 13], [6, 12], [7, 11], [8, 10], [9, 9], [10, 8]],
+            "width_px": 2,
+            "color_hint": "棕色木柄",
+        },
+        "crystal_cluster": {
+            "spike_columns": [8, 10, 12],
+            "transparent_columns": [9, 11],
+            "base_y": 6,
+            "height_px": 3,
+            "width_px": 1,
+            "color_hint": "低饱和青绿水晶",
+        },
+        "rule": "这是几何结构骨架（位置/粗细/分离度），不是锁死的颜色模板；纹理、明暗、描边、细节完全由你设计。水晶必须按 spike_columns 画 3 根独立竖列，transparent_columns 必须保持透明；手柄沿 waypoints 走，总宽不超过 3px；下部（y>=9）必须用棕色系，禁止出现青绿；下部每行不透明像素 <= 4。",
+    }
     return {
         "item_name": "异形水晶法杖 (Alien Crystal Wand)",
         "description": "一根以法杖为语义骨架、顶端长着多根尖柱状异形水晶簇的 Minecraft 物品；整体沿同一条对角线构图，水晶簇锚定在杖身顶端，视觉主体是水晶簇，不是简单火焰棒。",

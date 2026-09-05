@@ -1,14 +1,14 @@
 {
-  "query": "蘑菇幼苗",
-  "form": "cross",
-  "form_note": "cross：十字交叉贴图 + cross model + blockstate",
+  "query": "蘑菇萤石",
+  "form": "block_multi",
+  "form_note": "block_multi：顶/侧/底三面 + model + blockstate",
   "form_source": "forced",
   "method": "rule",
   "method_note": "内置中文别名+关键词规则，未调用外部 LLM 子代理；离线可复现。",
   "top": 3,
   "anchors": [
     {
-      "path": "/tmp/sprout_pack2/retrieval_assets/brown_mushroom.png",
+      "path": "/tmp/glow_pack/retrieval_assets/brown_mushroom.png",
       "name": "brown_mushroom",
       "category": "block",
       "role": "color",
@@ -33,7 +33,7 @@
       "palette_count": 1
     },
     {
-      "path": "/tmp/sprout_pack2/retrieval_assets/brown_mushroom_block.png",
+      "path": "/tmp/glow_pack/retrieval_assets/brown_mushroom_block.png",
       "name": "brown_mushroom_block",
       "category": "block",
       "role": "pattern",
@@ -56,15 +56,44 @@
         "mushroom"
       ],
       "palette_count": 1
+    },
+    {
+      "path": "/tmp/glow_pack/retrieval_assets/stone_axe.png",
+      "name": "stone_axe",
+      "category": "block",
+      "role": "shape",
+      "features": {
+        "shape": "斧头",
+        "pattern": "纹理/斑点",
+        "colors": [
+          "#787878"
+        ],
+        "parts": [
+          "斧刃/头",
+          "柄"
+        ],
+        "attraction": []
+      },
+      "score": 3,
+      "matched_terms": [
+        "stone"
+      ],
+      "palette_count": 1
     }
   ],
-  "count": 2,
+  "count": 3,
   "query_terms": {
     "english": [
+      "cobblestone",
+      "end_stone",
       "mooshroom",
-      "mushroom"
+      "mushroom",
+      "obsidian",
+      "sandstone",
+      "stone"
     ],
     "chinese": [
+      "石",
       "蘑菇"
     ]
   }

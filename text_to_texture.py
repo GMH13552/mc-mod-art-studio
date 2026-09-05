@@ -241,10 +241,15 @@ def _parse_hex_grid(lines: list[str], start: int, w: int, h: int) -> list[list[t
             continue
         tokens = s.split()
         if len(tokens) > w:
-            raise ValueError(
-                "hex row %d has %d columns; expected %d (line: %r)"
-                % (len(rows) + 1, len(tokens), w, s)
-            )
+            # 容错：模型偶尔多输出尾部透明列（----）；多余部分必须全为透明才可裁剪
+            extra = tokens[w:]
+            if len(extra) > 0 and all(tok == "----" for tok in extra):
+                tokens = tokens[:w]
+            else:
+                raise ValueError(
+                    "hex row %d has %d columns; expected %d (line: %r)"
+                    % (len(rows) + 1, len(tokens), w, s)
+                )
         if len(tokens) < w:
             # 容错：模型偶尔少写尾部透明列，自动补 ---- 到 W 列
             tokens = tokens + ["----"] * (w - len(tokens))
