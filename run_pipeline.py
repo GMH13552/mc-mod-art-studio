@@ -104,7 +104,7 @@ def _load_retrieval_for_pipeline(
     return entries, tmp_root, tmp_root
 
 
-def _generate_raw_text(args: argparse.Namespace, prompt_text: str) -> str:
+def _generate_raw_text(args: argparse.Namespace, prompt_text: str, auto_images: list[str] | None = None) -> str:
     """按 --raw > --llm-cmd 的顺序获得 raw_answer 文本。"""
     if args.raw:
         raw_path = Path(args.raw)
@@ -116,15 +116,18 @@ def _generate_raw_text(args: argparse.Namespace, prompt_text: str) -> str:
     if args.llm_cmd:
         cmd = args.llm_cmd.replace("{prompt}", prompt_text)
         cmd = cmd.replace("{prompt_file}", _prompt_file_placeholder(prompt_text))
-        if args.llm_image:
-            image_paths: list[str] = []
-            for raw in args.llm_image:
-                for item in str(raw).split(","):
-                    item = item.strip()
-                    if item:
-                        image_paths.append(str(Path(item).resolve()))
-            if not image_paths:
-                raise ValueError("--llm-image: no image paths after expanding commas")
+        image_paths: list[str] = []
+        for raw in (auto_images or []):
+            for item in str(raw).split(","):
+                item = item.strip()
+                if item:
+                    image_paths.append(str(Path(item).resolve()))
+        for raw in args.llm_image:
+            for item in str(raw).split(","):
+                item = item.strip()
+                if item:
+                    image_paths.append(str(Path(item).resolve()))
+        if image_paths:
             missing = [p for p in image_paths if not Path(p).exists()]
             if missing:
                 raise FileNotFoundError("--llm-image not found: %s" % "; ".join(missing))
@@ -307,6 +310,28 @@ def _file_contract_summary(pack: dict) -> list[str]:
     return lines
 
 
+def _build_catalog_text(entries: list[dict]) -> str:
+    """把索引中的全部资源名按分类列成目录，供模型自己挑参考。"""
+    cats: dict[str, list[str]] = {}
+    for e in entries:
+        if not isinstance(e, dict):
+            continue
+        name = str(e.get("name", "") or Path(str(e.get("path", ""))).stem or "")
+        cat = str(e.get("category", "item") or "item")
+        if name:
+            cats.setdefault(cat, []).append(name)
+    lines = ["# 可用资源全目录（请从下面自己挑 2-4 个做参考）", ""]
+    for cat in sorted(cats):
+        names = sorted(set(cats[cat]))
+        lines.append("## %s (%d)" % (cat, len(names)))
+        lines.append(", ".join(names))
+    lines.append("")
+    lines.append("> 从上面**任意分类**中挑选 2-4 个你判断最相关的作为参考；在“设计分析”里写清楚：")
+    lines.append("> 选择了哪几个、每个借什么（结构/配色/纹理/明暗）、组合成什么新物品；不选的说一句理由即可。")
+    lines.append("> 禁止把任何参考当最终像素网格；参考只为质感/结构/配色，不改变主体语义。")
+    return "\n".join(lines)
+
+
 def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     """生成紧凑 prompt：设计要点 + PALETTE/INDEX GRID（-1 0 1 索引模式）。
 
@@ -321,6 +346,9 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
         pack.get("form", "item"), asset_label
     ))
     lines.append("")
+    if pack.get("catalog"):
+        lines.append(pack["catalog"])
+        lines.append("")
     lines.append("# 本体硬约束（最重要）")
     lines.append("- 必须生成「%s」这个物体本身；参考节点不能改变主体类别、形状或语义。" % asset_label)
     lines.append("- 参考节点只允许借用配色、材质、明暗、尺度与局部图案；若参考节点与 %s 语义冲突，请忽略其形状与语义。" % asset_label)
@@ -374,10 +402,13 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
             "%s(%s)" % (r.get("asset", "?"), r.get("role", "?")) for r in refs))
     lines.append("")
 
-    reference_block = pack.get("reference_block", "") or ""
-    if reference_block:
-        lines.append(reference_block)
-        lines.append("")
+    # 当使用“全资源目录”（catalog）时，不再预塞 top 锚点的 compact/分析文本；
+    # 只给名字让模型自己挑，挑完再取细节（避免把整段 texture 文本全塞进 prompt）。
+    if not pack.get("catalog"):
+        reference_block = pack.get("reference_block", "") or ""
+        if reference_block:
+            lines.append(reference_block)
+            lines.append("")
 
     lines.append("# 通用设计原则（每个物体都适用）")
     for rule in getattr(cg, "GENERIC_DESIGN_PRINCIPLES", []) or []:
@@ -440,11 +471,12 @@ def run(args: argparse.Namespace) -> int:
     entries, index_base, synthetic_tmp = _load_retrieval_for_pipeline(args)
     try:
         # 2. retrieve
+        pool_top = max(args.top, args.pool)
         forced_form = None if args.form in (None, "", "auto") else args.form
         print("[2/7] retrieve_assets.retrieve: query=%r top=%d form=%s" % (
-            args.query, args.top, args.form or "auto"))
+            args.query, pool_top, args.form or "auto"))
         retrieval = ra.retrieve(
-            args.query, top=args.top, form=forced_form,
+            args.query, top=pool_top, form=forced_form,
             index=entries, index_base=index_base,
         )
         # 修复 --index 相对路径：把索引中的相对 raw 路径解析为真实绝对路径，
@@ -489,12 +521,21 @@ def run(args: argparse.Namespace) -> int:
             no_original_ref=args.no_original_ref,
         )
         pack = bsp.build_prompt_pack_v2(ns)
-        pack["prompt"] = _build_compact_prompt(pack, vision=bool(args.llm_image))  # 用紧凑 HEX prompt；vision 模式更短（图作引导）
+        pack["catalog"] = _build_catalog_text(entries)
+        auto_images: list[str] = []
+        if args.auto_visual_ref:
+            for a in pack.get("anchors", []):
+                p = a.get("path") or ""
+                if p and Path(p).exists():
+                    auto_images.append(str(Path(p).resolve()))
+        pack["auto_visual_refs"] = auto_images
+        pack["prompt"] = _build_compact_prompt(pack, vision=bool(args.llm_image) or bool(auto_images))  # 用紧凑 HEX prompt；vision 模式更短（图作引导）
         pack.setdefault("output_contract", {})["text"] = _palette_index_contract_text(pack)
         bsp.write_v2_prompt_pack(pack, out_dir / "prompt_pack.json")
-        print("      -> prompt_pack.json (%d anchors, concept=%s)" % (
+        print("      -> prompt_pack.json (%d anchors, concept=%s%s)" % (
             len(pack.get("anchors", [])),
             "ok" if pack.get("concept_card") else "MISSING",
+            " auto_refs=%d" % len(auto_images) if auto_images else "",
         ))
 
         if args.prompt_only:
@@ -502,16 +543,27 @@ def run(args: argparse.Namespace) -> int:
             print("\n" + pack["prompt"] + "\n")
             return 0
 
-        # 5. raw generation
-        raw_text = _generate_raw_text(args, pack["prompt"])
-        out_dir.joinpath("raw_answer.txt").write_text(raw_text, encoding="utf-8")
-
-        # 6. text_to_texture
-        print("[6/7] text_to_texture: raw -> PNG")
-        saved = _render_raw_faces(raw_text, out_dir, pack)
-        if not saved:
-            raise RuntimeError("no PNG generated from raw_answer")
-        _assert_nonempty_pngs(saved, args.query)
+        # 5-6. raw generation + text_to_texture，允许自动重试（模型偶发全 -1 / 缺头）
+        max_attempts = max(1, args.retries)
+        raw_text: str | None = None
+        saved: list[Path] = []
+        for attempt in range(1, max_attempts + 1):
+            try:
+                raw_text = _generate_raw_text(args, pack["prompt"], auto_images=auto_images)
+                out_dir.joinpath("raw_answer.txt").write_text(raw_text, encoding="utf-8")
+                print("[6/7] text_to_texture: raw -> PNG (attempt %d/%d)" % (attempt, max_attempts))
+                saved = _render_raw_faces(raw_text, out_dir, pack)
+                if not saved:
+                    raise RuntimeError("no PNG generated from raw_answer")
+                _assert_nonempty_pngs(saved, args.query)
+                break
+            except Exception as _e:
+                if attempt < max_attempts:
+                    print("[retry] attempt %d/%d failed: %s" % (attempt, max_attempts, _e))
+                    continue
+                raise
+        if raw_text is None or not saved:
+            raise RuntimeError("failed to generate a non-empty PNG")
 
         # 7. package_asset (optional)
         if args.package:
@@ -555,8 +607,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--form", default="auto",
                         choices=["auto", "item", "block_multi", "cross", "entity_uv"],
                         help="形式（默认 auto）")
-    parser.add_argument("--top", type=int, default=3, choices=list(range(1, 9)),
-                        help="检索参考节点数 1-8（默认 3）")
+    parser.add_argument("--top", type=int, default=5, choices=list(range(1, 33)),
+                        help="兼容参数：用于候选池下限；模型在 --pool 范围里自选（默认 5）")
+    parser.add_argument("--pool", type=int, default=12, choices=list(range(1, 33)),
+                        help="候选资源池大小（默认 12）；模型从池中自选 2-4 个参考")
+    parser.add_argument("--retries", type=int, default=2,
+                        help="生成空图/解析失败时自动重试次数（默认 2）")
     parser.add_argument("--novelty", type=float, default=0.5,
                         help="参考自由度 0..1；默认 0.5。越高越少附原版 compact 片段，越低越贴原版。")
     parser.add_argument("--no-original-ref", action="store_true",
@@ -568,6 +624,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--llm-image", action="append", default=[],
                         help="参考 PNG 路径；可多次使用（--llm-image a.png --llm-image b.png）或用逗号分隔（--llm-image a.png,b.png）；"
                              "全部传给支持视觉的模型（如 deepseek-v4-flash-vision-exp）")
+    parser.add_argument("--auto-visual-ref", action="store_true", default=True,
+                        help="自动把检索到的 top 锚点原版图传给视觉模型（默认开启；用 --no-auto-visual-ref 关闭）")
+    parser.add_argument("--no-auto-visual-ref", dest="auto_visual_ref", action="store_false",
+                        help="关闭自动传递检索锚点参考图")
     parser.add_argument("--prompt-only", action="store_true",
                         help="只生成并打印 prompt 文本，不生成 raw/PNG")
     parser.add_argument("--package", action="store_true", help="同时打包成资源包")

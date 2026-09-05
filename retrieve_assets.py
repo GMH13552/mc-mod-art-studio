@@ -112,6 +112,15 @@ ALIASES = OrderedDict(
         ("土豆", ["potato"]),
         ("箭", ["arrow"]),
         ("弓", ["bow"]),
+        ("眼球", ["ender_eye", "spider_eye"]),
+        ("眼睛", ["ender_eye", "spider_eye", "phantom_eyes"]),
+        ("眼", ["ender_eye", "spider_eye"]),
+        ("恶魔", ["red_mooshroom", "netherite", "soul_fire", "wither"]),
+        ("小刀", ["shears", "sword", "iron_sword"]),
+        ("皮", ["leather", "rabbit_hide", "hide"]),
+        ("皮革", ["leather"]),
+        ("剥皮", ["shears", "sword", "knife"]),
+        ("骨", ["bone", "skeleton", "skull"]),
         ("骨头", ["bone"]),
         ("线", ["string"]),
         ("珍珠", ["ender_pearl"]),
@@ -562,8 +571,8 @@ def retrieve(
     """
     if index is None:
         index = load_index()
-    if top < 1 or top > 8:
-        raise ValueError("--top must be 1..8, got %d" % top)
+    if top < 1 or top > 32:
+        raise ValueError("--top must be 1..32, got %d" % top)
 
     en_terms, zh_terms = _query_terms(query)
     cat_intent = _category_intent(query)
