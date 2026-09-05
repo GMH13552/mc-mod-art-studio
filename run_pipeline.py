@@ -381,12 +381,14 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
             lines.append("  · %s：形状=%s 纹样=%s 走向=%s" % (
                 item.get("part", ""), item.get("shape", ""),
                 item.get("pattern", ""), item.get("flow", "")))
-    silhouette_candidates = sp.get("silhouette_candidates") or pack.get("silhouette_bank") or []
-    if silhouette_candidates:
-        candidate_block = refa.render_silhouette_candidates(silhouette_candidates)
-        if candidate_block:
-            lines.append(candidate_block)
-            lines.append("")
+    # catalog 模式下：不渲染 top 锚点的 silhouette 剪影候选，只给名字清单让模型自己挑。
+    if not pack.get("catalog"):
+        silhouette_candidates = sp.get("silhouette_candidates") or pack.get("silhouette_bank") or []
+        if silhouette_candidates:
+            candidate_block = refa.render_silhouette_candidates(silhouette_candidates)
+            if candidate_block:
+                lines.append(candidate_block)
+                lines.append("")
     chk = cc.get("design_checklist") or []
     if chk:
         lines.append("- 设计自检（输出前逐项自查）：%s" % "；".join(
@@ -419,8 +421,8 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
         lines.append("- %s" % rule)
     lines.append("")
     lines.append("# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）")
-    lines.append("- 先写 2~3 行设计分析（主方向/部件走向/连接点），放在 FORMAT 之前；face 块内禁止解释。")
-    lines.append("- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；-1=透明，非负整数引用 PALETTE；非 -1 像素必须 >= 40；禁止全 -1 空图。")
+    lines.append("- 先写 2~3 行设计分析：总结你要借/组合的关键特征（形状/配色/花纹/明暗），放在 FORMAT 之前。")
+    lines.append("- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；设计分析中提到的每个关键特征必须在网格中可见（例如“眼球”要有瞳孔/虹膜/高光），非 -1 像素 >= 40；禁止全 -1 空图。")
     lines.extend(_file_contract_summary(pack))
     lines.append("")
     oc = pack.get("output_contract") or {}
@@ -529,8 +531,8 @@ def run(args: argparse.Namespace) -> int:
                 if p and Path(p).exists():
                     auto_images.append(str(Path(p).resolve()))
         pack["auto_visual_refs"] = auto_images
-        pack["prompt"] = _build_compact_prompt(pack, vision=bool(args.llm_image) or bool(auto_images))  # 用紧凑 HEX prompt；vision 模式更短（图作引导）
         pack.setdefault("output_contract", {})["text"] = _palette_index_contract_text(pack)
+        pack["prompt"] = _build_compact_prompt(pack, vision=bool(args.llm_image) or bool(auto_images))  # 用紧凑 HEX prompt；vision 模式更短（图作引导）
         bsp.write_v2_prompt_pack(pack, out_dir / "prompt_pack.json")
         print("      -> prompt_pack.json (%d anchors, concept=%s%s)" % (
             len(pack.get("anchors", [])),

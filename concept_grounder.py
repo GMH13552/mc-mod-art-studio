@@ -237,6 +237,67 @@ _DESIGN_ROLE_MAP = {
 }
 
 
+_PATTERN_INTENT: dict[str, tuple[list[str], str]] = {
+    "眼球": (["eye 眼球（镶嵌于主体，1-2px 小区域）"],
+             "眼球：深色眼窝/眼眶 + 绿色虹膜/瞳孔 + 1px 白高光；眼球是视觉焦点，嵌在主体中央，不做大区域。"),
+    "眼睛": (["eye 眼睛（小区域视觉焦点）"],
+             "眼睛：深色眼眶 + 高亮瞳孔/虹膜 + 1px 白高光；小区域镶嵌，不占主体大半。"),
+    "眼": (["eye 眼睛（小区域视觉焦点）"],
+          "眼睛：深色眼眶 + 高亮瞳孔/虹膜 + 1px 白高光；小区域镶嵌。"),
+    "恶魔": (["flame 魂火/恶魔纹"],
+             "恶魔纹：青色/青绿色魂火或恶魔火焰，带发光边缘 + 深色轮廓，与本体暗红/黑红形成对比。"),
+    "魂": (["flame 魂火"],
+          "魂火：青色/青绿发光，边缘 1px 高亮，中心白/青。"),
+    "骨": (["bone 骨纹"],
+          "骨纹：骨白底 + 深色眼窝 + 裂纹；不要画成完整骨架，只取头骨/骨骼质感。"),
+    "骷髅": (["skull 骷髅纹"],
+            "骷髅：骨白头骨 + 深色眼窝/鼻洞 + 裂纹；只取头部语义，不做全身动画。"),
+    "刀": (["blade 刃面", "handle 刀柄"],
+          "刃面：冷灰金属高光 + 刀身渐变/划痕；刀柄：皮革/木纹。"),
+    "剑": (["blade 刃面", "guard 护手", "handle 剑柄"],
+          "刃面：金属高光 + 中脊亮线；护手：深色；柄：皮革/木纹。"),
+    "皮": (["hide_edge 皮张边缘"],
+          "皮张：不规则边缘/毛边 + 皮革纹理（颗粒+折痕）+ 织物内衬/缝线。"),
+}
+
+
+def _pattern_intent(query: str) -> tuple[list[str], str | None]:
+    """从 query 推断“花纹/结构意图”，避免因锚点 pattern 为空而让模型不画细节。"""
+    extra_parts: list[str] = []
+    override: str | None = None
+    for zh in sorted(_PATTERN_INTENT, key=len, reverse=True):
+        if zh in query:
+            parts, pat = _PATTERN_INTENT[zh]
+            for p in parts:
+                if p not in extra_parts:
+                    extra_parts.append(p)
+            if override is None or len(pat) > len(override):
+                override = pat
+    return extra_parts, override
+
+
+def _far_color(base: str, colors: list[str]) -> str | None:
+    """返回与 base 色差异最大、且差异达到阈值的颜色；用于把“点缀色”从非主锚点并进来。"""
+    def rgb(h: str) -> tuple[int, int, int]:
+        h = h.lstrip("#")
+        return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    if not base or not colors:
+        return None
+    br, bg, bb = rgb(base)
+    best = None
+    best_d = 60  # 低于此差异视为同色系，不用
+    for c in colors:
+        try:
+            r, g, b = rgb(c)
+        except Exception:
+            continue
+        d = abs(r - br) + abs(g - bg) + abs(b - bb)
+        if d > best_d:
+            best_d = d
+            best = c
+    return best
+
+
 def _make_palette_scheme(
     base: str,
     light: str,
@@ -599,6 +660,19 @@ def _generic_card(
 ) -> dict:
     anchors = _anchor_summary(retrieval)
     parts = list(anchors["parts"]) or ["主体"]
+    extra_parts, pattern_override = _pattern_intent(query)
+    for p in extra_parts:
+        if p not in parts:
+            parts.append(p)
+    # 去重/去掉 “主体” 这种占位重复
+    seen = set()
+    clean_parts = []
+    for p in parts:
+        base = p.replace(" 主体", "").strip()
+        if base and base not in seen:
+            seen.add(base)
+            clean_parts.append(base)
+    parts = clean_parts or parts
     # 从 form 决定 face_regions
     if form == "block_custom":
         keys = _block_custom_texture_keys(template or "anvil")
@@ -616,6 +690,8 @@ def _generic_card(
 
     colors = anchors["colors"] or []
     color_hint = " ".join(colors[:5]) if colors else "使用检索调色板"
+    shape_hint = "；".join(anchors["shape"]) if anchors["shape"] else form
+    pattern_hint = pattern_override or ("；".join(anchors["pattern"]) if anchors["pattern"] else "无明显图案")
     goals = []
     if form == "block_custom":
         keys = list(face_regions.keys())
@@ -629,7 +705,7 @@ def _generic_card(
         for fid, _ in face_regions.items():
             goals.append(
                 "%s 使用 %s 配色，绘制%s；轮廓/剪影保持 %s。"
-                % (fid, color_hint, ("；".join(anchors["pattern"]) or "检索图案"),
+                % (fid, color_hint, pattern_hint,
                    ("；".join(anchors["shape"]) or "原版同类形态"))
             )
 
@@ -647,8 +723,6 @@ def _generic_card(
     dark_color = colors[2] if len(colors) >= 3 else "#3A3A3A"
     accent_color = colors[3] if len(colors) >= 4 else "#B8942B"
     outline_color = colors[4] if len(colors) >= 5 else "#222222"
-    shape_hint = "；".join(anchors["shape"]) if anchors["shape"] else form
-    pattern_hint = "；".join(anchors["pattern"]) if anchors["pattern"] else "检索图案"
 
     return {
         "item_name": "%s (%s)" % (
