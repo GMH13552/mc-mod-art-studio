@@ -1,0 +1,64 @@
+{
+  "png": "/tmp/mc-mod-art-studio-core/vanilla_entity_ref/pig.png",
+  "entity": "pig",
+  "checked_at": "2026-09-05T07:47:03.881471+00:00",
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "dimension",
+      "name": "尺寸",
+      "ok": true,
+      "detail": "pig 原版纹理是 64x32 实际=64x32，期望=64x32"
+    },
+    {
+      "id": "nonempty",
+      "name": "非空",
+      "ok": true,
+      "detail": "opaque_pixels=1274"
+    },
+    {
+      "id": "region_head",
+      "name": "区域 head",
+      "ok": true,
+      "detail": "期望 0,0 -> 32,16，opaque=384"
+    },
+    {
+      "id": "region_body",
+      "name": "区域 body",
+      "ok": true,
+      "detail": "期望 28,8 -> 64,32，opaque=768"
+    },
+    {
+      "id": "region_legs",
+      "name": "区域 legs",
+      "ok": true,
+      "detail": "期望 0,16 -> 16,26，opaque=128"
+    }
+  ],
+  "regions": {
+    "head": {
+      "expected": "0,0 -> 32,16",
+      "opaque": 384,
+      "ok": true
+    },
+    "body": {
+      "expected": "28,8 -> 64,32",
+      "opaque": 768,
+      "ok": true
+    },
+    "legs": {
+      "expected": "0,16 -> 16,26",
+      "opaque": 128,
+      "ok": true
+    }
+  },
+  "summary": "PASS: 符合标准实体 UV 布局 (entity=pig, size=64x32, opaque=1274, regions=3)",
+  "size": "64x32",
+  "opaque_pixels": 1274,
+  "bbox": [
+    0,
+    0,
+    64,
+    32
+  ]
+}

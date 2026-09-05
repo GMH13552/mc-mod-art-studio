@@ -1,0 +1,76 @@
+{
+  "png": "tests/runs/v3/creeper/sprite.png",
+  "entity": "creeper",
+  "checked_at": "2026-09-05T08:16:24.731874+00:00",
+  "status": "FAIL",
+  "checks": [
+    {
+      "id": "dimension",
+      "name": "尺寸",
+      "ok": true,
+      "detail": "creeper 原版纹理是 64x32 实际=64x32，期望=64x32"
+    },
+    {
+      "id": "nonempty",
+      "name": "非空",
+      "ok": true,
+      "detail": "opaque_pixels=920"
+    },
+    {
+      "id": "canvas_margin",
+      "name": "画布边距",
+      "ok": false,
+      "detail": "margins={'left': 0, 'top': 1, 'right': 0, 'bottom': 1} (atlas 左右至少 1px；顶/底为说明项)"
+    },
+    {
+      "id": "region_head",
+      "name": "区域 head",
+      "ok": true,
+      "detail": "期望 0,0 -> 32,16，opaque=132"
+    },
+    {
+      "id": "region_body",
+      "name": "区域 body",
+      "ok": true,
+      "detail": "期望 16,16 -> 40,32，opaque=300"
+    },
+    {
+      "id": "region_legs",
+      "name": "区域 legs",
+      "ok": true,
+      "detail": "期望 0,16 -> 16,26，opaque=16"
+    }
+  ],
+  "regions": {
+    "head": {
+      "expected": "0,0 -> 32,16",
+      "opaque": 132,
+      "ok": true
+    },
+    "body": {
+      "expected": "16,16 -> 40,32",
+      "opaque": 300,
+      "ok": true
+    },
+    "legs": {
+      "expected": "0,16 -> 16,26",
+      "opaque": 16,
+      "ok": true
+    }
+  },
+  "summary": "FAIL: 不满足标准实体 UV 布局 (entity=creeper, size=64x32, opaque=920, regions=3, margins={'left': 0, 'top': 1, 'right': 0, 'bottom': 1} margins_lt_1=left/right)",
+  "size": "64x32",
+  "opaque_pixels": 920,
+  "bbox": [
+    0,
+    1,
+    64,
+    31
+  ],
+  "margins": {
+    "left": 0,
+    "top": 1,
+    "right": 0,
+    "bottom": 1
+  }
+}

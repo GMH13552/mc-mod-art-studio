@@ -43,6 +43,7 @@ import concept_grounder as cg  # noqa: E402
 import build_style_prompt as bsp  # noqa: E402
 import text_to_texture as t2t  # noqa: E402
 import package_asset as pa  # noqa: E402
+import entity_uv_spec as eu  # noqa: E402
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -221,6 +222,71 @@ def _write_audit_evidence(pack: dict, raw_text: str, out_dir: Path, subagent_id:
     print("      -> prompt.sha256=%s" % prompt_hash)
 
 
+def _form_specific_constraints(pack: dict) -> list[str]:
+    """返回 form-specific 的结构化输出硬约束（参考完整资源，不做单张图/剪影）。"""
+    form = pack.get("form", "item")
+    lines: list[str] = []
+    if form == "block_multi":
+        lines.append("# 形式硬约束（block_multi：完整方块，不是物品剪影）")
+        lines.append("- 三面 top/side/bottom 都是 16x16 全不透明方块面，边缘必须连续；禁止沿用透明物品剪影或棋盘格。")
+        lines.append("- side 左右边可环绕平铺（四个侧面共用同一张 side，左右 wrap 一致）；side 顶/底边与 top/bottom 边缘颜色连续。")
+        lines.append("- 参考完整资源：不是只看单张参考图；必须同时理解方块三面 + 原版 blockstate/model（cube_bottom_top）契约，按结构化 face 输出。")
+    elif form == "entity_uv":
+        lines.append("# 形式硬约束（entity_uv：标准 UV 图集/皮肤，不是单个侧视图）")
+        lines.append("- 这不是单个侧视图，是标准 64x32/64x64 atlas；每个区域按语义填，禁止把整张图画成一个居中侧视剪影。")
+        lines.append("- 按 entity_uv_spec 注入的区域坐标逐区域展开（头/身/腿/手臂等）；Java 资源包只能替换原版实体贴图路径，原版模型硬编码。")
+        lines.append("- 参考完整资源：原版实体 64x32/64x64 texture atlas + 标准模型采样坐标，不是只看单张截图。")
+    elif form == "cross":
+        lines.append("# 形式硬约束（cross：植物/十字透明贴图）")
+        lines.append("- 这是 16x16 透明背景的十字交叉贴图；主体居中、四周保留至少 1px 透明边距，禁止铺满到边缘。")
+    else:  # item
+        lines.append("# 形式硬约束（item：16x16 透明物品贴图）")
+        lines.append("- 这是 16x16 透明背景物品贴图；主体居中、四周保留至少 1px 透明边距，禁止铺满到边缘。")
+    return lines
+
+
+def _file_contract_summary(pack: dict) -> list[str]:
+    """生成 file_contract 的紧凑摘要：输出文件/模型 parent/blockstate 清单。
+
+    只读 pack 里的 file_contract / output_contract，不把大 JSON 塞进 prompt。
+    """
+    fc = pack.get("file_contract") or {}
+    oc = pack.get("output_contract") or {}
+    lines = ["# 文件契约摘要（输出文件 / model / blockstate；不贴大 JSON）"]
+
+    faces = oc.get("faces") or []
+    if faces:
+        for f in faces:
+            face = f.get("face") or f.get("id") or "sprite"
+            path = f.get("file") or "?"
+            lines.append("- face %s -> %s" % (face, path))
+    else:
+        for e in fc.get("files", []):
+            if e.get("kind") == "texture":
+                lines.append("- %s -> %s" % (e.get("face") or "texture", e.get("path")))
+
+    for e in fc.get("files", []):
+        if e.get("kind") == "model":
+            tpl = (fc.get("templates") or {}).get(e.get("path"), {})
+            parent = tpl.get("parent") or e.get("format") or ""
+            short_parent = parent.rsplit(":", 1)[-1] or parent
+            lines.append("- model %s (parent=%s)" % (e.get("path"), short_parent))
+
+    for e in fc.get("files", []):
+        if e.get("kind") == "blockstate":
+            lines.append("- blockstate %s" % e.get("path"))
+
+    form = pack.get("form", "item")
+    if form == "entity_uv":
+        entity = eu.detect_entity(pack.get("query") or pack.get("name") or "")
+        vanilla_path = eu.MOB_VANILLA_TEXTURE_PATHS.get(entity, "")
+        if vanilla_path:
+            lines.append("- 原版实体替换路径：%s（模型/blockstate 由原版硬编码，无需生成）" % vanilla_path)
+        else:
+            lines.append("- 原版实体替换路径：assets/minecraft/textures/entity/<原版路径>.png（模型/blockstate 由原版硬编码，无需生成）")
+    return lines
+
+
 def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     """生成紧凑 prompt：设计要点 + PALETTE/INDEX GRID（-1 0 1 索引模式）。
 
@@ -238,6 +304,8 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     lines.append("# 本体硬约束（最重要）")
     lines.append("- 必须生成「%s」这个物体本身；参考节点不能改变主体类别、形状或语义。" % asset_label)
     lines.append("- 参考节点只允许借用配色、材质、明暗、尺度与局部图案；若参考节点与 %s 语义冲突，请忽略其形状与语义。" % asset_label)
+    lines.append("")
+    lines.extend(_form_specific_constraints(pack))
     lines.append("")
     lines.append("# 设计要点（先理解，再直接输出）")
     if cc.get("description"):
@@ -275,10 +343,8 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
             "%s(%s)" % (r.get("asset", "?"), r.get("role", "?")) for r in refs))
     lines.append("")
     lines.append("# 通用设计原则（每个物体都适用）")
-    lines.append("- 整体方向统一：所有部件沿同一主方向/轴线；附属物方向与主体一致或围绕主体自然分叉，禁止主体与附属朝向相反。")
-    lines.append("- 连接点自然：部件相接处与主轴/重心对齐，不悬空、不偏心、不错位。")
-    lines.append("- 剪影可辨：只看形状也能认出“这是什么”；部件之间用描边/色差/空隙区分，不要糊成实心团块。")
-    lines.append("- 纹样贴合形状：纹理/高光/图案沿部件的走向与明暗面流动，不脱离形状。")
+    for rule in getattr(cg, "GENERIC_DESIGN_PRINCIPLES", []) or []:
+        lines.append("- %s" % rule)
     lines.append("")
     lines.append("# 通用像素细节（每个物体都适用）")
     for rule in getattr(cg, "GENERIC_PIXEL_DETAIL_RULES", []) or []:
@@ -287,12 +353,14 @@ def _build_compact_prompt(pack: dict, vision: bool = False) -> str:
     lines.append("# 输出格式（PALETTE + INDEX GRID，-1 0 1 索引模式）")
     lines.append("- 先写 2~3 行设计分析（主方向/部件走向/连接点），放在 FORMAT 之前；face 块内禁止解释。")
     lines.append("- 然后按下面的固定头输出 PALETTE 与 INDEX GRID；-1=透明，非负整数引用 PALETTE；非 -1 像素必须 >= 40；禁止全 -1 空图。")
+    lines.extend(_file_contract_summary(pack))
+    lines.append("")
     oc = pack.get("output_contract") or {}
     lines.append(oc.get("text", ""))
     if vision:
         lines.append("# 已附带参考图（仅视觉引导；不要照搬像素，只参考结构/配色方向）")
     lines.append("")
-    lines.append("> 设计分析放在 FORMAT 之前；FORMAT 之后只允许 PALETTE + INDEX GRID 数据。")
+    lines.append("> 设计分析放在 FORMAT 之前；face 块内只允许 PALETTE + INDEX GRID 数据；ENTITY UV 语义是格式元数据，不写入 face 块。")
     lines.append("")
     return "\n".join(lines)
 
@@ -315,6 +383,12 @@ def _palette_index_contract_text(pack: dict) -> str:
         lines.append("INDEX GRID")
         lines.append("# 共 %d 行，每行 %d 个整数；-1=透明，非负整数引用上面 PALETTE 索引；非 -1 像素必须 >= 40；禁止全 -1 空图。" % (
             f.get("height", 16), f.get("width", 16)))
+        lines.append("")
+    if form == "entity_uv":
+        entity = eu.detect_entity(pack.get("query") or pack.get("name") or "")
+        face0 = faces[0] if faces else {}
+        lines.append(eu.contract_text(
+            int(face0.get("width", 64)), int(face0.get("height", 32)), entity=entity))
         lines.append("")
     return "\n".join(lines).strip()
 

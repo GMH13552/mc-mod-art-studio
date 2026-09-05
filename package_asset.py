@@ -53,6 +53,11 @@ except ImportError as exc:  # pragma: no cover
 
 import text_to_texture as t2t
 
+_THIS_DIR = Path(__file__).resolve().parent
+if str(_THIS_DIR) not in sys.path:
+    sys.path.insert(0, str(_THIS_DIR))
+import entity_uv_spec as eu  # noqa: E402
+
 SELFTEST_REPORT = "package_asset_selftest.txt"
 LOG_PATH = "package_asset_log.txt"
 V3_LOG_PATH = "v3-custom-form-log.txt"
@@ -727,7 +732,7 @@ def build_model_json(form: str, modid: str, name: str) -> dict:
         }
     if form == "block_multi":
         return {
-            "parent": "minecraft:block/cube",
+            "parent": "minecraft:block/cube_bottom_top",
             "textures": {
                 "particle": "%s:block/%s_side" % (modid, name),
                 "top": "%s:block/%s_top" % (modid, name),
@@ -1132,7 +1137,7 @@ def package_block_custom(
             "bottom": "%s:block/%s_bottom" % (modid, name),
             "side": "%s:block/%s_side" % (modid, name),
         }
-        full_model = {"parent": "minecraft:block/cube", "textures": full_textures}
+        full_model = {"parent": "minecraft:block/cube_bottom_top", "textures": full_textures}
         with open(dest, "w", encoding="utf-8") as f:
             json.dump(full_model, f, ensure_ascii=False, indent=2)
             f.write("\n")
@@ -1285,11 +1290,34 @@ def package_asset(
         note_rel = entity_note_rel_path(modid, name)
         dest = root / note_rel
         dest.parent.mkdir(parents=True, exist_ok=True)
+        entity = eu.detect_entity(spec.get("query") or spec.get("entity") or name)
+        vanilla_path = eu.MOB_VANILLA_TEXTURE_PATHS.get(entity, "")
+        if vanilla_path:
+            replacement_line = (
+                "Standard vanilla replacement path: %s\n"
+                "  (put this file at that path in a resource pack, or copy/rename to it; "
+                "Java vanilla entity model is hardcoded and only reads this texture.)"
+                % vanilla_path
+            )
+        elif entity == "player":
+            replacement_line = (
+                "Standard player skin replacement path: assets/minecraft/textures/entity/steve.png "
+                "(or alex.png / custom skin name); use 64x64 or legacy 64x32 skin layout.\n"
+                "  Opaque layers go in the inner-body regions; overlay/hat layer is optional."
+            )
+        else:
+            replacement_line = (
+                "No built-in vanilla entity detected from query/name; this texture is a generic entity UV.\n"
+                "  To load in Java: replace an existing vanilla path, or use OptiFine CEM / a mod renderer "
+                "(see docs/entity-uv-design.md)."
+            )
         note = (
             "Entity UV texture for %s (%s).\n"
             "This package intentionally does NOT generate an entity model.\n"
-            "A mod/entity model adapter must bind texture '%s' to the entity model."
-            % (name, modid, "%s:entity/%s" % (modid, name))
+            "%s\n"
+            "Format contract: 64x32/64x64 standard entity UV layout (NOT a single centered side view).\n"
+            "Validate with: python3 check_entity_uv.py <png> --entity pig|creeper|player\n"
+            % (name, modid, replacement_line)
         )
         dest.write_text(note, encoding="utf-8")
         files_entries.append({"path": note_rel, "kind": "note"})
@@ -1306,7 +1334,9 @@ def package_asset(
         "generated_by": "package_asset.py",
         "output_root": str(root),
         "entity_uv_note": (
-            "需要实体模型适配；未生成 model。" if form == "entity_uv" else None
+            "实体贴图采用 64x32/64x64 标准 UV 布局；未生成 Java 实体 model，"
+            "标准实体只能替换 vanilla texture 路径，自定义实体需 OptiFine CEM / Bedrock geometry / 模组 renderer，"
+            "详见 docs/entity-uv-design.md。" if form == "entity_uv" else None
         ),
         "files": files_entries,
     }
@@ -1659,6 +1689,13 @@ def _run_self_test(args) -> int:
                 if form in ("block_multi", "cross"):
                     bs_rel = blockstate_rel_path("demo", manifest["name"], form)
                     check("%s blockstate exists" % form, (case_out_root / bs_rel).exists(), bs_rel)
+                    if form == "block_multi":
+                        model_json = json.loads((case_out_root / model_rel).read_text(encoding="utf-8"))
+                        check(
+                            "block_multi model uses cube_bottom_top",
+                            model_json.get("parent") == "minecraft:block/cube_bottom_top",
+                            str(model_json.get("parent")),
+                        )
             except Exception as e:
                 check("%s package_asset" % form, False, str(e))
 

@@ -1,0 +1,64 @@
+{
+  "png": "/tmp/mc-mod-art-studio-core/tests/runs/v2/creeper/sprite.png",
+  "entity": "creeper",
+  "checked_at": "2026-09-05T07:47:04.108189+00:00",
+  "status": "FAIL",
+  "checks": [
+    {
+      "id": "dimension",
+      "name": "尺寸",
+      "ok": true,
+      "detail": "creeper 原版纹理是 64x32 实际=64x32，期望=64x32"
+    },
+    {
+      "id": "nonempty",
+      "name": "非空",
+      "ok": true,
+      "detail": "opaque_pixels=44"
+    },
+    {
+      "id": "region_head",
+      "name": "区域 head",
+      "ok": true,
+      "detail": "期望 0,0 -> 32,16，opaque=44"
+    },
+    {
+      "id": "region_body",
+      "name": "区域 body",
+      "ok": false,
+      "detail": "期望 16,16 -> 40,32，opaque=0"
+    },
+    {
+      "id": "region_legs",
+      "name": "区域 legs",
+      "ok": false,
+      "detail": "期望 0,16 -> 16,26，opaque=0"
+    }
+  ],
+  "regions": {
+    "head": {
+      "expected": "0,0 -> 32,16",
+      "opaque": 44,
+      "ok": true
+    },
+    "body": {
+      "expected": "16,16 -> 40,32",
+      "opaque": 0,
+      "ok": false
+    },
+    "legs": {
+      "expected": "0,16 -> 16,26",
+      "opaque": 0,
+      "ok": false
+    }
+  },
+  "summary": "FAIL: 不满足标准实体 UV 布局 (entity=creeper, size=64x32, opaque=44, regions=3)",
+  "size": "64x32",
+  "opaque_pixels": 44,
+  "bbox": [
+    19,
+    12,
+    30,
+    16
+  ]
+}

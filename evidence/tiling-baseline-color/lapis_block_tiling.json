@@ -1,0 +1,131 @@
+{
+  "tool": "check_tiling.py",
+  "asset": "lapis_block",
+  "side_order": [
+    "north",
+    "east",
+    "south",
+    "west"
+  ],
+  "images": {
+    "top": "tests/runs/v2/lapis_block/resourcepack/assets/demo/textures/block/q_975291d177f35757_top.png",
+    "side": "tests/runs/v2/lapis_block/resourcepack/assets/demo/textures/block/q_975291d177f35757_side.png",
+    "bottom": "tests/runs/v2/lapis_block/resourcepack/assets/demo/textures/block/q_975291d177f35757_bottom.png",
+    "size": "16x16"
+  },
+  "threshold": 32,
+  "require_opaque": false,
+  "status": "PASS",
+  "checks": {
+    "side_wrap": {
+      "status": "PASS",
+      "gate": "left==right (per-row)",
+      "metric": {
+        "status": "PASS",
+        "max_diff": 0,
+        "avg_diff": 0.0,
+        "transparent_pairs": 0,
+        "total_pairs": 16,
+        "threshold": 32
+      }
+    },
+    "top_side": {
+      "status": "PASS",
+      "gate": "side.top vs top.{top,bottom,left,right}",
+      "edges": {
+        "top": {
+          "status": "PASS",
+          "max_diff": 0,
+          "avg_diff": 0.0,
+          "transparent_pairs": 0,
+          "total_pairs": 16,
+          "threshold": 32,
+          "edge": "top",
+          "orientation": "forward"
+        },
+        "bottom": {
+          "status": "PASS",
+          "max_diff": 0,
+          "avg_diff": 0.0,
+          "transparent_pairs": 0,
+          "total_pairs": 16,
+          "threshold": 32,
+          "edge": "bottom",
+          "orientation": "forward"
+        },
+        "left": {
+          "status": "PASS",
+          "max_diff": 0,
+          "avg_diff": 0.0,
+          "transparent_pairs": 0,
+          "total_pairs": 16,
+          "threshold": 32,
+          "edge": "left",
+          "orientation": "forward"
+        },
+        "right": {
+          "status": "PASS",
+          "max_diff": 0,
+          "avg_diff": 0.0,
+          "transparent_pairs": 0,
+          "total_pairs": 16,
+          "threshold": 32,
+          "edge": "right",
+          "orientation": "forward"
+        }
+      }
+    },
+    "bottom_side": {
+      "status": "PASS",
+      "gate": "side.bottom vs bottom.{top,bottom,left,right}",
+      "edges": {
+        "top": {
+          "status": "PASS",
+          "max_diff": 0,
+          "avg_diff": 0.0,
+          "transparent_pairs": 0,
+          "total_pairs": 16,
+          "threshold": 32,
+          "edge": "top",
+          "orientation": "forward"
+        },
+        "bottom": {
+          "status": "PASS",
+          "max_diff": 0,
+          "avg_diff": 0.0,
+          "transparent_pairs": 0,
+          "total_pairs": 16,
+          "threshold": 32,
+          "edge": "bottom",
+          "orientation": "forward"
+        },
+        "left": {
+          "status": "PASS",
+          "max_diff": 0,
+          "avg_diff": 0.0,
+          "transparent_pairs": 0,
+          "total_pairs": 16,
+          "threshold": 32,
+          "edge": "left",
+          "orientation": "forward"
+        },
+        "right": {
+          "status": "PASS",
+          "max_diff": 0,
+          "avg_diff": 0.0,
+          "transparent_pairs": 0,
+          "total_pairs": 16,
+          "threshold": 32,
+          "edge": "right",
+          "orientation": "forward"
+        }
+      }
+    }
+  },
+  "failed_checks": [],
+  "message": "PASS: block_multi textures tile into a cube (edge continuity OK).",
+  "output_files": [
+    "evidence/tiling-baseline-color/lapis_block_tiling.json",
+    "evidence/tiling-baseline-color/lapis_block_tiling.md"
+  ]
+}

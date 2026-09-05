@@ -59,6 +59,11 @@ except ImportError:  # pragma: no cover
     raise
 
 _THIS_DIR = Path(__file__).resolve().parent
+if str(_THIS_DIR) not in sys.path:
+    sys.path.insert(0, str(_THIS_DIR))
+
+import entity_uv_spec as eu  # noqa: E402
+
 _ASSET_SCRIPT = _THIS_DIR / "asset_to_text.py"
 _INDEX_PATH = _THIS_DIR / "mc_asset_library" / "library-index.json"
 _STYLE_CARDS_DIR = _THIS_DIR / "style_cards"
@@ -695,7 +700,7 @@ def _form_file_contract(form: str, name: str, width: int, height: int) -> dict:
             },
             {
                 "path": "%s/block/%s.json" % (model_dir, name),
-                "kind": "model", "format": "block/cube",
+                "kind": "model", "format": "block/cube_bottom_top",
                 "face": None,
             },
             {
@@ -706,7 +711,7 @@ def _form_file_contract(form: str, name: str, width: int, height: int) -> dict:
         ]
         templates = {
             "%s/block/%s.json" % (model_dir, name): {
-                "parent": "minecraft:block/cube",
+                "parent": "minecraft:block/cube_bottom_top",
                 "textures": {
                     "particle": "%s:block/%s_side" % (modid, name),
                     "top": "%s:block/%s_top" % (modid, name),
@@ -785,7 +790,8 @@ def _build_v2_file_path(form: str, name: str, face: dict) -> str:
     return "assets/%s/textures/item/%s.png" % (modid, name)
 
 
-def _build_v2_output_contract(form: str, name: str, width: int, height: int, anchors: list[dict]) -> dict:
+def _build_v2_output_contract(form: str, name: str, width: int, height: int,
+                              anchors: list[dict], entity: str | None = None) -> dict:
     """生成 output_contract：按 form 声明每个 face 需要输出的像素块。
 
     v3-prompt-fix：这是**格式骨架**，不是答案示例。
@@ -844,6 +850,12 @@ def _build_v2_output_contract(form: str, name: str, width: int, height: int, anc
             text_lines.append("# 注意：该样本的 PALETTE 有 0~7 共 8 个颜色索引；你的输出调色板也必须更丰富（至少 5~8 色：主色/亮部/暗部/强调色/描边色/中间色），并用这些索引填充细节。样本只是格式示范，不代表你只能用这几色。")
         else:
             text_lines.append("# 示例：至少填一部分非 -1 像素，并用 0/1/2 等索引表示颜色。")
+        text_lines.append("")
+
+    # entity_uv 额外输出 Vanilla 标准 UV 语义，避免 LLM 画成单个居中侧视图。
+    if form == "entity_uv":
+        text_lines.append("")
+        text_lines.append(eu.contract_text(width, height, entity=entity))
         text_lines.append("")
 
     return {
@@ -928,7 +940,8 @@ def build_prompt_pack_v2(args: argparse.Namespace) -> dict:
     style_rules = _v2_style_rules(type_)
     few_shot = _v2_few_shot(form)
     file_contract = _form_file_contract(form, args.name, width, height)
-    output_contract = _build_v2_output_contract(form, args.name, width, height, anchors)
+    entity = eu.detect_entity(args.query or args.name) if form == "entity_uv" else None
+    output_contract = _build_v2_output_contract(form, args.name, width, height, anchors, entity=entity)
 
     # v4-concept：生成概念卡并作为“先理解再生成”的前置上下文。
     concept_card = None
@@ -986,6 +999,28 @@ def build_prompt_pack_v2(args: argparse.Namespace) -> dict:
     return pack
 
 
+def _form_specific_constraints_text(form: str, width: int, height: int) -> list[str]:
+    """返回 form-specific 的结构化输出硬约束（参考完整资源，不做单张图/剪影）。"""
+    lines: list[str] = []
+    if form == "block_multi":
+        lines.append("# 形式硬约束（block_multi：完整方块，不是物品剪影）")
+        lines.append("- 三面 top/side/bottom 都是 16x16 全不透明方块面，边缘必须连续；禁止沿用透明物品剪影或棋盘格。")
+        lines.append("- side 左右边可环绕平铺（四个侧面共用同一张 side，左右 wrap 一致）；side 顶/底边与 top/bottom 边缘颜色连续。")
+        lines.append("- 参考完整资源：不是只看单张参考图；必须同时理解方块三面 + 原版 blockstate/model（cube_bottom_top）契约，按结构化 face 输出。")
+    elif form == "entity_uv":
+        lines.append("# 形式硬约束（entity_uv：标准 UV 图集/皮肤，不是单个侧视图）")
+        lines.append("- 这不是单个侧视图，是标准 %dx%d atlas；每个区域按语义填，禁止把整张图画成一个居中侧视剪影。" % (width, height))
+        lines.append("- 按 entity_uv_spec 注入的区域坐标逐区域展开（头/身/腿/手臂等）；Java 资源包只能替换原版实体贴图路径，原版模型硬编码。")
+        lines.append("- 参考完整资源：原版实体 texture atlas + 标准模型采样坐标，不是只看单张截图。")
+    elif form == "cross":
+        lines.append("# 形式硬约束（cross：植物/十字透明贴图）")
+        lines.append("- 这是 16x16 透明背景的十字交叉贴图；主体居中、四周保留至少 1px 透明边距，禁止铺满到边缘。")
+    else:  # item
+        lines.append("# 形式硬约束（item：16x16 透明物品贴图）")
+        lines.append("- 这是 16x16 透明背景物品贴图；主体居中、四周保留至少 1px 透明边距，禁止铺满到边缘。")
+    return lines
+
+
 def _build_v2_prompt_text(
     name: str, retrieval: dict, form: str, width: int, height: int,
     anchors: list[dict], features: dict, style_rules: dict,
@@ -1005,6 +1040,9 @@ def _build_v2_prompt_text(
     lines.append("# 本体硬约束（最重要）")
     lines.append("- 必须生成「%s」这个物体本身；参考节点不能改变主体类别、形状或语义。" % (retrieval.get("query", name) or name))
     lines.append("- 参考节点只允许借用配色、材质、明暗、尺度与局部图案；若参考节点与 %s 语义冲突，请忽略其形状与语义。" % (retrieval.get("query", name) or name))
+    lines.append("")
+    lines.extend(_form_specific_constraints_text(form, width, height))
+    lines.append("")
 
     if concept_card:
         lines.append("")
@@ -1125,6 +1163,17 @@ def _build_v2_prompt_text(
             lines.append("## %s" % label)
             lines.extend(rules)
             lines.append("")
+
+    lines.append("# 通用设计原则（每个物体都适用）")
+    lines.append("")
+    try:
+        import concept_grounder as cg
+        generic_principles = getattr(cg, "GENERIC_DESIGN_PRINCIPLES", []) or []
+    except Exception:  # noqa: BLE001
+        generic_principles = []
+    for rule in generic_principles:
+        lines.append("- %s" % rule)
+    lines.append("")
 
     lines.append("# 通用像素细节（每个物体都适用，不绑定具体物品）")
     lines.append("")

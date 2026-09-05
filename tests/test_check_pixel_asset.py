@@ -79,6 +79,8 @@ class TestCheckPixelAsset(unittest.TestCase):
         self.assertTrue(data["metrics"]["palette_ok"])
         self.assertEqual(data["metrics"]["component_count"], 2)
         self.assertTrue(data["metrics"]["part_separation"])
+        self.assertGreater(data["metrics"]["opaque_ratio"], 0.0)
+        self.assertLess(data["metrics"]["opaque_ratio"], 1.0)
         self.assertEqual(data["verdict"]["overall"], "PASS")
 
     def test_require_separation_off_reports_only(self) -> None:
@@ -98,6 +100,7 @@ class TestCheckPixelAsset(unittest.TestCase):
             img.save(path)
             data = cpa.analyze_png(path, _args(require_separation=True))
         self.assertEqual(data["metrics"]["opaque_count"], 0)
+        self.assertEqual(data["metrics"]["opaque_ratio"], 0.0)
         self.assertEqual(data["verdict"]["overall"], "FAIL")
 
     def test_bbox_touching_edge_fails(self) -> None:

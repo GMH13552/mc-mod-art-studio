@@ -190,7 +190,9 @@ def _parse_index_grid(lines: list[str], start: int, w: int, h: int, palette: lis
         tokens = s.split()
         if len(tokens) > w:
             extra = tokens[w:]
-            if all(t in ("-1", ".") for t in extra):
+            # 容错：模型偶尔多输出 1~2 个尾部 token（透明占位或颜色索引）；
+            # declared W/H 是契约，多余列按尾列裁剪，避免整张图片失败。
+            if all(t in ("-1", ".") for t in extra) or len(extra) <= 2:
                 tokens = tokens[:w]
             else:
                 raise ValueError(

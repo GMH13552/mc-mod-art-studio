@@ -192,10 +192,13 @@ def analyze_png(path: str | Path, args: argparse.Namespace) -> dict:
             "bottom": height - bottom,
         }
         bbox_ok = all(v >= args.min_margin for v in margins.values())
+        bbox_area = (right - left) * (bottom - top)
+        opaque_ratio = opaque_count / bbox_area if bbox_area > 0 else 0.0
     else:
         bbox = None
         margins = {"left": 0, "top": 0, "right": 0, "bottom": 0}
         bbox_ok = False
+        opaque_ratio = 0.0
 
     # ---- border / 描边 ----
     boundary = _outer_boundary(mask, width, height)
@@ -313,6 +316,8 @@ def analyze_png(path: str | Path, args: argparse.Namespace) -> dict:
             "alpha_min": args.alpha_min,
             "size_ok": size_ok,
             "bbox": bbox,
+            "bbox_area": (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) if bbox is not None else 0,
+            "opaque_ratio": round(opaque_ratio, 4),
             "margins": margins,
             "min_margin": args.min_margin,
             "bbox_ok": bbox_ok,
@@ -376,6 +381,8 @@ def render_markdown(data: dict) -> str:
         "| opaque_min | %d |" % m["opaque_min"],
         "| size | %dx%d |" % (data["input"]["width"], data["input"]["height"]),
         "| bbox | %s |" % m["bbox"],
+        "| bbox_area | %d |" % m["bbox_area"],
+        "| opaque_ratio | %.4f |" % m["opaque_ratio"],
         "| margins | %s |" % m["margins"],
         "| boundary_pixel_count | %d |" % m["boundary_pixel_count"],
         "| boundary_dark_count | %d |" % m["boundary_dark_pixel_count"],
@@ -405,8 +412,8 @@ def render_console(data: dict) -> str:
     lines = [
         "[%s] %s (%dx%d) -> %s"
         % (data["tool"], data["input"]["path"], data["input"]["width"], data["input"]["height"], v["overall"]),
-        "  opaque=%d/%d bbox=%s margins=%s"
-        % (m["opaque_count"], m["opaque_min"], m["bbox"], m["margins"]),
+        "  opaque=%d/%d bbox=%s bbox_area=%d opaque_ratio=%.4f margins=%s"
+        % (m["opaque_count"], m["opaque_min"], m["bbox"], m["bbox_area"], m["opaque_ratio"], m["margins"]),
         "  border: boundary=%d dark=%d ratio=%.4f ok=%s"
         % (
             m["boundary_pixel_count"],

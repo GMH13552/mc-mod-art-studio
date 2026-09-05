@@ -1,0 +1,113 @@
+{
+  "generated_at": "2026-09-05T16:04:30+08:00",
+  "commit": "b9bd17dfe52414fbf2f3f1edbb3fe5d50e9d21ff",
+  "source": "tests/test_set.md (t03/t04/t05/t06/t09/t10)",
+  "llm": "deepseek-chat via llm_client.py",
+  "items": [
+    {
+      "id": "t04",
+      "slug": "glowstone",
+      "query": "荧石",
+      "form": "block_multi",
+      "run_exit": 0,
+      "check_tool": "check_tiling",
+      "check_status": "PASS",
+      "images_opaque": [256, 256, 256],
+      "failed_checks": []
+    },
+    {
+      "id": "t05",
+      "slug": "bricks",
+      "query": "红砖",
+      "form": "block_multi",
+      "run_exit": 0,
+      "check_tool": "check_tiling",
+      "check_status": "FAIL",
+      "images_opaque": [256, 256, 256],
+      "failed_checks": [
+        "top_side.top: max_diff=116/32 transparent_pairs=0/16",
+        "top_side.bottom: max_diff=116/32 transparent_pairs=0/16",
+        "top_side.left: max_diff=116/32 transparent_pairs=0/16",
+        "top_side.right: max_diff=116/32 transparent_pairs=0/16"
+      ]
+    },
+    {
+      "id": "t06",
+      "slug": "lapis_block",
+      "query": "青金石块",
+      "form": "block_multi",
+      "run_exit": 0,
+      "check_tool": "check_tiling",
+      "check_status": "FAIL",
+      "images_opaque": [256, 256, 256],
+      "failed_checks": [
+        "side_wrap: max_diff=64/32 transparent_pairs=0/16",
+        "bottom_side.right: max_diff=64/32 transparent_pairs=0/16"
+      ],
+      "note": "初跑因 LLM 多输出 1 列触发 parser 失败；text_to_texture 增加多余尾列容错后用现有 raw 重跑成功生成三面。"
+    },
+    {
+      "id": "t09",
+      "slug": "pig",
+      "query": "猪",
+      "form": "entity_uv",
+      "run_exit": 0,
+      "check_tool": "check_entity_uv",
+      "check_status": "PASS",
+      "size": "64x32",
+      "opaque_pixels": 858,
+      "regions": {
+        "head": 336,
+        "body": 310,
+        "legs": 48
+      },
+      "failed_checks": [],
+      "note": "第 3 次 LLM 尝试才产生非空图；前 2 次全透明。"
+    },
+    {
+      "id": "t10",
+      "slug": "creeper",
+      "query": "苦力怕",
+      "form": "entity_uv",
+      "run_exit": 0,
+      "check_tool": "check_entity_uv",
+      "check_status": "PASS",
+      "size": "64x32",
+      "opaque_pixels": 920,
+      "regions": {
+        "head": 132,
+        "body": 300,
+        "legs": 16
+      },
+      "failed_checks": [],
+      "note": "初跑 legs 区域为 0；重试循环第 1 次产生 legs 非空并通过。"
+    },
+    {
+      "id": "t03",
+      "slug": "bow",
+      "query": "弓",
+      "form": "item",
+      "run_exit": 0,
+      "check_tool": "check_pixel_asset",
+      "check_status": "FAIL",
+      "opaque_pixels": 74,
+      "bbox": [1, 2, 13, 16],
+      "bbox_area": 168,
+      "opaque_ratio": 0.4405,
+      "failed_checks": ["bbox"],
+      "visual_note": "人工目检：弧形主体+灰白边缘，但未看到清晰独立的弦线；细弧+弦不完全达标。负空间满足 opaque_ratio<=0.8。"
+    }
+  ],
+  "self_tests": {
+    "concept_grounder": "PASS",
+    "build_style_prompt": "PASS",
+    "text_to_texture": "PASS",
+    "package_asset": "PASS",
+    "retrieve_assets": "PASS",
+    "compose_asset": "PASS",
+    "check_tiling": "PASS",
+    "check_entity_uv": "PASS",
+    "check_pixel_asset": "PASS",
+    "unittest": "PASS"
+  }
+}

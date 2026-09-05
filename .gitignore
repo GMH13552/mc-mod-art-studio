@@ -24,3 +24,6 @@ text_to_texture_selftest_assets/
 
 # 测试本地大产物：tests/runs 不入库；tests/reports、tests/evidence、tests/results/summary* 保留
 tests/runs/
+
+# 原版素材参考：vanilla_entity_ref/ 不入库（模板仍可本地保留，但不作为仓库素材）
+vanilla_entity_ref/
