@@ -1,0 +1,108 @@
+{
+  "item_name": "村民皮 (Villager Hide)",
+  "query": "村民皮：新物品，不是原版 villager 皮肤，也不是 leather 复制品",
+  "form": "item",
+  "size": "16x16",
+  "description": "一张被剥下并鞣制的村民皮/兽皮，作为自定义采集材料和掉落物；主体是一块折叠/铺开的皮革，带折痕、颗粒、接缝，边缘露出灰褐色村民长袍织物带与缝线。",
+  "parts": [
+    "皮面主体 leather hide",
+    "折痕/接缝 seams",
+    "织物内衬 village cloth trim",
+    "挂环/标签 hanger tag"
+  ],
+  "source_table": [
+    {
+      "part": "皮面主体",
+      "reference": "leather.png",
+      "borrowed_texture": "皮革颗粒、折痕高光、不规则剥制边缘",
+      "borrowed_palette": {
+        "base": "#C65C35",
+        "light": "#D76B43",
+        "dark": "#542716",
+        "accent": "#9E492A",
+        "outline": "#3D1C10",
+        "note": "皮革棕：主色暖橙棕，亮部偏橙，暗部深红棕，边缘用深褐描边。"
+      },
+      "borrowed_structure": "16x16 中央皮面主体、边缘包边、自然折痕",
+      "not_borrow": "不借 leather.png 的物品外形/具体排布"
+    },
+    {
+      "part": "织物内衬",
+      "reference": "villager.png",
+      "borrowed_texture": "村民长袍布料层叠、缝线针脚质感",
+      "borrowed_palette": {
+        "base": "#6F6D6A",
+        "light": "#817D79",
+        "dark": "#545353",
+        "accent": "#636260",
+        "outline": "#3D2D29",
+        "note": "村民袍灰：低饱和暖灰，亮部稍浅，暗部深灰；缝线用更暗灰绿/深棕分隔。"
+      },
+      "borrowed_structure": "皮面下缘/内侧的窄条织物与 1px 缝线",
+      "not_borrow": "不借村民头部/脸/身体/手臂形状，不把整张图画成村民皮肤"
+    },
+    {
+      "part": "挂环/标签",
+      "reference": "stick.png / iron_sword.png",
+      "borrowed_texture": "深色小环/木质小节颗粒",
+      "borrowed_palette": {
+        "base": "#493615",
+        "light": "#896727",
+        "dark": "#281E0B",
+        "accent": "#684E1E",
+        "outline": "#281E0B",
+        "note": "挂环用暗棕木色：主色深棕，亮部木褐，暗部近黑；避免与皮面主色混同。"
+      },
+      "borrowed_structure": "上缘 2-3px 小环或木牌",
+      "not_borrow": "不借棍/剑形状"
+    }
+  ],
+  "palette_scheme": {
+    "base": "#C65C35",
+    "light": "#D76B43",
+    "dark": "#542716",
+    "accent": "#6F6D6A",
+    "outline": "#3D1C10",
+    "border_note": "外轮廓 1px 深褐；皮革与织物内衬用暗色缝隙分隔，不做均匀黑框。",
+    "saturation_note": "整体保持中低饱和，皮革棕不荧光；灰褐织物作为次色。"
+  },
+  "shape_pattern": {
+    "silhouette": "16x16 透明 item：一块折叠/铺开的方形皮革，中央有 1-2px 纵向或斜向折痕/褶皱高光，边缘有深色皮革包边；下缘/内侧露出窄条灰褐织物与 1px 缝线，上方有小挂环；整体居中，四边至少 1px 透明。",
+    "orientation": "主方向为纵向（皮革主体在中央，织物内衬在下/侧），挂环朝上；所有部件沿同一中轴。",
+    "part_pattern_flow": [
+      {
+        "part": "皮面主体",
+        "shape": "折叠方形皮革（不是脸/面具）",
+        "pattern": "皮革颗粒 + 1-2px 折痕高光 + 边缘深色包边",
+        "flow": "折痕与高光沿皮面自然起伏走，不形成眼睛/鼻子/嘴巴；边缘用 1px 深褐描边。"
+      },
+      {
+        "part": "织物内衬",
+        "shape": "皮面下缘/内侧的窄条织物",
+        "pattern": "灰褐色布料 + 1px 缝线/针脚",
+        "flow": "缝线沿织物条边缘走；布料与皮革之间留暗色接缝，不用黑色粗框。"
+      },
+      {
+        "part": "挂环/标签",
+        "shape": "上缘 2-3px 小环或木牌",
+        "pattern": "深色小节 + 1px 高光",
+        "flow": "挂环与皮面连接自然，不悬空；单独看仍能识别为掉落物。"
+      }
+    ]
+  },
+  "method": "manual_part_level_concept_card + llm_client + text_to_texture",
+  "novelty": 0.75,
+  "avoid": [
+    "不要复制原版 leather.png 或 villager.png 的逐像素图案；",
+    "不要画成 villager 的头/身体/手臂，也不要画成原版 leather 物品；",
+    "不要出现眼睛/鼻孔/嘴等脸部五官；这不是面具，是皮料/皮革；",
+    "主体必须能看出是一张皮/皮革，而不是普通棕色方块；",
+    "保持 16x16 透明背景、四边至少 1px 透明边距。"
+  ],
+  "reference_hashes": {
+    "leather": "074eb989d8d88e20269414e654152236",
+    "villager": "8da291f5374bae0356045285be0f1954",
+    "stick": "ccd09839f4d1c71729bd222884e8f7dd",
+    "iron_sword": "d8489670a89dcd89008870e245f75d5f"
+  }
+}

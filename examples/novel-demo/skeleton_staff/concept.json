@@ -1,0 +1,106 @@
+{
+  "item_name": "骷髅法杖 (Skeleton Staff)",
+  "query": "骷髅法杖：新物品，不是原版 skeleton，也不是 wand/blaze_rod 的复制品",
+  "form": "item",
+  "size": "16x16",
+  "description": "一根顶端镶着骷髅头的新法杖/权杖：上方是骨白色、带深色眼窝的骷髅头，下方是木质杖身/握柄；整体是“法杖”而不是骷髅怪物。",
+  "parts": [
+    "骷髅头 skull top",
+    "眼窝/裂纹 eye sockets + cracks",
+    "杖身/握柄 wooden shaft"
+  ],
+  "source_table": [
+    {
+      "part": "骷髅头/眼窝",
+      "reference": "skeleton.png (head region) + bone_block_side.png",
+      "borrowed_texture": "骨白底、深色眼窝、骨裂纹/凹槽质感",
+      "borrowed_palette": {
+        "base": "#E9E6D4",
+        "light": "#FFFFFD",
+        "dark": "#CBC6A5",
+        "accent": "#DBD8C6",
+        "outline": "#2E2E2E",
+        "note": "骨白/骨灰：米白底，亮部近纯白，暗部暖灰；眼窝用深灰/黑灰，不出现彩度。"
+      },
+      "borrowed_structure": "杖顶骨白头骨、眼窝位于中上部、左右对称",
+      "not_borrow": "不借 skeleton 全身/动画/武器，不复制骨架纹理；只取头部语义"
+    },
+    {
+      "part": "连接插座",
+      "reference": "bone_block_side.png / stick.png",
+      "borrowed_texture": "暗色小口/环、骨质接缝",
+      "borrowed_palette": {
+        "base": "#7B7E6B",
+        "light": "#CBC6A5",
+        "dark": "#494949",
+        "accent": "#493615",
+        "outline": "#2E2E2E",
+        "note": "连接口用骨灰/深灰绿过渡，少量深褐木色，避免与骷髅头同色糊在一起。"
+      },
+      "borrowed_structure": "骷髅头下的 1-2px 暗色小口/环",
+      "not_borrow": "不借方块/骨头物品外形"
+    },
+    {
+      "part": "杖身/握柄",
+      "reference": "stick.png / oak_planks.png",
+      "borrowed_texture": "木纹纵向、少量磨损颗粒",
+      "borrowed_palette": {
+        "base": "#493615",
+        "light": "#896727",
+        "dark": "#281E0B",
+        "accent": "#684E1E",
+        "outline": "#281E0B",
+        "note": "木柄棕：主色深棕，亮部木褐，暗部近黑；亮木纹沿纵向走，不与骨白混用。"
+      },
+      "borrowed_structure": "1-2px 宽木杖、底部可加粗握柄",
+      "not_borrow": "不借木棍单独物品、不借剑/火炬形状"
+    }
+  ],
+  "palette_scheme": {
+    "base": "#E9E6D4",
+    "light": "#FFFFFD",
+    "dark": "#CBC6A5",
+    "accent": "#896727",
+    "outline": "#2E2E2E",
+    "border_note": "骷髅外轮廓 1px 深灰 #2E2E2E；杖身用深褐描边；头与杖连接处用暗色插座分隔。",
+    "saturation_note": "骨白保持低饱和、偏暖；木柄为暗棕；避免荧光白/荧光青。"
+  },
+  "shape_pattern": {
+    "silhouette": "16x16 透明 item：竖直法杖，顶部约 4-7px 为骷髅头（有眼窝/下颌暗示），中间为 1-2px 宽木杖，底部为握柄/尾端；整体居中，四边至少 1px 透明。",
+    "orientation": "主方向为竖直（可略带 1-2px 斜度：顶部在右上、底部在左下），沿一条连续轴线；骷髅头锚定在杖顶端，不可偏心。",
+    "part_pattern_flow": [
+      {
+        "part": "骷髅头",
+        "shape": "圆/方形骨白头骨，眼窝深色、鼻洞/裂纹",
+        "pattern": "骨白底 + 深色眼窝 + 1px 裂纹",
+        "flow": "眼窝位于头骨中上部，左右对称但允许 1px 不对称；裂纹沿骨面自然走，不画成完整骨架。"
+      },
+      {
+        "part": "连接插座",
+        "shape": "骷髅头下的 1-2px 暗色小口/环",
+        "pattern": "深灰/深褐",
+        "flow": "插座包住杖顶端，与头骨底边对齐。"
+      },
+      {
+        "part": "杖身/握柄",
+        "shape": "1-2px 宽木杖，底部可加粗",
+        "pattern": "木纹纵向 + 少量磨损",
+        "flow": "木纹沿杖身纵向；底端为握柄加粗段，与主轴对齐。"
+      }
+    ]
+  },
+  "method": "manual_part_level_concept_card + llm_client + text_to_texture",
+  "novelty": 0.75,
+  "avoid": [
+    "不要复制原版 skeleton.png / bone_block_side.png / stick.png 的逐像素图案；",
+    "不要画成完整骷髅或骷髅骑士；",
+    "不要画成普通木棍/火把：顶部必须有明显骷髅头；",
+    "保持 16x16 透明背景、四边至少 1px 透明边距。"
+  ],
+  "reference_hashes": {
+    "skeleton": "88910a4a570d759c9cc22ea557936ba3",
+    "bone_block_side": "da8f5260eee6417c6c9b62e4ef5de5e7",
+    "stick": "ccd09839f4d1c71729bd222884e8f7dd",
+    "oak_planks": "2b7c6bc281025a86308a0331623bb2d6"
+  }
+}

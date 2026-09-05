@@ -89,14 +89,35 @@ export LLM_MODEL=deepseek-v4-flash
 
 ## 效果图
 
-以下 4 张 PNG 来自 `examples/reset-demo/`，均由 `run_pipeline.py --novelty 0.5` 生成，未复制任何原版素材。
+以下 4 张 PNG 来自 `examples/novel-demo/`，均为 Minecraft 原版没有的新资产，由 `demo_generate.py` 通过“部件级参考映射”生成，未复制任何原版素材。
 
 | 资产 | form | 图片 |
 |---|---|---|
-| 弓 | `item` | ![bow](examples/reset-demo/bow.png) |
-| 红砖 | `block_multi` | ![bricks](examples/reset-demo/bricks.png) |
-| 苦力怕 | `entity_uv` | ![creeper](examples/reset-demo/creeper.png) |
-| 猪 | `entity_uv` | ![pig](examples/reset-demo/pig.png) |
+| 村民皮 (Villager Hide) | `item` | ![villager_hide](examples/novel-demo/villager_hide/sprite.png) |
+| 剥皮小刀 (Skinning Knife) | `item` | ![skinning_knife](examples/novel-demo/skinning_knife/sprite.png) |
+| 骷髅法杖 (Skeleton Staff) | `item` | ![skeleton_staff](examples/novel-demo/skeleton_staff/sprite.png) |
+| 恶魔牛 (Demon Cow) | `item` | ![demon_cow](examples/novel-demo/demon_cow/sprite.png) |
+
+## 部件级参考 / 配色素卡
+
+`novel-demo` 的生成采用“部件级参考映射”：不找一件最像的原版整件照抄，而是把新资产拆成**部件**，每个部件只从指定原版资产借用三样信息：
+
+| 借用维度 | 含义 | 示例 |
+|---|---|---|
+| `borrowed_texture` | 只借材质/纹样语法 | 皮革颗粒、金属划痕、骨裂纹、木纹 |
+| `borrowed_palette` | 每个部件拥有独立配色卡（base/light/dark/accent/outline） | 骨白、皮革棕、钢铁灰、魂火青 |
+| `borrowed_structure` | 只借结构/比例/布局 | 头部位置、刃口走向、握柄宽度、明暗体积 |
+
+配色严格按部件拆分，**不做全图统一调色板**，避免不同材质被同一个全局色表抹掉差异。每个部件的参考来源都记录 `borrowed_texture` / `borrowed_palette` / `borrowed_structure` 三列，并明确“不借什么”（不复制整件原版物品的形态/索引网格）。
+
+| 资产 | 部件级参考摘要 |
+|---|---|
+| 村民皮 (Villager Hide) | 皮面主体 ← `leather.png`（皮革颗粒/折痕）；织物内衬 ← `villager.png`（村民长袍层叠/缝线）；挂环/标签 ← `stick.png` + `iron_sword.png`（木/金属小件结构） |
+| 剥皮小刀 (Skinning Knife) | 刀刃 ← `iron_sword.png`（金属划痕/刃口高光）；护手/颈 ← `iron_sword.png` + `leather.png`；刀柄 ← `leather.png` + `stick.png`/`oak_planks.png`（皮革缠绳/木芯） |
+| 骷髅法杖 (Skeleton Staff) | 骷髅头/眼窝 ← `skeleton.png`（head region）+ `bone_block_side.png`（骨白/骨裂纹）；连接插座 ← `bone_block_side.png` + `stick.png`；杖身/握柄 ← `stick.png` + `oak_planks.png`（木纹/磨损） |
+| 恶魔牛 (Demon Cow) | 牛头 ← `cow.png` + `red_mooshroom.png`（红黑皮肤/鼻梁高光）；双角/耳朵 ← `cow.png` + `red_mooshroom.png`；眼睛/鼻口 ← `red_mooshroom.png` + `soul_fire_0.png`（青色魂火/黑色眼窝） |
+
+完整的逐部件来源表、原版参考 hash、`不借什么`、局部配色卡与复现命令见 `examples/novel-demo/README.md` 及各资产目录下的 `README.md`。
 
 ## 核心模块
 
@@ -167,10 +188,17 @@ python3 -m unittest discover -s tests -v
 ├── entity_uv_spec.py
 ├── llm_client.py
 ├── builtin_models_fallback/   # 内置 blockstate/model 模板
-├── examples/                  # 最小示例 + reset-demo 效果图
+├── examples/                  # 最小示例 + 新资产效果图
 │   ├── alien_crystal_wand/    # item 离线示例
 │   ├── mushroom_sprout/       # cross 示例
-│   └── reset-demo/            # bow.png / bricks.png / creeper.png / pig.png
+│   ├── novel-demo/            # 部件级参考新资产：村民皮/剥皮小刀/恶魔牛/骷髅法杖
+│   │   ├── villager_hide/     # sprite.png + README.md + prompt/raw/hash
+│   │   ├── skinning_knife/
+│   │   ├── demon_cow/
+│   │   ├── skeleton_staff/
+│   │   ├── README.md          # 资产清单 + 来源表 + 复现命令
+│   │   └── demo_generate.py
+│   └── reset-demo/            # 旧版演示图（bow/bricks/creeper/pig，保留供 docs 示例/历史参考）
 ├── docs/
 │   ├── workflow-concept.md
 │   ├── prompt-design.md

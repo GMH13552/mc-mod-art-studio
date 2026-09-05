@@ -1,0 +1,8 @@
+{
+  "prompt_sha256": "0866cb630444c131f0c7798d5dd21d10e889f6f9a48cef2f144698909682cfd2",
+  "answer_sha256": "dd6328fd8bed4407d4717eebe9d8ee2e132159d42ea9b08914c7357bccb06d7f",
+  "png_sha256": "dafbdd8306890436544f887c54c3bbacd2c3e801d4a3c612ce62f3da49ab6950",
+  "attempts": 1,
+  "novelty": 0.75,
+  "postprocess": "item_margin_min_1"
+}

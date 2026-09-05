@@ -1,0 +1,107 @@
+{
+  "item_name": "恶魔牛 (Demon Cow)",
+  "query": "恶魔牛：新物品图标，不是原版 cow/red_mooshroom 的复制品",
+  "form": "item",
+  "size": "16x16",
+  "description": "一个恶魔化牛头/牛图标：正面牛头，红色恶魔皮肤，黑色角/眼窝，眼睛和角尖带青色魂火；保留牛/红魔菌牛的剪影语义，但整体是新物品图标。",
+  "parts": [
+    "牛头 head",
+    "双角 horns",
+    "耳朵 ears",
+    "魂火眼睛/角尖 soul-fire accents",
+    "鼻口 muzzle/neck"
+  ],
+  "source_table": [
+    {
+      "part": "牛头",
+      "reference": "cow.png / red_mooshroom.png",
+      "borrowed_texture": "红黑皮肤、鼻梁高光、脸颊暗部",
+      "borrowed_palette": {
+        "base": "#A00F10",
+        "light": "#E04A45",
+        "dark": "#3A0708",
+        "accent": "#940E0F",
+        "outline": "#171414",
+        "note": "恶魔牛红：主体暗红，亮部红棕高光，暗部黑红；不使用原版普通棕色牛配色。"
+      },
+      "borrowed_structure": "正面牛头剪影、鼻梁纵向、脸颊两侧暗面",
+      "not_borrow": "不借整张 64x32 牛皮肤、不复制原版牛头像素"
+    },
+    {
+      "part": "双角/耳朵",
+      "reference": "cow.png / red_mooshroom.png",
+      "borrowed_texture": "黑色角/深红耳、角尖可发魂火",
+      "borrowed_palette": {
+        "base": "#2B0505",
+        "light": "#5A0A0B",
+        "dark": "#171414",
+        "accent": "#A00F10",
+        "outline": "#171414",
+        "note": "角/耳深黑红：比身体更暗，仅用暗红/黑红；不加入青色主色。"
+      },
+      "borrowed_structure": "顶部双角、两侧耳朵",
+      "not_borrow": "不借原版角/耳具体像素"
+    },
+    {
+      "part": "眼睛/鼻口",
+      "reference": "red_mooshroom.png + soul_fire_0.png",
+      "borrowed_texture": "黑色眼窝 + 青色魂火 + 暗红鼻口",
+      "borrowed_palette": {
+        "base": "#01A7AC",
+        "light": "#FFFFFF",
+        "dark": "#018488",
+        "accent": "#00D5DA",
+        "outline": "#171414",
+        "note": "魂火青：眼窝内青色发光，亮部白色核心，暗部青蓝；鼻口仍用暗红/黑红，不整体变青。"
+      },
+      "borrowed_structure": "两眼左右对称、鼻口在下方",
+      "not_borrow": "不复制整张 soul_fire 火焰贴图"
+    }
+  ],
+  "palette_scheme": {
+    "base": "#A00F10",
+    "light": "#E04A45",
+    "dark": "#3A0708",
+    "accent": "#01A7AC",
+    "outline": "#171414",
+    "border_note": "外轮廓 1px 深黑红 #171414；角/眼窝用更深 #2B0505；魂火用青色高光与白色核心。",
+    "saturation_note": "红色保持暗红色相，不荧光；青色只作局部魂火，占比小。"
+  },
+  "shape_pattern": {
+    "silhouette": "16x16 透明 item：正面牛头剪影居中，双角向上/两侧，耳朵在两侧，眼睛为青色发光点，鼻口在下方；整体居中，四边至少 1px 透明。",
+    "orientation": "主方向为竖直对称中轴；双角、耳朵、眼睛、鼻口沿中轴左右对称（允许 1px 不对称），连接点自然。",
+    "part_pattern_flow": [
+      {
+        "part": "牛头",
+        "shape": "正面牛头/脸",
+        "pattern": "暗红底 + 中央鼻梁高光 + 两侧暗部",
+        "flow": "高光沿鼻梁纵向，暗部在脸颊两侧；不画成整张侧视牛。"
+      },
+      {
+        "part": "双角/耳朵",
+        "shape": "顶部双角 + 两侧耳朵",
+        "pattern": "黑色/深黑红角 + 耳朵暗红",
+        "flow": "角尖可带 1px 青色魂火；耳朵与头连接自然，不悬空。"
+      },
+      {
+        "part": "眼睛/鼻口",
+        "shape": "两个青色发光眼 + 下方鼻口",
+        "pattern": "青色魂火眼 + 黑色眼窝 + 暗红鼻口",
+        "flow": "眼睛位于脸部中上部，左右对称；鼻口在下方，有暗色鼻孔。"
+      }
+    ]
+  },
+  "method": "manual_part_level_concept_card + llm_client + text_to_texture",
+  "novelty": 0.75,
+  "avoid": [
+    "不要复制原版 cow.png / red_mooshroom.png / soul_fire_0.png 的逐像素图案；",
+    "不要画成完整牛身体/侧视图：这是正面牛头图标；",
+    "不要画成普通红牛：必须有黑色角/眼窝与青色魂火点缀；",
+    "保持 16x16 透明背景、四边至少 1px 透明边距。"
+  ],
+  "reference_hashes": {
+    "cow": "64e4fcacfe84ee63b91898364c883d40",
+    "red_mooshroom": "00fbc3ceee0959ddcabd3f43355ce6e4",
+    "soul_fire_0": "bf4e3e98bc177b997ce91bf6cc9d9ba2"
+  }
+}
