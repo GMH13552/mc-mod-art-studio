@@ -64,6 +64,9 @@ ALIASES = OrderedDict(
         ("斧", ["axe"]),
         ("斧头", ["axe"]),
         ("镐", ["pickaxe"]),
+        ("稿", ["pickaxe"]),  # 用户常写“稿”代指镐
+        ("红铜", ["copper_ingot", "copper_block", "copper", "oxidized_copper"]),
+        ("铜", ["copper_ingot", "copper_block", "copper"]),
         ("剑", ["sword"]),
         ("铲", ["shovel"]),
         ("锄", ["hoe"]),

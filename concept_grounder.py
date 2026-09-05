@@ -256,6 +256,14 @@ _PATTERN_INTENT: dict[str, tuple[list[str], str]] = {
           "刃面：冷灰金属高光 + 刀身渐变/划痕；刀柄：皮革/木纹。"),
     "剑": (["blade 刃面", "guard 护手", "handle 剑柄"],
           "刃面：金属高光 + 中脊亮线；护手：深色；柄：皮革/木纹。"),
+    "稿": (["pickaxe_head 镐头", "handle 柄"],
+          "稿：横向镐头（两端尖）+ 斜向/竖直柄；铜/铁/石金属材质。"),
+    "镐": (["pickaxe_head 镐头", "handle 柄"],
+          "镐：横向镐头（两端尖）+ 斜向/竖直柄；铜/铁/石金属材质。"),
+    "斧": (["axe_head 斧刃", "handle 柄"],
+          "斧：斜向斧刃 + 木柄；金属/石/木材质。"),
+    "锄": (["hoe_head 锄头", "handle 柄"],
+          "锄：斜向锄头（小方/钩）+ 木柄；金属/木材质。"),
     "皮": (["hide_edge 皮张边缘"],
           "皮张：不规则边缘/毛边 + 皮革纹理（颗粒+折痕）+ 织物内衬/缝线。"),
 }
@@ -274,6 +282,34 @@ def _pattern_intent(query: str) -> tuple[list[str], str | None]:
             if override is None or len(pat) > len(override):
                 override = pat
     return extra_parts, override
+
+
+# 材质/颜色意图：query 中若出现材质词，覆盖调色板与材质描述（通用，不特化到具体物品名）。
+_MATERIAL_INTENT: dict[str, tuple[str, str, str, str, str, str]] = {
+    "红铜": ("#B87333", "#E8A47C", "#7A4A2A", "#C46A3A", "#5A2E1A", "红铜/铜金属：橙红铜色，柔和高光，可有氧化铜青/绿边缘。"),
+    "铜": ("#B87333", "#E8A47C", "#7A4A2A", "#C46A3A", "#5A2E1A", "铜金属：橙红铜色，柔和高光，氧化铜青/绿。"),
+    "铁": ("#8A8A8A", "#D0D0D0", "#4A4A4A", "#A0A0A0", "#333333", "铁：灰白金属，冷色高光，磨痕。"),
+    "金": ("#F6C445", "#FFE98A", "#B8860B", "#FFD700", "#8A5A00", "金：亮黄金属，高对比高光。"),
+    "钻石": ("#4AECD8", "#B8FFF4", "#1E7A6A", "#8FFFE9", "#0E3F36", "钻石：青绿透明，棱面高光。"),
+    "木": ("#493615", "#896727", "#281E0B", "#684E1E", "#1F1206", "木：棕色木纹，纵向纹理。"),
+    "石": ("#7A7A7A", "#B0B0B0", "#4A4A4A", "#999999", "#333333", "石：灰石，细颗粒/裂纹。"),
+}
+
+
+_TOOL_SHAPE_OVERRIDES: dict[str, str] = {
+    "稿": "斜向稿：横向镐头（两端尖）+ 斜向/竖直柄；item 透明剪影",
+    "镐": "斜向稿：横向镐头（两端尖）+ 斜向/竖直柄；item 透明剪影",
+    "斧": "斜向斧刃 + 木柄；item 透明剪影",
+    "锄": "斜向锄头 + 木柄；item 透明剪影",
+    "剑": "斜向剑刃 + 护手 + 柄；item 透明剪影",
+}
+
+
+def _material_intent(query: str) -> tuple[str, str, str, str, str, str] | None:
+    for zh in sorted(_MATERIAL_INTENT, key=len, reverse=True):
+        if zh in query:
+            return _MATERIAL_INTENT[zh]
+    return None
 
 
 def _far_color(base: str, colors: list[str]) -> str | None:
@@ -661,9 +697,13 @@ def _generic_card(
     anchors = _anchor_summary(retrieval)
     parts = list(anchors["parts"]) or ["主体"]
     extra_parts, pattern_override = _pattern_intent(query)
-    for p in extra_parts:
-        if p not in parts:
-            parts.append(p)
+    if extra_parts and len(extra_parts) >= 2:
+        # 类别有明确部件（工具/眼睛等）时，用它们替换掉聚合出来的“船体/矿石”等杂质
+        parts = list(extra_parts)
+    else:
+        for p in extra_parts:
+            if p not in parts:
+                parts.append(p)
     # 去重/去掉 “主体” 这种占位重复
     seen = set()
     clean_parts = []
@@ -692,6 +732,10 @@ def _generic_card(
     color_hint = " ".join(colors[:5]) if colors else "使用检索调色板"
     shape_hint = "；".join(anchors["shape"]) if anchors["shape"] else form
     pattern_hint = pattern_override or ("；".join(anchors["pattern"]) if anchors["pattern"] else "无明显图案")
+    for _t in sorted(_TOOL_SHAPE_OVERRIDES, key=len, reverse=True):
+        if _t in query:
+            shape_hint = _TOOL_SHAPE_OVERRIDES[_t]
+            break
     goals = []
     if form == "block_custom":
         keys = list(face_regions.keys())
@@ -723,6 +767,13 @@ def _generic_card(
     dark_color = colors[2] if len(colors) >= 3 else "#3A3A3A"
     accent_color = colors[3] if len(colors) >= 4 else "#B8942B"
     outline_color = colors[4] if len(colors) >= 5 else "#222222"
+    mat = _material_intent(query)
+    if mat:
+        base_color, light_color, dark_color, accent_color, outline_color, material_hint = mat
+        if pattern_hint:
+            pattern_hint = pattern_hint + "；" + material_hint
+        else:
+            pattern_hint = material_hint
 
     return {
         "item_name": "%s (%s)" % (
@@ -790,7 +841,7 @@ GENERIC_DESIGN_PRINCIPLES = [
     "整体方向统一：所有部件沿同一主方向/轴线；附属物方向与主体一致或围绕主体自然分叉，禁止主体与附属朝向相反。",
     "连接点自然：部件相接处与主轴/重心对齐，不悬空、不偏心、不错位。",
     "剪影可辨：只看形状也能认出“这是什么”；部件之间用描边/色差/空隙区分，不要糊成实心团块。",
-    "轮廓借鉴：从所选参考里选一个最贴近本体语义的剪影作为基础；可以改动，但**尽量少改**，保持主体剪影可辨认；选哪个、改动多少算合适由你判断，不以是否复制为准。",
+    "轮廓借鉴（尽量不改）：从所选参考里选一个最贴近本体语义的剪影作为基础；若该参考是同类物品（工具/武器/方块等），**尽量保留其原版剪影的朝向、对角线构图与部件比例**，可以换色/加装饰，但不要旋转、镜像或改成竖直/圆润形态；是否改动过多由你判断，但目标是“一眼就是同一工具/物品”。",
     "纹样贴合形状：纹理/高光/图案沿部件的走向与明暗面流动，不脱离形状。",
     "细长部件：所有细长部件（杆/柄/弦/茎/边框等）宽度控制在 1~2px，不能糊成 3px 以上实心色带。",
     "负空间：部件之间与内部孔洞保留至少 1px 透明负空间（block_multi 整面不透明方块除外），避免实心团块。",
